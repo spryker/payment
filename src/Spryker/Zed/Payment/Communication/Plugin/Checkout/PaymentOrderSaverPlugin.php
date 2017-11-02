@@ -9,25 +9,24 @@ namespace Spryker\Zed\Payment\Communication\Plugin\Checkout;
 
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Zed\Checkout\Dependency\Plugin\CheckoutSaveOrderInterface;
+use Generated\Shared\Transfer\SaveOrderTransfer;
+use Spryker\Zed\Checkout\Dependency\Plugin\PlaceOrder\CheckoutSaveOrderInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
- * @deprecated Please use \Spryker\Zed\Payment\Communication\Plugin\Checkout\PaymentOrderSaverPlugin instead
- * Will be removed in the next major.
- *
  * @method \Spryker\Zed\Payment\Business\PaymentFacade getFacade()
  */
-class PaymentSaverPlugin extends AbstractPlugin implements CheckoutSaveOrderInterface
+class PaymentOrderSaverPlugin extends AbstractPaymentOrderPlugin implements CheckoutSaveOrderInterface
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponse
+     * @param SaveOrderTransfer $saveOrderTransfer
      *
      * @return void
      */
-    public function saveOrder(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponse)
+    public function saveOrder(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer)
     {
-        $this->getFacade()->savePaymentForCheckout($quoteTransfer, $checkoutResponse);
+        $checkoutResponseTransfer = $this->createCheckoutResponse($saveOrderTransfer);
+        $this->getFacade()->savePaymentForCheckout($quoteTransfer, $checkoutResponseTransfer);
     }
 }
