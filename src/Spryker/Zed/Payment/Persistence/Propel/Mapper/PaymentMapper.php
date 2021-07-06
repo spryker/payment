@@ -104,12 +104,7 @@ class PaymentMapper
         PaymentMethodTransfer $paymentMethodTransfer,
         SpyPaymentMethod $paymentMethodEntity
     ): SpyPaymentMethod {
-        $arrayToMap = $paymentMethodTransfer->modifiedToArray();
-
-        $extraData = $paymentMethodTransfer->getExtraData();
-        $arrayToMap[static::KEY_EXTRA_DATA] = is_array($extraData) ? json_encode($extraData) : $paymentMethodEntity->getExtraData();
-
-        $paymentMethodEntity->fromArray($arrayToMap);
+        $paymentMethodEntity->fromArray($paymentMethodTransfer->modifiedToArray());
         $paymentMethodEntity->setFkPaymentProvider($paymentMethodTransfer->getIdPaymentProvider());
         $paymentMethodEntity->setPaymentMethodKey($paymentMethodTransfer->getPaymentMethodKey() ?? $paymentMethodTransfer->getMethodName());
 
