@@ -106,7 +106,7 @@ class PaymentMapper
         $arrayToMap = $paymentMethodTransfer->modifiedToArray();
 
         $extraData = $paymentMethodTransfer->getExtraData();
-        $arrayToMap[static::KEY_EXTRA_DATA] = is_array($extraData) ? json_encode($extraData) : null;
+        $arrayToMap[static::KEY_EXTRA_DATA] = is_array($extraData) ? json_encode($extraData) : $paymentMethodEntity->getExtraData();
 
         $paymentMethodEntity->fromArray($arrayToMap);
         $paymentMethodEntity->setFkPaymentProvider($paymentMethodTransfer->getIdPaymentProvider());
