@@ -125,19 +125,19 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
      */
     public function findPaymentProviderByKey(string $paymentProviderKey): ?PaymentProviderTransfer
     {
-        $paymentProviderEntities = $this->getFactory()
+        $paymentProviderEntity = $this->getFactory()
             ->createPaymentProviderQuery()
             ->filterByPaymentProviderKey($paymentProviderKey)
             ->findOne();
 
-        if ($paymentProviderEntities === null) {
+        if ($paymentProviderEntity === null) {
             return null;
         }
 
         return $this->getFactory()
             ->createPaymentProviderMapper()
             ->mapPaymentProviderEntityToPaymentProviderTransfer(
-                $paymentProviderEntities,
+                $paymentProviderEntity,
                 new PaymentProviderTransfer()
             );
     }
