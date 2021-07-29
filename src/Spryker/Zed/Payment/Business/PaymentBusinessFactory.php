@@ -22,6 +22,8 @@ use Spryker\Zed\Payment\Business\Method\PaymentMethodValidatorInterface;
 use Spryker\Zed\Payment\Business\Order\SalesPaymentHydrator;
 use Spryker\Zed\Payment\Business\Order\SalesPaymentReader;
 use Spryker\Zed\Payment\Business\Order\SalesPaymentSaver;
+use Spryker\Zed\Payment\Business\Provider\PaymentProviderReader;
+use Spryker\Zed\Payment\Business\Provider\PaymentProviderReaderInterface;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriter;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriterInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface;
@@ -181,5 +183,13 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
         return new SalesPaymentReader(
             $this->getQueryContainer()
         );
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Provider\PaymentProviderReaderInterface
+     */
+    public function createPaymentProviderReader(): PaymentProviderReaderInterface
+    {
+        return new PaymentProviderReader($this->getRepository());
     }
 }

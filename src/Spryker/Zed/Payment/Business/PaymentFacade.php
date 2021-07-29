@@ -280,4 +280,20 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
             ->createCheckoutPaymentPluginExecutor()
             ->executeOrderSaverPlugin($quoteTransfer, $checkoutResponse);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentProviderTransfer|null
+     */
+    public function findPaymentProvider(PaymentProviderTransfer $paymentProviderTransfer): ?PaymentProviderTransfer
+    {
+        return $this->getFactory()
+            ->createPaymentProviderReader()
+            ->findPaymentProvider($paymentProviderTransfer);
+    }
 }

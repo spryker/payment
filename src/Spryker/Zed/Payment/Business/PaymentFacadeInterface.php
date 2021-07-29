@@ -228,6 +228,20 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
+     * - Requires PaymentProviderTransfer.paymentProviderKey transfer field to be set.
+     * - Returns a payment provider transfer found using PaymentProvider transfer.
+     * - Returns NULL if payment provider is not found.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentProviderTransfer|null
+     */
+    public function findPaymentProvider(PaymentProviderTransfer $paymentProviderTransfer): ?PaymentProviderTransfer;
+
+    /**
+     * Specification:
      * - Creates sales payments
      *
      * @api
