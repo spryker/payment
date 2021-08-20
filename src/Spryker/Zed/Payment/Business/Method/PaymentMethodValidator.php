@@ -10,6 +10,7 @@ namespace Spryker\Zed\Payment\Business\Method;
 use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
+use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 
 class PaymentMethodValidator implements PaymentMethodValidatorInterface
@@ -65,11 +66,11 @@ class PaymentMethodValidator implements PaymentMethodValidatorInterface
     {
         $paymentMethodsKeys = [];
         if ($quoteTransfer->getPayment()) {
-            $paymentMethodsKeys[] = $quoteTransfer->getPayment()->getPaymentSelection();
+            $paymentMethodsKeys[] = $this->getPaymentMethodKey($quoteTransfer->getPayment());
         }
 
-        foreach ($quoteTransfer->getPayments() as $payment) {
-            $paymentMethodsKeys[] = $payment->getPaymentSelection();
+        foreach ($quoteTransfer->getPayments() as $paymentTransfer) {
+            $paymentMethodsKeys[] = $this->getPaymentMethodKey($paymentTransfer);
         }
 
         return $paymentMethodsKeys;
@@ -90,5 +91,26 @@ class PaymentMethodValidator implements PaymentMethodValidatorInterface
         }
 
         return $paymentSelections;
+    }
+
+    /**
+     * Returns only the first matching string for the provided pattern in square brackets.
+     * Returns the specified value if there is no match.
+     *
+     * @example 'externalPayments[paymentKey]' becomes 'paymentKey'
+     *
+     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
+     *
+     * @return string
+     */
+    protected function getPaymentMethodKey(PaymentTransfer $paymentTransfer): string
+    {
+        preg_match('/\[([a-zA-Z0-9_-]+)\]/', $paymentTransfer->getPaymentSelection(), $matches);
+
+        if (!isset($matches[1])) {
+            return $paymentTransfer->getPaymentSelection();
+        }
+
+        return $matches[1];
     }
 }

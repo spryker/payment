@@ -99,6 +99,55 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
+    public function testFindPaymentMethodReturnsTransferWithCorrectData(): void
+    {
+        // Arrange
+        $paymentProviderTransfer = $this->tester->havePaymentProvider();
+        $paymentMethodTransfer = $this->tester->havePaymentMethod([
+            PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
+        ]);
+
+        $firstCriteriaPaymentMethodTransfer = (new PaymentMethodTransfer())
+            ->setIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod());
+        $secondCriteriaPaymentMethodTransfer = (new PaymentMethodTransfer())
+            ->setPaymentMethodKey($paymentMethodTransfer->getPaymentMethodKey());
+
+        // Act
+        $foundFirstPaymentMethodTransfer = $this->paymentFacade->findPaymentMethod($firstCriteriaPaymentMethodTransfer);
+        $foundSecondPaymentMethodTransfer = $this->paymentFacade->findPaymentMethod($secondCriteriaPaymentMethodTransfer);
+
+        // Assert
+        $this->assertNotNull($foundFirstPaymentMethodTransfer);
+        $this->assertSame($paymentMethodTransfer->getIdPaymentMethod(), $foundFirstPaymentMethodTransfer->getIdPaymentMethod());
+        $this->assertNotNull($foundSecondPaymentMethodTransfer);
+        $this->assertSame($paymentMethodTransfer->getIdPaymentMethod(), $foundSecondPaymentMethodTransfer->getIdPaymentMethod());
+        $this->assertSame($paymentMethodTransfer->getPaymentMethodKey(), $foundSecondPaymentMethodTransfer->getPaymentMethodKey());
+    }
+
+    /**
+     * @return void
+     */
+    public function testFindPaymentMethodReturnsNullWithCorrectData(): void
+    {
+        // Arrange
+        $paymentProviderTransfer = $this->tester->havePaymentProvider();
+        $paymentMethodTransfer = $this->tester->havePaymentMethod([
+            PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
+        ]);
+
+        $criteriaPaymentMethodTransfer = (new PaymentMethodTransfer())
+            ->setIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod() + 1);
+
+        // Act
+        $foundPaymentMethodTransfer = $this->paymentFacade->findPaymentMethod($criteriaPaymentMethodTransfer);
+
+        // Assert
+        $this->assertNull($foundPaymentMethodTransfer);
+    }
+
+    /**
+     * @return void
+     */
     public function testUpdatePaymentMethodShouldUpdatePaymentMethodWithStoreRelation(): void
     {
         // Arrange

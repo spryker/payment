@@ -41,6 +41,34 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
     }
 
     /**
+     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
+     */
+    public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer
+    {
+        $paymentMethodQuery = $this->getFactory()->createPaymentMethodQuery();
+
+        if ($paymentMethodTransfer->getIdPaymentMethod() !== null) {
+            $paymentMethodQuery->filterByIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod());
+        }
+
+        if ($paymentMethodTransfer->getPaymentMethodKey() !== null) {
+            $paymentMethodQuery->filterByPaymentMethodKey($paymentMethodTransfer->getPaymentMethodKey());
+        }
+
+        $paymentMethodEntity = $paymentMethodQuery->findOne();
+
+        if (!$paymentMethodEntity) {
+            return null;
+        }
+
+        return $this->getFactory()
+            ->createPaymentMapper()
+            ->mapPaymentMethodEntityToPaymentMethodTransfer($paymentMethodEntity, new PaymentMethodTransfer());
+    }
+
+    /**
      * @param string $storeName
      *
      * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer

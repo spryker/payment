@@ -75,6 +75,22 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
+     * - Finds a payment method.
+     * - Uses PaymentMethodTransfer.idPaymentMethod if set to filter payment methods.
+     * - Uses PaymentMethodTransfer.paymentMethodKey if set to filter payment methods.
+     * - Returns a payment method found using the provided filters.
+     * - Returns NULL otherwise.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
+     */
+    public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer;
+
+    /**
+     * Specification:
      * - Updates payment method in database using provided PaymentMethod transfer object data.
      * - Updates or creates payment method store relations using 'storeRelation' collection in the PaymentMethod transfer object.
      * - Returns PaymentMethodResponse transfer object.

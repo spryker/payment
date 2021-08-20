@@ -95,6 +95,20 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      *
+     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
+     */
+    public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer
+    {
+        return $this->getRepository()->findPaymentMethod($paymentMethodTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
+     *
      * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
      */
     public function updatePaymentMethod(
