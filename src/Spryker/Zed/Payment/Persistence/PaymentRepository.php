@@ -99,7 +99,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         return $this->getFactory()
             ->createPaymentProviderMapper()->mapPaymentProviderEntityCollectionToPaymentProviderCollectionTransfer(
                 $paymentProviderEntities,
-                $paymentProviderCollectionTransfer
+                $paymentProviderCollectionTransfer,
             );
     }
 
@@ -142,7 +142,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             ->createPaymentMapper()
             ->mapPaymentMethodEntityCollectionToPaymentMethodsTransfer(
                 $paymentMethodEntities,
-                $paymentMethodsTransfer
+                $paymentMethodsTransfer,
             );
     }
 
