@@ -166,7 +166,7 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             ->createPaymentProviderMapper()
             ->mapPaymentProviderEntityToPaymentProviderTransfer(
                 $paymentProviderEntity,
-                new PaymentProviderTransfer()
+                new PaymentProviderTransfer(),
             );
     }
 }
