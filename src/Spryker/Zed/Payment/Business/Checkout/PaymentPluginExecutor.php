@@ -208,13 +208,8 @@ class PaymentPluginExecutor implements PaymentPluginExecutorInterface
     ) {
         $errorCount = $checkoutResponseTransfer->getErrors()->count();
         $plugin->execute($quoteTransfer, $checkoutResponseTransfer);
-        $isPassed = $errorCount === $checkoutResponseTransfer->getErrors()->count();
 
-        if (!$isPassed) {
-            $checkoutResponseTransfer->setIsSuccess(false);
-        }
-
-        return $isPassed;
+        return $errorCount === $checkoutResponseTransfer->getErrors()->count();
     }
 
     /**
