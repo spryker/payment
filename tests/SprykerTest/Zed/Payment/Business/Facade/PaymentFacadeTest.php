@@ -13,16 +13,27 @@ use Generated\Shared\DataBuilder\PaymentMethodBuilder;
 use Generated\Shared\DataBuilder\PaymentProviderBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\StoreRelationBuilder;
+use Generated\Shared\Transfer\CheckoutResponseTransfer;
+use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer;
+use Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer;
+use Generated\Shared\Transfer\PaymentMethodAddedTransfer;
+use Generated\Shared\Transfer\PaymentMethodDeletedTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\PaymentProviderTransfer;
+use Generated\Shared\Transfer\PaymentTransfer;
+use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Orm\Zed\Payment\Persistence\SpyPaymentMethodQuery;
 use Orm\Zed\Payment\Persistence\SpyPaymentMethodStoreQuery;
+use Spryker\Client\Payment\PaymentClientInterface;
+use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodReader;
 use Spryker\Zed\Payment\Business\PaymentBusinessFactory;
 use Spryker\Zed\Payment\PaymentConfig;
+use Spryker\Zed\Payment\PaymentDependencyProvider;
 
 /**
  * Auto-generated group annotations
@@ -38,6 +49,36 @@ use Spryker\Zed\Payment\PaymentConfig;
  */
 class PaymentFacadeTest extends Unit
 {
+    /**
+     * @var string
+     */
+    protected const STORE_REFERENCE = 'development_test-DE';
+
+    /**
+     * @var string
+     */
+    protected const STORE_NAME = 'DE';
+
+    /**
+     * @var string
+     */
+    protected const TOKEN = 'token-value';
+
+    /**
+     * @var string
+     */
+    protected const CHECKOUT_ORDER_TOKEN_URL = 'checkout-order-token-url';
+
+    /**
+     * @var string
+     */
+    protected const CHECKOUT_REDIRECT_URL = 'checkout-redirect-url';
+
+    /**
+     * @var string
+     */
+    protected const PAYMENT_AUTHORIZATION_ENDPOINT = 'payment_authorization_endpoint';
+
     /**
      * @var \SprykerTest\Zed\Payment\PaymentBusinessTester
      */
@@ -182,7 +223,11 @@ class PaymentFacadeTest extends Unit
         $storeRelationExist = SpyPaymentMethodStoreQuery::create()
             ->filterByFkPaymentMethod($paymentMethodTransfer->getIdPaymentMethod())
             ->exists();
-        $this->assertSame('test1', $resultPaymentMethodEntity->getPaymentMethodKey(), 'Payment method name should match to the expected value');
+        $this->assertSame(
+            'test1',
+            $resultPaymentMethodEntity->getPaymentMethodKey(),
+            'Payment method name should match to the expected value',
+        );
         $this->assertTrue($storeRelationExist, 'Payment method store relation should exists');
     }
 
@@ -530,6 +575,194 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
+    public function testExecuteOrderPostSaveHookReceivesTokenAndUsingItAddsRedirectUrlWithCorrectData(): void
+    {
+        // Arrange
+        $paymentProviderTransfer = $this->tester->havePaymentProvider();
+        $paymentMethodTransfer = $this->tester->havePaymentMethod([
+            PaymentMethodTransfer::IS_HIDDEN => false,
+            PaymentMethodTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => static::CHECKOUT_ORDER_TOKEN_URL,
+            PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
+        ]);
+
+        $paymentTransfer = (new PaymentTransfer())->setPaymentSelection(
+            sprintf('%s[%s]', PaymentTransfer::FOREIGN_PAYMENTS, $paymentMethodTransfer->getPaymentMethodKey()),
+        );
+
+        $quoteTransfer = $this->buildQuoteTransfer();
+        $quoteTransfer->setPayment($paymentTransfer);
+        $checkoutResponseTransfer = $this->buildCheckoutResponseTransfer();
+
+        $paymentClientMock = $this->getPaymentClientMock();
+        $paymentClientMock->expects($this->once())
+            ->method('authorizePayment')
+            ->with($this->callback(function (PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer) {
+                return $paymentAuthorizeRequestTransfer->getRequestUrl() === static::CHECKOUT_ORDER_TOKEN_URL;
+            }))
+            ->willReturn(
+                (new PaymentAuthorizeResponseTransfer())
+                    ->setIsSuccessful(true)
+                    ->setRedirectUrl(static::PAYMENT_AUTHORIZATION_ENDPOINT . '/' . static::TOKEN),
+            );
+
+        // Act
+        $this->tester->getFacade()->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+
+        // Assert
+        $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
+        $this->assertStringContainsString(static::PAYMENT_AUTHORIZATION_ENDPOINT, $checkoutResponseTransfer->getRedirectUrl());
+        $this->assertStringContainsString(static::TOKEN, $checkoutResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @return void
+     */
+    public function testExecuteOrderPostSaveHookDoesNothingWithIncorrectData(): void
+    {
+        // Arrange
+        $paymentProviderTransfer = $this->tester->havePaymentProvider();
+        $paymentMethodTransfer = $this->tester->havePaymentMethod([
+            PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
+        ]);
+
+        $initialQuoteTransfer = $this->buildQuoteTransfer();
+        $initialQuoteTransfer->setPayment(
+            (new PaymentTransfer())->setPaymentSelection($paymentMethodTransfer->getPaymentMethodKey()),
+        );
+        $initialCheckoutResponseTransfer = $this->buildCheckoutResponseTransfer();
+
+        $quoteTransfer = clone $initialQuoteTransfer;
+        $checkoutResponseTransfer = clone $initialCheckoutResponseTransfer;
+
+        // Act
+        $this->tester->getFacade()->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+
+        // Assert
+        $this->assertEquals($initialQuoteTransfer->toArray(), $quoteTransfer->toArray());
+        $this->assertEquals($initialCheckoutResponseTransfer->toArray(), $checkoutResponseTransfer->toArray());
+    }
+
+    /**
+     * @return void
+     */
+    public function testEnablePaymentMethodReturnsSavedPaymentMethodTransferWithCorrectData(): void
+    {
+        // Arrange
+        $storeTransfer = $this->tester->getStoreTransfer([
+            StoreTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
+        ]);
+        $this->tester->setStoreReferenceData([static::STORE_NAME => static::STORE_REFERENCE]);
+
+        $paymentMethodAddedTransfer = $this->tester->getPaymentMethodAddedTransfer([
+            PaymentMethodAddedTransfer::NAME => 'name-1',
+            PaymentMethodAddedTransfer::PROVIDER_NAME => 'provider-name-1',
+            PaymentMethodAddedTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => 'redirect-url',
+            PaymentMethodAddedTransfer::STORE => $storeTransfer,
+        ], [
+            MessageAttributesTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
+        ]);
+
+        // Act
+        $createdPaymentMethodTransfer = $this->tester->getFacade()
+            ->enablePaymentMethod($paymentMethodAddedTransfer);
+
+        $createdPaymentMethodAddedTransfer = $this->tester->mapPaymentMethodTransferToPaymentMethodAddedTransfer(
+            $createdPaymentMethodTransfer,
+            new PaymentMethodAddedTransfer(),
+        );
+
+        // Assert
+        $this->assertNotNull($createdPaymentMethodTransfer->getIdPaymentMethod());
+        $this->assertNotNull($createdPaymentMethodTransfer->getIdPaymentProvider());
+        $this->assertTrue($createdPaymentMethodTransfer->getIsHidden());
+
+        $this->assertSame($paymentMethodAddedTransfer->getName(), $createdPaymentMethodAddedTransfer->getName());
+        $this->assertSame($paymentMethodAddedTransfer->getProviderName(), $createdPaymentMethodAddedTransfer->getProviderName());
+        $this->assertSame($paymentMethodAddedTransfer->getPaymentAuthorizationEndpoint(), $createdPaymentMethodAddedTransfer->getPaymentAuthorizationEndpoint());
+    }
+
+    /**
+     * @return void
+     */
+    public function testDisableExternalPaymentMethodSetsPaymentMethodIsDeletedFlagToTrueWithCorrectData(): void
+    {
+        // Arrange
+        $storeTransfer = $this->tester->getStoreTransfer([
+            StoreTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
+        ]);
+        $this->tester->setStoreReferenceData([static::STORE_NAME => static::STORE_REFERENCE]);
+
+        $paymentMethodAddedTransfer = $this->tester->getPaymentMethodAddedTransfer([
+            PaymentMethodAddedTransfer::NAME => 'name-2',
+            PaymentMethodAddedTransfer::PROVIDER_NAME => 'provider-name-2',
+            PaymentMethodAddedTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => 'redirect-url',
+            PaymentMethodAddedTransfer::STORE => $storeTransfer,
+        ], [
+            MessageAttributesTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
+        ]);
+
+        // Act
+        $paymentMethodTransfer = $this->tester->getFacade()
+            ->enablePaymentMethod($paymentMethodAddedTransfer);
+        $paymentMethodTransfer->setStore($storeTransfer);
+
+        $paymentMethodDeletedTransfer = $this->tester->mapPaymentMethodTransferToPaymentMethodDeletedTransfer(
+            $paymentMethodTransfer,
+            (new PaymentMethodDeletedTransfer())
+                ->setMessageAttributes($paymentMethodAddedTransfer->getMessageAttributes()),
+        );
+        $this->tester->getFacade()->disablePaymentMethod($paymentMethodDeletedTransfer);
+
+        $filterPaymentMethodTransfer = (new PaymentMethodTransfer())
+            ->setIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod());
+        $updatedPaymentMethodTransfer = $this->tester->findPaymentMethod($filterPaymentMethodTransfer);
+
+        // Assert
+        $this->assertSame($paymentMethodTransfer->getIdPaymentMethod(), $updatedPaymentMethodTransfer->getIdPaymentMethod());
+        $this->assertTrue($updatedPaymentMethodTransfer->getIsHidden());
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Client\Payment\PaymentClientInterface
+     */
+    protected function getPaymentClientMock(): PaymentClientInterface
+    {
+        $paymentClient = $this->getMockBuilder(PaymentClientInterface::class)->getMock();
+        $this->tester->setDependency(PaymentDependencyProvider::CLIENT_PAYMENT, $paymentClient);
+
+        return $paymentClient;
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     */
+    protected function buildCheckoutResponseTransfer(): CheckoutResponseTransfer
+    {
+        return (new CheckoutResponseBuilder())
+            ->withSaveOrder()
+            ->build();
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    protected function buildQuoteTransfer(): QuoteTransfer
+    {
+        return (new QuoteBuilder())
+            ->withItem()
+            ->withStore([
+                'name' => static::STORE_NAME,
+            ])
+            ->withCustomer()
+            ->withTotals()
+            ->withCurrency()
+            ->withBillingAddress()
+            ->build();
+    }
+
+    /**
+     * @return void
+     */
     protected function mockPaymentMethodReader(): void
     {
         $paymentMethodReaderMock = $this->getMockBuilder(PaymentMethodReader::class)
@@ -544,12 +777,15 @@ class PaymentFacadeTest extends Unit
                 ),
         );
 
+        $container = new Container();
         /** @var \Spryker\Zed\Payment\Business\PaymentBusinessFactory $paymentBusinessFactoryMock */
         $paymentBusinessFactoryMock = $this->getMockBuilder(PaymentBusinessFactory::class)
-            ->onlyMethods(['createPaymentMethodReader'])
+            ->onlyMethods(['createPaymentMethodReader', 'getPaymentService'])
             ->getMock();
         $paymentBusinessFactoryMock->method('createPaymentMethodReader')
             ->willReturn($paymentMethodReaderMock);
+        $paymentBusinessFactoryMock->method('getPaymentService')
+            ->willReturn($container->getLocator()->payment()->service());
 
         $this->paymentFacade->setFactory($paymentBusinessFactoryMock);
     }

@@ -10,6 +10,8 @@ namespace Spryker\Zed\Payment\Business;
 use Generated\Shared\Transfer\CalculableObjectTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\PaymentMethodAddedTransfer;
+use Generated\Shared\Transfer\PaymentMethodDeletedTransfer;
 use Generated\Shared\Transfer\PaymentMethodResponseTransfer;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\PaymentProviderCollectionTransfer;
@@ -17,6 +19,7 @@ use Generated\Shared\Transfer\PaymentProviderResponseTransfer;
 use Generated\Shared\Transfer\PaymentProviderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SalesPaymentTransfer;
+use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -40,6 +43,57 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
         return $this->getFactory()
             ->createPaymentMethodReader()
             ->getAvailableMethods($quoteTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     *
+     * @return void
+     */
+    public function executeOrderPostSaveHook(
+        QuoteTransfer $quoteTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): void {
+        $this->getFactory()
+            ->createOrderPostSaveHook()
+            ->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodAddedTransfer $paymentMethodAddedTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
+     */
+    public function enablePaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer
+    {
+        return $this->getFactory()
+            ->createPaymentMethodEnabler()
+            ->enablePaymentMethod($paymentMethodAddedTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer
+     *
+     * @return void
+     */
+    public function disablePaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void
+    {
+        $this->getFactory()
+            ->createPaymentMethodDisabler()
+            ->disablePaymentMethod($paymentMethodDeletedTransfer);
     }
 
     /**
@@ -309,5 +363,76 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
         return $this->getFactory()
             ->createPaymentProviderReader()
             ->findPaymentProvider($paymentProviderTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\OrderPaymentEventTransfer $transfer
+     * @param string $eventName
+     *
+     * @return void
+     */
+    public function handleEventForOrderItems(TransferInterface $transfer, string $eventName): void
+    {
+        $this->getFactory()->createPaymentEventTypeListener()->handle($transfer, $eventName);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param array $orderItemIds
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return void
+     */
+    public function sendEventPaymentCancelReservationPending(array $orderItemIds, OrderTransfer $orderTransfer): void
+    {
+        $this->getFactory()
+            ->createCommandExecutor()
+            ->sendEventPaymentCancelReservationPending($orderItemIds, $orderTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param array $orderItemIds
+     * @param int $orderItemsTotal
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return void
+     */
+    public function sendEventPaymentConfirmationPending(array $orderItemIds, int $orderItemsTotal, OrderTransfer $orderTransfer): void
+    {
+        $this->getFactory()
+            ->createCommandExecutor()
+            ->sendEventPaymentConfirmationPending($orderItemIds, $orderItemsTotal, $orderTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param array $orderItemIds
+     * @param int $orderItemsTotal
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return void
+     */
+    public function sendEventPaymentRefundPending(
+        array $orderItemIds,
+        int $orderItemsTotal,
+        OrderTransfer $orderTransfer
+    ): void {
+        $this->getFactory()
+            ->createCommandExecutor()
+            ->sendEventPaymentRefundPending($orderItemIds, $orderItemsTotal, $orderTransfer);
     }
 }

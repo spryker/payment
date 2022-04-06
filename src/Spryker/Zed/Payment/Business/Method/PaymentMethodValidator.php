@@ -10,8 +10,8 @@ namespace Spryker\Zed\Payment\Business\Method;
 use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
-use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use Spryker\Service\Payment\PaymentServiceInterface;
 
 class PaymentMethodValidator implements PaymentMethodValidatorInterface
 {
@@ -26,11 +26,20 @@ class PaymentMethodValidator implements PaymentMethodValidatorInterface
     protected $paymentMethodReader;
 
     /**
-     * @param \Spryker\Zed\Payment\Business\Method\PaymentMethodReaderInterface $paymentMethodReader
+     * @var \Spryker\Service\Payment\PaymentServiceInterface
      */
-    public function __construct(PaymentMethodReaderInterface $paymentMethodReader)
-    {
+    protected $paymentService;
+
+    /**
+     * @param \Spryker\Zed\Payment\Business\Method\PaymentMethodReaderInterface $paymentMethodReader
+     * @param \Spryker\Service\Payment\PaymentServiceInterface $paymentService
+     */
+    public function __construct(
+        PaymentMethodReaderInterface $paymentMethodReader,
+        PaymentServiceInterface $paymentService
+    ) {
         $this->paymentMethodReader = $paymentMethodReader;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -69,11 +78,11 @@ class PaymentMethodValidator implements PaymentMethodValidatorInterface
     {
         $paymentMethodsKeys = [];
         if ($quoteTransfer->getPayment()) {
-            $paymentMethodsKeys[] = $this->getPaymentMethodKey($quoteTransfer->getPayment());
+            $paymentMethodsKeys[] = $this->paymentService->getPaymentMethodKey($quoteTransfer->getPayment());
         }
 
         foreach ($quoteTransfer->getPayments() as $paymentTransfer) {
-            $paymentMethodsKeys[] = $this->getPaymentMethodKey($paymentTransfer);
+            $paymentMethodsKeys[] = $this->paymentService->getPaymentMethodKey($paymentTransfer);
         }
 
         return $paymentMethodsKeys;
@@ -94,26 +103,5 @@ class PaymentMethodValidator implements PaymentMethodValidatorInterface
         }
 
         return $paymentSelections;
-    }
-
-    /**
-     * Returns only the first matching string for the provided pattern in square brackets.
-     * Returns the specified value if there is no match.
-     *
-     * @example 'externalPayments[paymentKey]' becomes 'paymentKey'
-     *
-     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
-     *
-     * @return string
-     */
-    protected function getPaymentMethodKey(PaymentTransfer $paymentTransfer): string
-    {
-        preg_match('/\[([a-zA-Z0-9_-]+)\]/', $paymentTransfer->getPaymentSelection(), $matches);
-
-        if (!isset($matches[1])) {
-            return $paymentTransfer->getPaymentSelection();
-        }
-
-        return $matches[1];
     }
 }

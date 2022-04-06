@@ -10,6 +10,8 @@ namespace Spryker\Zed\Payment\Business;
 use Generated\Shared\Transfer\CalculableObjectTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\PaymentMethodAddedTransfer;
+use Generated\Shared\Transfer\PaymentMethodDeletedTransfer;
 use Generated\Shared\Transfer\PaymentMethodResponseTransfer;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\PaymentProviderCollectionTransfer;
@@ -17,6 +19,7 @@ use Generated\Shared\Transfer\PaymentProviderResponseTransfer;
 use Generated\Shared\Transfer\PaymentProviderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SalesPaymentTransfer;
+use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 /**
  * @method \Spryker\Zed\Payment\Business\PaymentBusinessFactory getFactory()
@@ -35,6 +38,60 @@ interface PaymentFacadeInterface
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
     public function getAvailableMethods(QuoteTransfer $quoteTransfer);
+
+    /**
+     * Specification:
+     * - Check whether the given order has a payment method external selected.
+     * - Terminates hook execution if not.
+     * - Receives all the necessary information about the payment method external.
+     * - Sends a request with all pre-selected quote fields using PaymentMethodTransfer.paymentAuthorizationEndpoint.
+     * - If the response is free of errors, uses PaymentMethodTransfer.paymentAuthorizationEndpoint and response data to build a redirect URL.
+     * - Updates CheckoutResponseTransfer with errors or the redirect URL according to response received.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     *
+     * @return void
+     */
+    public function executeOrderPostSaveHook(
+        QuoteTransfer $quoteTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): void;
+
+    /**
+     * Specification:
+     * - Requires PaymentMethodTransfer.labelName transfer field to be set.
+     * - Requires PaymentMethodTransfer.groupName transfer field to be set.
+     * - Creates payment provider if respective provider doesn't exist in DB
+     * - Creates payment method if the payment method with provided key doesn't exist in DB.
+     * - Updates payment method otherwise.
+     * - Sets payment method `is_hidden` flag to false if it already exists.
+     * - Returns PaymentMethod transfer filled with payment method data.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodAddedTransfer $paymentMethodAddedTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
+     */
+    public function enablePaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer;
+
+    /**
+     * Specification:
+     * - Requires PaymentMethodTransfer.labelName transfer field to be set.
+     * - Requires PaymentMethodTransfer.groupName transfer field to be set.
+     * - Uses the specified data to find a payment method.
+     * - Sets payment method `is_hidden` flag to true.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer
+     *
+     * @return void
+     */
+    public function disablePaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void;
 
     /**
      * Specification:
@@ -270,4 +327,68 @@ interface PaymentFacadeInterface
      * @return void
      */
     public function savePaymentForCheckout(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponse);
+
+    /**
+     * Specification:
+     * - Uses OrderTransfer.orderReference, OrderTransfer.currencyIsoCode and order item ids to send the event.
+     *
+     * @api
+     *
+     * @param array $orderItemIds
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return void
+     */
+    public function sendEventPaymentCancelReservationPending(array $orderItemIds, OrderTransfer $orderTransfer): void;
+
+    /**
+     * Specification:
+     * - Sends event if total count of order items above zero.
+     * - Uses orderTransfer.orderReference, orderTransfer.currencyIsoCode, order item ids and total count to send the event.
+     *
+     * @api
+     *
+     * @param array $orderItemIds
+     * @param int $orderItemsTotal
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return void
+     */
+    public function sendEventPaymentConfirmationPending(
+        array $orderItemIds,
+        int $orderItemsTotal,
+        OrderTransfer $orderTransfer
+    ): void;
+
+    /**
+     * Specification:
+     * - Sends event if total count of order items above zero.
+     * - Uses orderTransfer.orderReference, orderTransfer.currencyIsoCode, order item ids and total count to send the event.
+     * - Total items count will be a negative number.
+     *
+     * @api
+     *
+     * @param array $orderItemIds
+     * @param int $orderItemsTotal
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return void
+     */
+    public function sendEventPaymentRefundPending(
+        array $orderItemIds,
+        int $orderItemsTotal,
+        OrderTransfer $orderTransfer
+    ): void;
+
+    /**
+     * Specification:
+     *
+     * @api
+     *
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
+     * @param string $eventName
+     *
+     * @return void
+     */
+    public function handleEventForOrderItems(TransferInterface $transfer, string $eventName): void;
 }

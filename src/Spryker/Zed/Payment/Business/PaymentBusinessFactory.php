@@ -7,9 +7,28 @@
 
 namespace Spryker\Zed\Payment\Business;
 
+use Spryker\Client\Payment\PaymentClientInterface;
+use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
 use Spryker\Zed\Payment\Business\Calculation\PaymentCalculator;
 use Spryker\Zed\Payment\Business\Checkout\PaymentPluginExecutor;
+use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisabler;
+use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface;
+use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnabler;
+use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface;
+use Spryker\Zed\Payment\Business\Executor\CommandExecutor;
+use Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface;
+use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
+use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
+use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHook;
+use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface;
+use Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListener;
+use Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListenerInterface;
+use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapper;
+use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface;
+use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapper;
+use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodFinder;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodFinderInterface;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodReader;
@@ -26,7 +45,12 @@ use Spryker\Zed\Payment\Business\Provider\PaymentProviderReader;
 use Spryker\Zed\Payment\Business\Provider\PaymentProviderReaderInterface;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriter;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriterInterface;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface;
+use Spryker\Zed\Payment\Dependency\Service\PaymentToUtilTextServiceInterface;
 use Spryker\Zed\Payment\PaymentDependencyProvider;
 
 /**
@@ -51,11 +75,106 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface
+     */
+    public function createOrderPostSaveHook(): OrderPostSaveHookInterface
+    {
+        return new OrderPostSaveHook(
+            $this->createQuoteDataMapper(),
+            $this->getLocaleFacade(),
+            $this->getRepository(),
+            $this->getPaymentClient(),
+            $this->getConfig(),
+            $this->getStoreReferenceFacade(),
+            $this->getPaymentService(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface
+     */
+    public function getStoreReferenceFacade(): PaymentToStoreReferenceFacadeInterface
+    {
+        return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_STORE_REFERENCE);
+    }
+
+    /**
+     * @return \Spryker\Client\Payment\PaymentClientInterface
+     */
+    public function getPaymentClient(): PaymentClientInterface
+    {
+        return $this->getProvidedDependency(PaymentDependencyProvider::CLIENT_PAYMENT);
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface
+     */
+    public function createQuoteDataMapper(): QuoteDataMapperInterface
+    {
+        return new QuoteDataMapper();
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface
+     */
+    public function getLocaleFacade(): PaymentToLocaleFacadeInterface
+    {
+        return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_LOCALE);
+    }
+
+    /**
+     * @return \Spryker\Service\Payment\PaymentServiceInterface
+     */
+    public function getPaymentService(): PaymentServiceInterface
+    {
+        return $this->getProvidedDependency(PaymentDependencyProvider::SERVICE_PAYMENT);
+    }
+
+    /**
      * @return \Spryker\Zed\Payment\Business\Method\PaymentMethodValidatorInterface
      */
     public function createPaymentMethodValidator(): PaymentMethodValidatorInterface
     {
-        return new PaymentMethodValidator($this->createPaymentMethodReader());
+        return new PaymentMethodValidator(
+            $this->createPaymentMethodReader(),
+            $this->getPaymentService(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface
+     */
+    public function createPaymentMethodEnabler(): PaymentMethodEnablerInterface
+    {
+        return new PaymentMethodEnabler(
+            $this->getRepository(),
+            $this->createPaymentWriter(),
+            $this->createPaymentMethodUpdater(),
+            $this->createPaymentMethodKeyGenerator(),
+            $this->createPaymentMethodEventMapper(),
+            $this->getStoreReferenceFacade(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface
+     */
+    public function createPaymentMethodDisabler(): PaymentMethodDisablerInterface
+    {
+        return new PaymentMethodDisabler(
+            $this->getEntityManager(),
+            $this->createPaymentMethodKeyGenerator(),
+            $this->createPaymentMethodEventMapper(),
+            $this->getStoreReferenceFacade(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface
+     */
+    public function createPaymentMethodEventMapper(): PaymentMethodEventMapperInterface
+    {
+        return new PaymentMethodEventMapper();
     }
 
     /**
@@ -94,6 +213,22 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
             $this->getEntityManager(),
             $this->createPaymentMethodStoreRelationUpdater(),
         );
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface
+     */
+    public function createPaymentMethodKeyGenerator(): PaymentMethodKeyGeneratorInterface
+    {
+        return new PaymentMethodKeyGenerator($this->getUtilTextService());
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Dependency\Service\PaymentToUtilTextServiceInterface
+     */
+    public function getUtilTextService(): PaymentToUtilTextServiceInterface
+    {
+        return $this->getProvidedDependency(PaymentDependencyProvider::SERVICE_UTIL_TEXT);
     }
 
     /**
@@ -191,5 +326,42 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     public function createPaymentProviderReader(): PaymentProviderReaderInterface
     {
         return new PaymentProviderReader($this->getRepository());
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface
+     */
+    public function getOmsFacade(): PaymentToOmsFacadeInterface
+    {
+        return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_OMS);
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge
+     */
+    public function getMessageBrokerFacade(): PaymentToMessageBrokerBridge
+    {
+        return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_MESSAGE_BROKER);
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface
+     */
+    public function createCommandExecutor(): CommandExecutorInterface
+    {
+        return new CommandExecutor($this->getMessageBrokerFacade());
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListenerInterface
+     */
+    public function createPaymentEventTypeListener(): PaymentEventTypeListenerInterface
+    {
+        return new PaymentEventTypeListener(
+            $this->getOmsFacade(),
+            $this->getStoreReferenceFacade(),
+            $this->getStoreFacade(),
+            $this->getQueryContainer(),
+        );
     }
 }
