@@ -25,7 +25,7 @@ class PaymentEventTypeListenerPlugin extends AbstractPlugin implements EventHand
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\OrderPaymentEventTransfer $transfer
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
      * @param string $eventName
      *
      * @return void

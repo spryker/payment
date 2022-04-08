@@ -10,7 +10,6 @@ namespace Spryker\Zed\Payment\Business;
 use Spryker\Client\Payment\PaymentClientInterface;
 use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
 use Spryker\Zed\Payment\Business\Calculation\PaymentCalculator;
 use Spryker\Zed\Payment\Business\Checkout\PaymentPluginExecutor;
 use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisabler;
@@ -21,6 +20,8 @@ use Spryker\Zed\Payment\Business\Executor\CommandExecutor;
 use Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
+use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
+use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
 use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHook;
 use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface;
 use Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListener;
@@ -350,6 +351,17 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     public function createCommandExecutor(): CommandExecutorInterface
     {
         return new CommandExecutor($this->getMessageBrokerFacade());
+    }
+
+    /**
+     * @return \Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface
+     */
+    public function createPaymentMessageOmsEventTriggerer(): PaymentMessageOmsEventTriggererInterface
+    {
+        return new PaymentMessageOmsEventTriggerer(
+            $this->getOmsFacade(),
+            $this->getConfig(),
+        );
     }
 
     /**

@@ -215,25 +215,25 @@
             <event name="payment authorization failed"/>
             <event name="payment confirmation successful"/>
             <event name="payment confirmation failed"/>
-            <event name="retry payment" manual="true" command="Oms/SendEventPaymentConfirmationPending"/>
+            <event name="retry payment" manual="true" command="Payment/SendEventPaymentConfirmationPending"/>
             <event name="confirm payment" manual="true"/>
             <event name="payment refund successful"/>
             <event name="payment refund failed"/>
-            <event name="retry payment refund" manual="true" command="Oms/SendEventPaymentRefundPending"/>
+            <event name="retry payment refund" manual="true" command="Payment/SendEventPaymentRefundPending"/>
             <event name="confirm payment refund" manual="true"/>
             <event name="created" onEnter="true" manual="true"/>
             <event name="authorize payment" manual="true"/>
-            <event name="cancel" manual="true" command="Oms/SendEventPaymentCancelReservationPending"/>
+            <event name="cancel" manual="true" command="Payment/SendEventPaymentCancelReservationPending"/>
             <event name="close" manual="true" timeout="14 day"/>
-            <event name="request payment" manual="true" command="Oms/SendEventPaymentConfirmationPending"/>
+            <event name="request payment" manual="true" command="Payment/SendEventPaymentConfirmationPending"/>
             <event name="deliver" manual="true"/>
             <event name="ship" manual="true"/>
             <event name="invoice customer" manual="true"/>
-            <event name="refund" manual="true" command="Oms/SendEventPaymentRefundPending"/>
+            <event name="refund" manual="true" command="Payment/SendEventPaymentRefundPending"/>
             <event name="reservation cancellation successful"/>
             <event name="reservation cancellation failed"/>
-            <event name="cancel reservation" manual="true" command="Oms/SendEventPaymentCancelReservationPending"/>
-            <event name="retry reservation cancellation" manual="true" command="Oms/SendEventPaymentCancelReservationPending"/>
+            <event name="cancel reservation" manual="true" command="Payment/SendEventPaymentCancelReservationPending"/>
+            <event name="retry reservation cancellation" manual="true" command="Payment/SendEventPaymentCancelReservationPending"/>
             <event name="confirm reservation cancellation" manual="true"/>
         </events>
     </process>

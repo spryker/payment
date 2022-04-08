@@ -13,7 +13,7 @@ use Spryker\Shared\Kernel\Transfer\TransferInterface;
 interface PaymentEventTypeListenerInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\OrderPaymentEventTransfer $transfer
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
      * @param string $eventName
      *
      * @return void

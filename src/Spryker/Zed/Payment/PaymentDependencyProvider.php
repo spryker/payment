@@ -128,6 +128,8 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addLocaleFacade($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addStoreReferenceFacade($container);
+        $container = $this->addOmsFacade($container);
+        $container = $this->addMessageBrokerFacade($container);
 
         return $container;
     }

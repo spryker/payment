@@ -10,7 +10,7 @@ namespace Spryker\Zed\Payment\Business\Listener;
 
 use Orm\Zed\Sales\Persistence\Map\SpySalesOrderItemTableMap;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
-use Spryker\Zed\Oms\Communication\Exception\ListenerCannotProcessEventException;
+use Spryker\Zed\Payment\Communication\Exception\ListenerCannotProcessEventException;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface;
@@ -82,10 +82,10 @@ class PaymentEventTypeListener implements PaymentEventTypeListenerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\OrderPaymentEventTransfer $transfer
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
      * @param string $eventName
      *
-     * @throws \Spryker\Zed\Oms\Communication\Exception\ListenerCannotProcessEventException
+     * @throws \Spryker\Zed\Payment\Communication\Exception\ListenerCannotProcessEventException
      *
      * @return void
      */
@@ -117,7 +117,7 @@ class PaymentEventTypeListener implements PaymentEventTypeListenerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\OrderPaymentEventTransfer $transfer
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
      *
      * @return void
      */

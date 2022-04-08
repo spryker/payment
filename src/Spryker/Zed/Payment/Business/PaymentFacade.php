@@ -370,7 +370,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\OrderPaymentEventTransfer $transfer
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
      * @param string $eventName
      *
      * @return void
@@ -413,6 +413,20 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
         $this->getFactory()
             ->createCommandExecutor()
             ->sendEventPaymentConfirmationPending($orderItemIds, $orderItemsTotal, $orderTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $orderPaymentEventTransfer
+     *
+     * @return void
+     */
+    public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void
+    {
+        $this->getFactory()->createPaymentMessageOmsEventTriggerer()->triggerPaymentMessageOmsEvent($orderPaymentEventTransfer);
     }
 
     /**

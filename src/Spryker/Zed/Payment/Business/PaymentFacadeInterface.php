@@ -382,6 +382,21 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
+     * - Checks store matching.
+     * - Checks if the received event is one of the Preauthorized events (PaymentMessageOmsEventTriggerer::OMS_EVENT_TRANSFERS_APPLIED_FOR_ALL_ORDER_ITEMS_LIST).
+     * - Triggers its own event for each received transfer from the PaymentMessageOmsEventTriggerer::SUPPORTED_ORDER_PAYMENT_EVENT_TRANSFERS_LIST.
+     * - The first parameter is request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
+     *
+     * @api
+     *
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $orderPaymentEventTransfer
+     *
+     * @return void
+     */
+    public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void;
+
+    /**
+     * Specification:
      *
      * @api
      *

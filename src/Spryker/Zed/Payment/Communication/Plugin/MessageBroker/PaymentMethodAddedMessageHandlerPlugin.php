@@ -21,6 +21,7 @@ class PaymentMethodAddedMessageHandlerPlugin extends AbstractPlugin implements M
 {
     /**
      * {@inheritDoc}
+     * - Triggers an OMS event for PaymentMethodAddedTransfer.
      *
      * @api
      *
@@ -35,8 +36,7 @@ class PaymentMethodAddedMessageHandlerPlugin extends AbstractPlugin implements M
 
     /**
      * {@inheritDoc}
-     *
-     * Return an array where the key is the class name to be handled and the value is the callable that handles the message.
+     * - Return an array where the key is the class name to be handled and the value is the callable that handles the message.
      *
      * @api
      *
