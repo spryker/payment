@@ -383,8 +383,8 @@ interface PaymentFacadeInterface
     /**
      * Specification:
      * - Checks store matching.
-     * - Checks if the received event is one of the Preauthorized events (PaymentMessageOmsEventTriggerer::OMS_EVENT_TRANSFERS_APPLIED_FOR_ALL_ORDER_ITEMS_LIST).
-     * - Triggers its own event for each received transfer from the PaymentMessageOmsEventTriggerer::SUPPORTED_ORDER_PAYMENT_EVENT_TRANSFERS_LIST.
+     * - Checks if the received event is one of the Preauthorized events.
+     * - Triggers its own event for each received transfer from the `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
      * - The first parameter is request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
      *
      * @api
