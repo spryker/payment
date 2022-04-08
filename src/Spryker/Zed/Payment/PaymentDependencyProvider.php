@@ -16,7 +16,6 @@ use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeBridge;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeBridge;
 use Spryker\Zed\Payment\Dependency\Plugin\Checkout\CheckoutPluginCollection;
 use Spryker\Zed\Payment\Dependency\Plugin\Sales\PaymentHydratorPluginCollection;
-use Spryker\Zed\Payment\Dependency\QueryContainer\PaymentToSalesBridge;
 use Spryker\Zed\Payment\Dependency\Service\PaymentToUtilTextServiceBridge;
 
 /**
@@ -107,11 +106,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_OMS = 'FACADE_OMS';
 
     /**
-     * @var string
-     */
-    public const QUERY_CONTAINER_SALES = 'QUERY_CONTAINER_SALES';
-
-    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -130,20 +124,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addStoreReferenceFacade($container);
         $container = $this->addOmsFacade($container);
         $container = $this->addMessageBrokerFacade($container);
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    public function providePersistenceLayerDependencies(Container $container)
-    {
-        $container = parent::providePersistenceLayerDependencies($container);
-
-        $container = $this->addSalesQueryContainer($container);
 
         return $container;
     }
@@ -341,22 +321,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_OMS, function (Container $container) {
             return new PaymentToOmsFacadeBridge($container->getLocator()->oms()->facade());
-        });
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addSalesQueryContainer(Container $container): Container
-    {
-        $container->set(static::QUERY_CONTAINER_SALES, function (Container $container) {
-            return new PaymentToSalesBridge(
-                $container->getLocator()->sales()->queryContainer(),
-            );
         });
 
         return $container;

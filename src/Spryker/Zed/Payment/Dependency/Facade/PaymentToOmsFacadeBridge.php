@@ -29,7 +29,7 @@ class PaymentToOmsFacadeBridge implements PaymentToOmsFacadeInterface
      *
      * @return array|null
      */
-    public function triggerEventForOrderItems($eventId, array $orderItemIds, array $data = [])
+    public function triggerEventForOrderItems(string $eventId, array $orderItemIds, array $data = []): ?array
     {
         return $this->omsFacade->triggerEventForOrderItems($eventId, $orderItemIds, $data);
     }

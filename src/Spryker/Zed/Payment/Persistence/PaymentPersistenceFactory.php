@@ -13,7 +13,6 @@ use Orm\Zed\Payment\Persistence\SpyPaymentProviderQuery;
 use Orm\Zed\Payment\Persistence\SpySalesPaymentMethodTypeQuery;
 use Orm\Zed\Payment\Persistence\SpySalesPaymentQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
-use Spryker\Zed\Payment\PaymentDependencyProvider;
 use Spryker\Zed\Payment\Persistence\Propel\Mapper\PaymentMapper;
 use Spryker\Zed\Payment\Persistence\Propel\Mapper\PaymentProviderMapper;
 use Spryker\Zed\Payment\Persistence\Propel\Mapper\StoreRelationMapper;
@@ -91,13 +90,5 @@ class PaymentPersistenceFactory extends AbstractPersistenceFactory
     public function createPaymentProviderQuery(): SpyPaymentProviderQuery
     {
         return SpyPaymentProviderQuery::create();
-    }
-
-    /**
-     * @return \Spryker\Zed\ProductBundle\Dependency\QueryContainer\ProductBundleToSalesQueryContainerInterface
-     */
-    public function getSalesQueryContainer()
-    {
-        return $this->getProvidedDependency(PaymentDependencyProvider::QUERY_CONTAINER_SALES);
     }
 }
