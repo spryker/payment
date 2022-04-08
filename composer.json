@@ -28,7 +28,6 @@
         "spryker/calculation": "*",
         "spryker/checkout": "*",
         "spryker/code-sniffer": "*",
-        "spryker/event": "^2.0.0",
         "spryker/propel": "*",
         "spryker/testify": "*"
     },

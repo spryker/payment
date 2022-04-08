@@ -370,21 +370,6 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     * @param string $eventName
-     *
-     * @return void
-     */
-    public function handleEventForOrderItems(TransferInterface $transfer, string $eventName): void
-    {
-        $this->getFactory()->createPaymentEventTypeListener()->handle($transfer, $eventName);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
      * @param array $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *

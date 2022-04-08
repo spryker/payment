@@ -394,16 +394,4 @@ interface PaymentFacadeInterface
      * @return void
      */
     public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void;
-
-    /**
-     * Specification:
-     *
-     * @api
-     *
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     * @param string $eventName
-     *
-     * @return void
-     */
-    public function handleEventForOrderItems(TransferInterface $transfer, string $eventName): void;
 }

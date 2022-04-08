@@ -16,16 +16,14 @@ use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisabler;
 use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface;
 use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnabler;
 use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface;
+use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
+use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
 use Spryker\Zed\Payment\Business\Executor\CommandExecutor;
 use Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
-use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
-use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
 use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHook;
 use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface;
-use Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListener;
-use Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListenerInterface;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapper;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface;
 use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapper;
@@ -361,19 +359,6 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
         return new PaymentMessageOmsEventTriggerer(
             $this->getOmsFacade(),
             $this->getConfig(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListenerInterface
-     */
-    public function createPaymentEventTypeListener(): PaymentEventTypeListenerInterface
-    {
-        return new PaymentEventTypeListener(
-            $this->getOmsFacade(),
-            $this->getStoreReferenceFacade(),
-            $this->getStoreFacade(),
-            $this->getQueryContainer(),
         );
     }
 }
