@@ -378,7 +378,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
     public function sendEventPaymentCancelReservationPending(array $orderItemIds, OrderTransfer $orderTransfer): void
     {
         $this->getFactory()
-            ->createCommandExecutor()
+            ->createMessageEmitter()
             ->sendEventPaymentCancelReservationPending($orderItemIds, $orderTransfer);
     }
 
@@ -396,7 +396,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
     public function sendEventPaymentConfirmationPending(array $orderItemIds, int $orderItemsTotal, OrderTransfer $orderTransfer): void
     {
         $this->getFactory()
-            ->createCommandExecutor()
+            ->createMessageEmitter()
             ->sendEventPaymentConfirmationPending($orderItemIds, $orderItemsTotal, $orderTransfer);
     }
 
@@ -431,7 +431,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
         OrderTransfer $orderTransfer
     ): void {
         $this->getFactory()
-            ->createCommandExecutor()
+            ->createMessageEmitter()
             ->sendEventPaymentRefundPending($orderItemIds, $orderItemsTotal, $orderTransfer);
     }
 }

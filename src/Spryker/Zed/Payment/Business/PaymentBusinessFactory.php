@@ -18,8 +18,8 @@ use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnabler;
 use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface;
 use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
 use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
-use Spryker\Zed\Payment\Business\Executor\CommandExecutor;
-use Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface;
+use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitter;
+use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitterInterface;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
 use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHook;
@@ -344,11 +344,11 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface
+     * @return \Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitterInterface
      */
-    public function createCommandExecutor(): CommandExecutorInterface
+    public function createMessageEmitter(): MessageEmitterInterface
     {
-        return new CommandExecutor($this->getMessageBrokerFacade());
+        return new MessageEmitter($this->getMessageBrokerFacade());
     }
 
     /**

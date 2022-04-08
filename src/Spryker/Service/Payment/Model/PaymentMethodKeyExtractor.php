@@ -20,11 +20,11 @@ class PaymentMethodKeyExtractor implements PaymentMethodKeyExtractorInterface
     {
         preg_match('/^([\w]+)/', $paymentTransfer->getPaymentSelectionOrFail(), $matches);
 
-        if (!isset($matches[0])) {
-            return $paymentTransfer->getPaymentSelectionOrFail();
+        if (isset($matches[0])) {
+            return $matches[0];
         }
 
-        return $matches[0];
+        return $paymentTransfer->getPaymentSelectionOrFail();
     }
 
     /**
@@ -36,10 +36,10 @@ class PaymentMethodKeyExtractor implements PaymentMethodKeyExtractorInterface
     {
         preg_match('/\[([a-zA-Z0-9_-]+)\]/', $paymentTransfer->getPaymentSelectionOrFail(), $matches);
 
-        if (!isset($matches[1])) {
-            return $paymentTransfer->getPaymentSelectionOrFail();
+        if (isset($matches[1])) {
+            return $matches[1];
         }
 
-        return $matches[1];
+        return $paymentTransfer->getPaymentSelectionOrFail();
     }
 }

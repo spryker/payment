@@ -74,6 +74,8 @@ class PaymentMethodEnabler implements PaymentMethodEnablerInterface
     }
 
     /**
+     * Business requirement - by default payment method is not active and should be activated manually.
+     *
      * @param \Generated\Shared\Transfer\PaymentMethodAddedTransfer $paymentMethodAddedTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentMethodTransfer
