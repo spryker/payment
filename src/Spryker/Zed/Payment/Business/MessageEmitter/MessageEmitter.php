@@ -11,19 +11,19 @@ use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentCancelReservationRequestedTransfer;
 use Generated\Shared\Transfer\PaymentConfirmationRequestedTransfer;
 use Generated\Shared\Transfer\PaymentRefundRequestedTransfer;
-use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface;
 
 class MessageEmitter implements MessageEmitterInterface
 {
     /**
-     * @var \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge
+     * @var \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface
      */
     protected $messageBrokerFacade;
 
     /**
-     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge $messageBrokerFacade
+     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface $messageBrokerFacade
      */
-    public function __construct(PaymentToMessageBrokerBridge $messageBrokerFacade)
+    public function __construct(PaymentToMessageBrokerInterface $messageBrokerFacade)
     {
         $this->messageBrokerFacade = $messageBrokerFacade;
     }

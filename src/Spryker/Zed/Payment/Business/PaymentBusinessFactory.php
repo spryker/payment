@@ -45,7 +45,7 @@ use Spryker\Zed\Payment\Business\Provider\PaymentProviderReaderInterface;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriter;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriterInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface;
-use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface;
@@ -336,9 +336,9 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge
+     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface
      */
-    public function getMessageBrokerFacade(): PaymentToMessageBrokerBridge
+    public function getMessageBrokerFacade(): PaymentToMessageBrokerInterface
     {
         return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_MESSAGE_BROKER);
     }
