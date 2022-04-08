@@ -130,18 +130,6 @@ class PaymentConfig extends AbstractBundleConfig
     /**
      * @api
      *
-     * @return string
-     */
-    public function getTenantIdentifier(): string
-    {
-        $beHostInsteadOfTenantIdentifier = getenv('SPRYKER_BE_HOST') !== false ? getenv('SPRYKER_BE_HOST') : 'TENANT_IDENTIFIER_UNDEFINED';
-
-        return getenv('TENANT_IDENTIFIER') !== false ? getenv('TENANT_IDENTIFIER') : $beHostInsteadOfTenantIdentifier;
-    }
-
-    /**
-     * @api
-     *
      * @example
      * [
      *     QuoteTransfer::ORDER_REFERENCE => 'orderReference',
