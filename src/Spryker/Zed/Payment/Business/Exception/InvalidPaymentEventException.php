@@ -5,10 +5,10 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\Payment\Exception;
+namespace Spryker\Zed\Payment\Business\Exception;
 
-use LogicException;
+use Exception;
 
-class CommandNotFoundException extends LogicException
+class InvalidPaymentEventException extends Exception
 {
 }

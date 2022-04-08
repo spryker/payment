@@ -382,13 +382,16 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
+     * - Checks store matching.
+     * - Checks if the received event is one of the Preauthorized events.
+     * - Triggers its own event for each received transfer from the `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
+     * - The first parameter is request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
      *
      * @api
      *
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     * @param string $eventName
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $orderPaymentEventTransfer
      *
      * @return void
      */
-    public function handleEventForOrderItems(TransferInterface $transfer, string $eventName): void;
+    public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void;
 }

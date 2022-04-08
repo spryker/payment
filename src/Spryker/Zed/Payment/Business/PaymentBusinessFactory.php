@@ -10,21 +10,20 @@ namespace Spryker\Zed\Payment\Business;
 use Spryker\Client\Payment\PaymentClientInterface;
 use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
 use Spryker\Zed\Payment\Business\Calculation\PaymentCalculator;
 use Spryker\Zed\Payment\Business\Checkout\PaymentPluginExecutor;
 use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisabler;
 use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface;
 use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnabler;
 use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface;
-use Spryker\Zed\Payment\Business\Executor\CommandExecutor;
-use Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface;
+use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
+use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
+use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitter;
+use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitterInterface;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
 use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHook;
 use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface;
-use Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListener;
-use Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListenerInterface;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapper;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface;
 use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapper;
@@ -46,7 +45,7 @@ use Spryker\Zed\Payment\Business\Provider\PaymentProviderReaderInterface;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriter;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriterInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface;
-use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface;
@@ -337,31 +336,29 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge
+     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface
      */
-    public function getMessageBrokerFacade(): PaymentToMessageBrokerBridge
+    public function getMessageBrokerFacade(): PaymentToMessageBrokerInterface
     {
         return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_MESSAGE_BROKER);
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\Executor\CommandExecutorInterface
+     * @return \Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitterInterface
      */
-    public function createCommandExecutor(): CommandExecutorInterface
+    public function createMessageEmitter(): MessageEmitterInterface
     {
-        return new CommandExecutor($this->getMessageBrokerFacade());
+        return new MessageEmitter($this->getMessageBrokerFacade());
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\Listener\PaymentEventTypeListenerInterface
+     * @return \Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface
      */
-    public function createPaymentEventTypeListener(): PaymentEventTypeListenerInterface
+    public function createPaymentMessageOmsEventTriggerer(): PaymentMessageOmsEventTriggererInterface
     {
-        return new PaymentEventTypeListener(
+        return new PaymentMessageOmsEventTriggerer(
             $this->getOmsFacade(),
-            $this->getStoreReferenceFacade(),
-            $this->getStoreFacade(),
-            $this->getQueryContainer(),
+            $this->getConfig(),
         );
     }
 }

@@ -14,5 +14,5 @@ interface PaymentToUtilTextServiceInterface
      *
      * @return string
      */
-    public function generateSlug($value): string;
+    public function generateSlug(string $value): string;
 }

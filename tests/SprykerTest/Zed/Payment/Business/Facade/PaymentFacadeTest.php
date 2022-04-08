@@ -674,7 +674,7 @@ class PaymentFacadeTest extends Unit
         // Assert
         $this->assertNotNull($createdPaymentMethodTransfer->getIdPaymentMethod());
         $this->assertNotNull($createdPaymentMethodTransfer->getIdPaymentProvider());
-        $this->assertTrue($createdPaymentMethodTransfer->getIsHidden());
+        $this->assertFalse($createdPaymentMethodTransfer->getIsHidden());
 
         $this->assertSame($paymentMethodAddedTransfer->getName(), $createdPaymentMethodAddedTransfer->getName());
         $this->assertSame($paymentMethodAddedTransfer->getProviderName(), $createdPaymentMethodAddedTransfer->getProviderName());

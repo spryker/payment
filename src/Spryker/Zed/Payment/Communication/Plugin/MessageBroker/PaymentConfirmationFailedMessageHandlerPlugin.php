@@ -7,31 +7,31 @@
 
 namespace Spryker\Zed\Payment\Communication\Plugin\MessageBroker;
 
-use Generated\Shared\Transfer\PaymentMethodAddedTransfer;
+use Generated\Shared\Transfer\PaymentConfirmationFailedTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface;
 
 /**
  * @method \Spryker\Zed\Payment\Business\PaymentFacadeInterface getFacade()
+ * @method \Spryker\Zed\Payment\Persistence\PaymentQueryContainerInterface getQueryContainer()
  * @method \Spryker\Zed\Payment\PaymentConfig getConfig()
  * @method \Spryker\Zed\Payment\Communication\PaymentCommunicationFactory getFactory()
- * @method \Spryker\Zed\Payment\Persistence\PaymentQueryContainerInterface getQueryContainer()
  */
-class PaymentMethodAddedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
+class PaymentConfirmationFailedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
      * Specification:
-     * - Triggers an OMS event for PaymentMethodAddedTransfer.
+     * - Triggers an OMS event for PaymentConfirmationFailedTransfer.
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\PaymentMethodAddedTransfer $paymentMethodAddedTransfer
+     * @param \Generated\Shared\Transfer\PaymentConfirmationFailedTransfer $paymentConfirmationFailedTransfer
      *
      * @return void
      */
-    public function onPaymentMethodAdded(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): void
+    public function onPaymentConfirmationFailed(PaymentConfirmationFailedTransfer $paymentConfirmationFailedTransfer): void
     {
-        $this->getFacade()->enablePaymentMethod($paymentMethodAddedTransfer);
+        $this->getFacade()->triggerPaymentMessageOmsEvent($paymentConfirmationFailedTransfer);
     }
 
     /**
@@ -44,6 +44,6 @@ class PaymentMethodAddedMessageHandlerPlugin extends AbstractPlugin implements M
      */
     public function handles(): iterable
     {
-        yield PaymentMethodAddedTransfer::class => [$this, 'onPaymentMethodAdded'];
+        yield PaymentConfirmationFailedTransfer::class => [$this, 'onPaymentConfirmationFailed'];
     }
 }

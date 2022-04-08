@@ -5,11 +5,11 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\Payment\Business\Executor;
+namespace Spryker\Zed\Payment\Business\MessageEmitter;
 
 use Generated\Shared\Transfer\OrderTransfer;
 
-interface CommandExecutorInterface
+interface MessageEmitterInterface
 {
     /**
      * @param array $orderItemIds

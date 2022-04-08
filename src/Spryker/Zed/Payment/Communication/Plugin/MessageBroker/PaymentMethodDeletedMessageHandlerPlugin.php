@@ -20,7 +20,8 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInt
 class PaymentMethodDeletedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
-     * {@inheritDoc}
+     * Specification:
+     * - Triggers an OMS event for PaymentMethodDeletedTransfer.
      *
      * @api
      *
@@ -35,7 +36,7 @@ class PaymentMethodDeletedMessageHandlerPlugin extends AbstractPlugin implements
 
     /**
      * {@inheritDoc}
-     * Return an array where the key is the class name to be handled and the value is the callable that handles the message.
+     * - Return an array where the key is the class name to be handled and the value is the callable that handles the message.
      *
      * @api
      *

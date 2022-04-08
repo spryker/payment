@@ -31,12 +31,4 @@ class PaymentToStoreFacadeBridge implements PaymentToStoreFacadeInterface
     {
         return $this->storeFacade->getStoreByName($storeName);
     }
-
-    /**
-     * @return \Generated\Shared\Transfer\StoreTransfer
-     */
-    public function getCurrentStore()
-    {
-        return $this->storeFacade->getCurrentStore();
-    }
 }

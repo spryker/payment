@@ -370,21 +370,6 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\OrderPaymentEventTransfer $transfer
-     * @param string $eventName
-     *
-     * @return void
-     */
-    public function handleEventForOrderItems(TransferInterface $transfer, string $eventName): void
-    {
-        $this->getFactory()->createPaymentEventTypeListener()->handle($transfer, $eventName);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
      * @param array $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -393,7 +378,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
     public function sendEventPaymentCancelReservationPending(array $orderItemIds, OrderTransfer $orderTransfer): void
     {
         $this->getFactory()
-            ->createCommandExecutor()
+            ->createMessageEmitter()
             ->sendEventPaymentCancelReservationPending($orderItemIds, $orderTransfer);
     }
 
@@ -411,8 +396,22 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
     public function sendEventPaymentConfirmationPending(array $orderItemIds, int $orderItemsTotal, OrderTransfer $orderTransfer): void
     {
         $this->getFactory()
-            ->createCommandExecutor()
+            ->createMessageEmitter()
             ->sendEventPaymentConfirmationPending($orderItemIds, $orderItemsTotal, $orderTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $orderPaymentEventTransfer
+     *
+     * @return void
+     */
+    public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void
+    {
+        $this->getFactory()->createPaymentMessageOmsEventTriggerer()->triggerPaymentMessageOmsEvent($orderPaymentEventTransfer);
     }
 
     /**
@@ -432,7 +431,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
         OrderTransfer $orderTransfer
     ): void {
         $this->getFactory()
-            ->createCommandExecutor()
+            ->createMessageEmitter()
             ->sendEventPaymentRefundPending($orderItemIds, $orderItemsTotal, $orderTransfer);
     }
 }
