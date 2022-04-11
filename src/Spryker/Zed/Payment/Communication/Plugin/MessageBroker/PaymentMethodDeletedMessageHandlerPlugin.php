@@ -31,7 +31,7 @@ class PaymentMethodDeletedMessageHandlerPlugin extends AbstractPlugin implements
      */
     public function onPaymentMethodDeleted(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void
     {
-        $this->getFacade()->disablePaymentMethod($paymentMethodDeletedTransfer);
+        $this->getFacade()->disableForeignPaymentMethod($paymentMethodDeletedTransfer);
     }
 
     /**
