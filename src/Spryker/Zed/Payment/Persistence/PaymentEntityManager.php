@@ -128,7 +128,7 @@ class PaymentEntityManager extends AbstractEntityManager implements PaymentEntit
 
         if (method_exists($paymentMethodEntity, 'getIsHidden')) {
             $paymentMethodEntity->setIsHidden(true);
-            $paymentMethodTransfer->setIsHidden($paymentMethodEntity->getIsHidden());
+            $paymentMethodTransfer->setIsHidden(true);
         }
 
         $paymentMethodEntity->save();
