@@ -5,11 +5,11 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerTest\Service\Payment\Model;
+namespace SprykerTest\Service\Payment\Extractor;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\PaymentTransfer;
-use Spryker\Service\Payment\Model\PaymentMethodKeyExtractor;
+use Spryker\Service\Payment\Extractor\PaymentMethodKeyExtractor;
 
 /**
  * Auto-generated group annotations
