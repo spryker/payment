@@ -22,8 +22,8 @@ use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitter;
 use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitterInterface;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
-use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHook;
-use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface;
+use Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizer;
+use Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizerInterface;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapper;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface;
 use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapper;
@@ -74,11 +74,11 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface
+     * @return \Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizerInterface
      */
-    public function createOrderPostSaveHook(): OrderPostSaveHookInterface
+    public function createForeignPaymentAuthorizer(): ForeignPaymentAuthorizerInterface
     {
-        return new OrderPostSaveHook(
+        return new ForeignPaymentAuthorizer(
             $this->createQuoteDataMapper(),
             $this->getLocaleFacade(),
             $this->getRepository(),

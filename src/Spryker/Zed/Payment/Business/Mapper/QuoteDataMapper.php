@@ -11,6 +11,9 @@ use ArrayObject;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 
+/**
+ * Maps allowed fields from QuoteTransfer and to array for using them in foreign payment authorizer
+ */
 class QuoteDataMapper implements QuoteDataMapperInterface
 {
     /**

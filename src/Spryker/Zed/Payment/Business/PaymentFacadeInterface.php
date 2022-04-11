@@ -55,7 +55,7 @@ interface PaymentFacadeInterface
      *
      * @return void
      */
-    public function executeOrderPostSaveHook(
+    public function authorizePaymentMethod(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void;

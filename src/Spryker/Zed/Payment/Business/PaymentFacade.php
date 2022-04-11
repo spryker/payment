@@ -55,13 +55,13 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return void
      */
-    public function executeOrderPostSaveHook(
+    public function authorizePaymentMethod(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
         $this->getFactory()
-            ->createOrderPostSaveHook()
-            ->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+            ->createForeignPaymentAuthorizer()
+            ->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
     }
 
     /**

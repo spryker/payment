@@ -575,7 +575,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testExecuteOrderPostSaveHookReceivesTokenAndUsingItAddsRedirectUrlWithCorrectData(): void
+    public function testForeignPaymentAuthorizerReceivesTokenAndUsingItAddsRedirectUrlWithCorrectData(): void
     {
         // Arrange
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
@@ -606,7 +606,7 @@ class PaymentFacadeTest extends Unit
             );
 
         // Act
-        $this->tester->getFacade()->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
@@ -617,7 +617,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testExecuteOrderPostSaveHookDoesNothingWithIncorrectData(): void
+    public function testForeignPaymentAuthorizerDoesNothingWithIncorrectData(): void
     {
         // Arrange
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
@@ -635,7 +635,7 @@ class PaymentFacadeTest extends Unit
         $checkoutResponseTransfer = clone $initialCheckoutResponseTransfer;
 
         // Act
-        $this->tester->getFacade()->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertEquals($initialQuoteTransfer->toArray(), $quoteTransfer->toArray());

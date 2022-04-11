@@ -5,12 +5,12 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\Payment\Business\Hook;
+namespace Spryker\Zed\Payment\Business\Authorizer;
 
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 
-interface OrderPostSaveHookInterface
+interface ForeignPaymentAuthorizerInterface
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -18,7 +18,7 @@ interface OrderPostSaveHookInterface
      *
      * @return void
      */
-    public function executeOrderPostSaveHook(
+    public function authorizePaymentMethod(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void;
