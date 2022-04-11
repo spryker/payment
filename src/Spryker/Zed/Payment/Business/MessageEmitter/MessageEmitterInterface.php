@@ -12,7 +12,7 @@ use Generated\Shared\Transfer\OrderTransfer;
 interface MessageEmitterInterface
 {
     /**
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return void
@@ -20,7 +20,7 @@ interface MessageEmitterInterface
     public function sendEventPaymentCancelReservationPending(array $orderItemIds, OrderTransfer $orderTransfer): void;
 
     /**
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -33,7 +33,7 @@ interface MessageEmitterInterface
     ): void;
 
     /**
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *

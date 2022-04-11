@@ -41,11 +41,12 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Check whether the given order has a payment method external selected.
-     * - Terminates hook execution if not.
-     * - Receives all the necessary information about the payment method external.
-     * - Sends a request with all pre-selected quote fields using PaymentMethodTransfer.paymentAuthorizationEndpoint.
-     * - If the response is free of errors, uses PaymentMethodTransfer.paymentAuthorizationEndpoint and response data to build a redirect URL.
+     * - Check whether the given order has a foreign payment selection key.
+     * - Terminates payment authorization if not.
+     * - Receives all the necessary information about the foreign payment method.
+     * - Terminates payment authorization if the payment method is not found.
+     * - Sends an HTTP request with all pre-selected quote fields using URL from PaymentMethodTransfer.paymentAuthorizationEndpoint.
+     * - Terminates payment authorization if PaymentMethodTransfer.paymentAuthorizationEndpoint is empty.
      * - Updates CheckoutResponseTransfer with errors or the redirect URL according to response received.
      *
      * @api
@@ -62,8 +63,8 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Requires PaymentMethodTransfer.labelName transfer field to be set.
-     * - Requires PaymentMethodTransfer.groupName transfer field to be set.
+     * - Requires PaymentMethodAddedTransfer.labelName transfer field to be set.
+     * - Requires PaymentMethodAddedTransfer.groupName transfer field to be set.
      * - Creates payment provider if respective provider doesn't exist in DB
      * - Creates payment method if the payment method with provided key doesn't exist in DB.
      * - Updates payment method otherwise.
@@ -80,8 +81,8 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Requires PaymentMethodTransfer.labelName transfer field to be set.
-     * - Requires PaymentMethodTransfer.groupName transfer field to be set.
+     * - Requires PaymentMethodDeletedTransfer.labelName transfer field to be set.
+     * - Requires PaymentMethodDeletedTransfer.groupName transfer field to be set.
      * - Uses the specified data to find a payment method.
      * - Sets payment method `is_hidden` flag to true.
      *
@@ -129,22 +130,6 @@ interface PaymentFacadeInterface
      * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
      */
     public function findPaymentMethodById(int $idPaymentMethod): PaymentMethodResponseTransfer;
-
-    /**
-     * Specification:
-     * - Finds a payment method.
-     * - Uses PaymentMethodTransfer.idPaymentMethod if set to filter payment methods.
-     * - Uses PaymentMethodTransfer.paymentMethodKey if set to filter payment methods.
-     * - Returns a payment method found using the provided filters.
-     * - Returns NULL otherwise.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
-    public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer;
 
     /**
      * Specification:
@@ -334,7 +319,7 @@ interface PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return void
@@ -348,7 +333,7 @@ interface PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -368,7 +353,7 @@ interface PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -383,9 +368,9 @@ interface PaymentFacadeInterface
     /**
      * Specification:
      * - Checks store matching.
-     * - Checks if the received event is one of the Preauthorized events.
+     * - Checks if the received event is one of the events from a list PaymentConfig::SUPPORTED_ORDER_PAYMENT_EVENT_TRANSFERS_LIST.
      * - Triggers its own event for each received transfer from the `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
-     * - The first parameter is request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
+     * - The parameter $orderPaymentEventTransfer parameter is a request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
      *
      * @api
      *

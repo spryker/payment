@@ -17,7 +17,7 @@ use Spryker\Service\Payment\Extractor\PaymentMethodKeyExtractor;
  * @group SprykerTest
  * @group Service
  * @group Payment
- * @group Model
+ * @group Extractor
  * @group PaymentMethodKeyExtractorTest
  * Add your own group annotations below this line
  */

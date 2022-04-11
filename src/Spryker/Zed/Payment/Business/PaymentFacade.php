@@ -149,20 +149,6 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
-    public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer
-    {
-        return $this->getRepository()->findPaymentMethod($paymentMethodTransfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
      * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
      */
     public function updatePaymentMethod(
@@ -370,7 +356,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return void
@@ -387,7 +373,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -419,7 +405,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
