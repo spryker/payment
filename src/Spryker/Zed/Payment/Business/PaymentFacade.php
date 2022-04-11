@@ -73,7 +73,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return \Generated\Shared\Transfer\PaymentMethodTransfer
      */
-    public function enablePaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer
+    public function enableForeignPaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer
     {
         return $this->getFactory()
             ->createPaymentMethodUpdater()
@@ -89,7 +89,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return void
      */
-    public function disablePaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void
+    public function disableForeignPaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void
     {
         $this->getFactory()
             ->createPaymentMethodUpdater()

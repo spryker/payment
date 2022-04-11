@@ -31,7 +31,7 @@ class PaymentMethodAddedMessageHandlerPlugin extends AbstractPlugin implements M
      */
     public function onPaymentMethodAdded(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): void
     {
-        $this->getFacade()->enablePaymentMethod($paymentMethodAddedTransfer);
+        $this->getFacade()->enableForeignPaymentMethod($paymentMethodAddedTransfer);
     }
 
     /**

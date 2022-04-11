@@ -615,7 +615,7 @@ class PaymentFacadeTest extends Unit
 
         // Act
         $createdPaymentMethodTransfer = $this->tester->getFacade()
-            ->enablePaymentMethod($paymentMethodAddedTransfer);
+            ->enableForeignPaymentMethod($paymentMethodAddedTransfer);
 
         $createdPaymentMethodAddedTransfer = $this->tester->mapPaymentMethodTransferToPaymentMethodAddedTransfer(
             $createdPaymentMethodTransfer,
@@ -635,7 +635,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testDisableExternalPaymentMethodSetsPaymentMethodIsDeletedFlagToTrueWithCorrectData(): void
+    public function testDisableForeignPaymentMethodSetsPaymentMethodIsDeletedFlagToTrueWithCorrectData(): void
     {
         // Arrange
         $storeTransfer = $this->tester->getStoreTransfer([
@@ -654,7 +654,7 @@ class PaymentFacadeTest extends Unit
 
         // Act
         $paymentMethodTransfer = $this->tester->getFacade()
-            ->enablePaymentMethod($paymentMethodAddedTransfer);
+            ->enableForeignPaymentMethod($paymentMethodAddedTransfer);
         $paymentMethodTransfer->setStore($storeTransfer);
 
         $paymentMethodDeletedTransfer = $this->tester->mapPaymentMethodTransferToPaymentMethodDeletedTransfer(
@@ -662,7 +662,7 @@ class PaymentFacadeTest extends Unit
             (new PaymentMethodDeletedTransfer())
                 ->setMessageAttributes($paymentMethodAddedTransfer->getMessageAttributes()),
         );
-        $this->tester->getFacade()->disablePaymentMethod($paymentMethodDeletedTransfer);
+        $this->tester->getFacade()->disableForeignPaymentMethod($paymentMethodDeletedTransfer);
 
         $filterPaymentMethodTransfer = (new PaymentMethodTransfer())
             ->setIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod());
