@@ -12,10 +12,6 @@ use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\Payment\Business\Calculation\PaymentCalculator;
 use Spryker\Zed\Payment\Business\Checkout\PaymentPluginExecutor;
-use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisabler;
-use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface;
-use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnabler;
-use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface;
 use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
 use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
 use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitter;
@@ -141,34 +137,6 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface
-     */
-    public function createPaymentMethodEnabler(): PaymentMethodEnablerInterface
-    {
-        return new PaymentMethodEnabler(
-            $this->getRepository(),
-            $this->createPaymentWriter(),
-            $this->createPaymentMethodUpdater(),
-            $this->createPaymentMethodKeyGenerator(),
-            $this->createPaymentMethodEventMapper(),
-            $this->getStoreReferenceFacade(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface
-     */
-    public function createPaymentMethodDisabler(): PaymentMethodDisablerInterface
-    {
-        return new PaymentMethodDisabler(
-            $this->getEntityManager(),
-            $this->createPaymentMethodKeyGenerator(),
-            $this->createPaymentMethodEventMapper(),
-            $this->getStoreReferenceFacade(),
-        );
-    }
-
-    /**
      * @return \Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface
      */
     public function createPaymentMethodEventMapper(): PaymentMethodEventMapperInterface
@@ -211,6 +179,12 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
         return new PaymentMethodUpdater(
             $this->getEntityManager(),
             $this->createPaymentMethodStoreRelationUpdater(),
+
+            $this->getRepository(),
+            $this->createPaymentWriter(),
+            $this->createPaymentMethodKeyGenerator(),
+            $this->createPaymentMethodEventMapper(),
+            $this->getStoreReferenceFacade(),
         );
     }
 

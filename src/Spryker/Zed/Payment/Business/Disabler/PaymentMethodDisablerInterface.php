@@ -12,10 +12,5 @@ use Generated\Shared\Transfer\PaymentMethodTransfer;
 
 interface PaymentMethodDisablerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
-    public function disablePaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): PaymentMethodTransfer;
+
 }

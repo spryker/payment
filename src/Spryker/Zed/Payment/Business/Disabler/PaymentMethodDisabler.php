@@ -53,35 +53,4 @@ class PaymentMethodDisabler implements PaymentMethodDisablerInterface
         $this->paymentMethodEventMapper = $paymentMethodEventMapper;
         $this->storeReferenceFacade = $storeReferenceFacade;
     }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
-    public function disablePaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): PaymentMethodTransfer
-    {
-        $paymentMethodTransfer = $this->paymentMethodEventMapper->mapPaymentMethodDeletedTransferToPaymentMethodTransfer(
-            $paymentMethodDeletedTransfer,
-            new PaymentMethodTransfer(),
-        );
-
-        $paymentMethodTransfer->requireLabelName()
-            ->requireGroupName();
-
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference(
-            $paymentMethodDeletedTransfer->getMessageAttributesOrFail()->getStoreReferenceOrFail(),
-        );
-
-        $paymentMethodKey = $this->paymentMethodKeyGenerator->generatePaymentMethodKey(
-            $paymentMethodTransfer->getGroupNameOrFail(),
-            $paymentMethodTransfer->getLabelNameOrFail(),
-            $storeTransfer->getNameOrFail(),
-        );
-
-        $paymentMethodTransfer->setPaymentMethodKey($paymentMethodKey);
-        $this->paymentEntityManager->hidePaymentMethod($paymentMethodTransfer);
-
-        return $paymentMethodTransfer;
-    }
 }

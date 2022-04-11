@@ -73,73 +73,7 @@ class PaymentMethodEnabler implements PaymentMethodEnablerInterface
         $this->storeReferenceFacade = $storeReferenceFacade;
     }
 
-    /**
-     * Business requirement - by default payment method is not active and should be activated manually.
-     *
-     * @param \Generated\Shared\Transfer\PaymentMethodAddedTransfer $paymentMethodAddedTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
-    public function enablePaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer
-    {
-        $paymentMethodTransfer = $this->paymentMethodEventMapper->mapPaymentMethodAddedTransferToPaymentMethodTransfer(
-            $paymentMethodAddedTransfer,
-            new PaymentMethodTransfer(),
-        );
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference(
-            $paymentMethodAddedTransfer->getMessageAttributesOrFail()->getStoreReferenceOrFail(),
-        );
 
-        $paymentMethodKey = $this->paymentMethodKeyGenerator->generatePaymentMethodKey(
-            $paymentMethodTransfer->getGroupNameOrFail(),
-            $paymentMethodTransfer->getLabelNameOrFail(),
-            $storeTransfer->getNameOrFail(),
-        );
 
-        $paymentProviderTransfer = $this->findOrCreatePaymentProvider($paymentMethodTransfer->getGroupNameOrFail());
-
-        $paymentMethodTransfer
-            ->setName($paymentMethodTransfer->getLabelName())
-            ->setIdPaymentProvider($paymentProviderTransfer->getIdPaymentProvider())
-            ->setPaymentMethodKey($paymentMethodKey)
-            ->setIsActive(false)
-            ->setIsHidden(false);
-
-        $existingPaymentMethodTransfer = $this->paymentRepository->findPaymentMethod($paymentMethodTransfer);
-        if ($existingPaymentMethodTransfer) {
-            $existingPaymentMethodTransfer->fromArray($paymentMethodTransfer->modifiedToArray());
-
-            $paymentMethodResponseTransfer = $this->paymentMethodUpdater->updatePaymentMethod($existingPaymentMethodTransfer);
-
-            return $paymentMethodResponseTransfer->getPaymentMethodOrFail();
-        }
-
-        $paymentMethodResponseTransfer = $this->paymentWriter->createPaymentMethod($paymentMethodTransfer);
-
-        return $paymentMethodResponseTransfer->getPaymentMethodOrFail();
-    }
-
-    /**
-     * @param string $paymentProviderName
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer
-     */
-    protected function findOrCreatePaymentProvider(string $paymentProviderName): PaymentProviderTransfer
-    {
-        $foundPaymentProviderTransfer = $this->paymentRepository->findPaymentProviderByKey(
-            $paymentProviderName,
-        );
-
-        if ($foundPaymentProviderTransfer) {
-            return $foundPaymentProviderTransfer;
-        }
-
-        $paymentProviderTransfer = (new PaymentProviderTransfer())
-            ->setPaymentProviderKey($paymentProviderName)
-            ->setName($paymentProviderName);
-        $paymentProviderResponseTransfer = $this->paymentWriter->createPaymentProvider($paymentProviderTransfer);
-
-        return $paymentProviderResponseTransfer->getPaymentProvider() ?? $paymentProviderTransfer;
-    }
 }

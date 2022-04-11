@@ -12,10 +12,5 @@ use Generated\Shared\Transfer\PaymentMethodTransfer;
 
 interface PaymentMethodEnablerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodAddedTransfer $paymentMethodAddedTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
-    public function enablePaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer;
+
 }
