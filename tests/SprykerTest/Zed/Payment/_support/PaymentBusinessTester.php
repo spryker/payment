@@ -90,8 +90,7 @@ class PaymentBusinessTester extends Actor
     ): PaymentMethodDeletedTransfer {
         $paymentMethodDeletedTransfer
             ->setName($paymentMethodTransfer->getLabelName())
-            ->setProviderName($paymentMethodTransfer->getGroupName())
-            ->setStore($paymentMethodTransfer->getStore());
+            ->setProviderName($paymentMethodTransfer->getGroupName());
 
         return $paymentMethodDeletedTransfer;
     }

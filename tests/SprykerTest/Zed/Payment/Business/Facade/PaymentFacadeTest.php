@@ -599,16 +599,12 @@ class PaymentFacadeTest extends Unit
     public function testEnablePaymentMethodReturnsSavedPaymentMethodTransferWithCorrectData(): void
     {
         // Arrange
-        $storeTransfer = $this->tester->getStoreTransfer([
-            StoreTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
-        ]);
         $this->tester->setStoreReferenceData([static::STORE_NAME => static::STORE_REFERENCE]);
 
         $paymentMethodAddedTransfer = $this->tester->getPaymentMethodAddedTransfer([
             PaymentMethodAddedTransfer::NAME => 'name-1',
             PaymentMethodAddedTransfer::PROVIDER_NAME => 'provider-name-1',
             PaymentMethodAddedTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => 'redirect-url',
-            PaymentMethodAddedTransfer::STORE => $storeTransfer,
         ], [
             MessageAttributesTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
         ]);
@@ -647,7 +643,6 @@ class PaymentFacadeTest extends Unit
             PaymentMethodAddedTransfer::NAME => 'name-2',
             PaymentMethodAddedTransfer::PROVIDER_NAME => 'provider-name-2',
             PaymentMethodAddedTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => 'redirect-url',
-            PaymentMethodAddedTransfer::STORE => $storeTransfer,
         ], [
             MessageAttributesTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
         ]);
@@ -655,7 +650,6 @@ class PaymentFacadeTest extends Unit
         // Act
         $paymentMethodTransfer = $this->tester->getFacade()
             ->enableForeignPaymentMethod($paymentMethodAddedTransfer);
-        $paymentMethodTransfer->setStore($storeTransfer);
 
         $paymentMethodDeletedTransfer = $this->tester->mapPaymentMethodTransferToPaymentMethodDeletedTransfer(
             $paymentMethodTransfer,
