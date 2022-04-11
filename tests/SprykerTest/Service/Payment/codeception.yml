@@ -18,4 +18,3 @@ suites:
         modules:
             enabled:
                 - Asserts
-
