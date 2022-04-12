@@ -45,14 +45,14 @@ class PaymentMessageOmsEventTriggerer implements PaymentMessageOmsEventTriggerer
     {
         $orderPaymentEventTransferClassName = get_class($orderPaymentEventTransfer);
 
-        if (!isset($this->paymentConfig->getSupportedOrderPaymentEvenTransfersList()[$orderPaymentEventTransferClassName])) {
+        if (!isset($this->paymentConfig->getSupportedOrderPaymentEventTransfersList()[$orderPaymentEventTransferClassName])) {
             throw new InvalidPaymentEventException(
                 'transfer: ' . $orderPaymentEventTransferClassName . 'cannot be handled for OMS event',
             );
         }
 
         $this->omsFacade->triggerEventForOrderItems(
-            $this->paymentConfig->getSupportedOrderPaymentEvenTransfersList()[$orderPaymentEventTransferClassName],
+            $this->paymentConfig->getSupportedOrderPaymentEventTransfersList()[$orderPaymentEventTransferClassName],
             $orderPaymentEventTransfer->getOrderItemIds(),
             [],
         );

@@ -92,7 +92,7 @@ class PaymentConfig extends AbstractBundleConfig
      *
      * @return array
      */
-    public function getSupportedOrderPaymentEvenTransfersList(): array
+    public function getSupportedOrderPaymentEventTransfersList(): array
     {
         return static::SUPPORTED_ORDER_PAYMENT_EVENT_TRANSFERS_LIST;
     }

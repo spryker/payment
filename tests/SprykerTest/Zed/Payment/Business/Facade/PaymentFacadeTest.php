@@ -52,7 +52,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @var string
      */
-    protected const STORE_REFERENCE = 'development_test-DE';
+    protected const STORE_REFERENCE = 'dev-DE';
 
     /**
      * @var string

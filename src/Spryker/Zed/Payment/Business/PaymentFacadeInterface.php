@@ -368,7 +368,7 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Finds the appropriate event for the current transfer using `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
+     * - Finds the appropriate event for the current transfer using `PaymentConfig::getSupportedOrderPaymentEventTransfersList()`.
      * - If nothing is found - throws `InvalidPaymentEventException`.
      * - Otherwise triggers the found OMS event for all order items from `$orderPaymentEventTransfer::getOrderItemIds()`.
      * - The `$orderPaymentEventTransfer` parameter is a request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
