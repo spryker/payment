@@ -38,6 +38,6 @@ class PaymentAuthorizationCheckoutPostSavePlugin extends AbstractPlugin implemen
      */
     public function executeHook(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer)
     {
-        $this->getFacade()->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+        $this->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
     }
 }

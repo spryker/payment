@@ -557,7 +557,7 @@ class PaymentFacadeTest extends Unit
             );
 
         // Act
-        $this->tester->getFacade()->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
@@ -586,7 +586,7 @@ class PaymentFacadeTest extends Unit
         $checkoutResponseTransfer = clone $initialCheckoutResponseTransfer;
 
         // Act
-        $this->tester->getFacade()->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertEquals($initialQuoteTransfer->toArray(), $quoteTransfer->toArray());

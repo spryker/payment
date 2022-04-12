@@ -55,7 +55,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return void
      */
-    public function authorizePaymentMethod(
+    public function authorizeForeignPaymentMethod(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {

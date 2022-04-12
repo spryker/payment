@@ -44,9 +44,8 @@ interface PaymentFacadeInterface
      * - Check whether the given order has a foreign payment selection key.
      * - Terminates payment authorization if not.
      * - Receives all the necessary information about the foreign payment method.
-     * - Terminates payment authorization if the payment method is not found.
+     * - Terminates payment authorization if the payment method is not found or PaymentMethodTransfer.paymentAuthorizationEndpoint is empty.
      * - Sends an HTTP request with all pre-selected quote fields using URL from PaymentMethodTransfer.paymentAuthorizationEndpoint.
-     * - Terminates payment authorization if PaymentMethodTransfer.paymentAuthorizationEndpoint is empty.
      * - Updates CheckoutResponseTransfer with errors or the redirect URL according to response received.
      *
      * @api
@@ -56,7 +55,7 @@ interface PaymentFacadeInterface
      *
      * @return void
      */
-    public function authorizePaymentMethod(
+    public function authorizeForeignPaymentMethod(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void;
