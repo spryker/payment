@@ -44,8 +44,8 @@ interface PaymentFacadeInterface
      * - Check whether the given order has a foreign payment selection key.
      * - Terminates payment authorization if not.
      * - Receives all the necessary information about the foreign payment method.
-     * - Terminates payment authorization if the payment method is not found or PaymentMethodTransfer.paymentAuthorizationEndpoint is empty.
-     * - Sends an HTTP request with all pre-selected quote fields using URL from PaymentMethodTransfer.paymentAuthorizationEndpoint.
+     * - Terminates payment authorization if the payment method is not found or no `paymentAuthorizationEndpoint` is specified for it.
+     * - Sends an HTTP request with all pre-selected quote fields using URL from `PaymentMethod.paymentAuthorizationEndpoint`.
      * - Updates CheckoutResponseTransfer with errors or the redirect URL according to response received.
      *
      * @api
@@ -62,13 +62,14 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Requires PaymentMethodAddedTransfer.labelName transfer field to be set.
-     * - Requires PaymentMethodAddedTransfer.groupName transfer field to be set.
-     * - Creates payment provider if respective provider doesn't exist in DB
-     * - Creates payment method if the payment method with provided key doesn't exist in DB.
+     * - Used to support only foreign payment methods.
+     * - Requires `PaymentMethodAdded.labelName` transfer field to be set.
+     * - Requires `PaymentMethodAdded.groupName` transfer field to be set.
+     * - Creates payment provider if respective provider doesn't exist in the database.
+     * - Creates payment method if the payment method with provided key doesn't exist in the database.
      * - Updates payment method otherwise.
-     * - Sets payment method `is_hidden` flag to false if it already exists.
-     * - Returns PaymentMethod transfer filled with payment method data.
+     * - Sets payment method `is_hidden` flag to `false` (if it exists in the database).
+     * - Returns `PaymentMethod` transfer filled with payment method data.
      *
      * @api
      *
@@ -80,10 +81,11 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Requires PaymentMethodDeletedTransfer.labelName transfer field to be set.
-     * - Requires PaymentMethodDeletedTransfer.groupName transfer field to be set.
+     * - Used to support only foreign payment methods.
+     * - Requires `PaymentMethodDeleted.labelName` transfer field to be set.
+     * - Requires `PaymentMethodDeleted.groupName` transfer field to be set.
      * - Uses the specified data to find a payment method.
-     * - Sets payment method `is_hidden` flag to true.
+     * - Sets payment method `is_hidden` flag to `true` (if it exists in the database).
      *
      * @api
      *
@@ -366,10 +368,10 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Checks store matching.
-     * - Checks if the received event is one of the events from a list PaymentConfig::SUPPORTED_ORDER_PAYMENT_EVENT_TRANSFERS_LIST.
-     * - Triggers its own event for each received transfer from the `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
-     * - The parameter $orderPaymentEventTransfer parameter is a request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
+     * - Finds the appropriate event for the current transfer using `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
+     * - If nothing is found - throws `InvalidPaymentEventException`.
+     * - Otherwise triggers the found OMS event for all order items from `$orderPaymentEventTransfer::getOrderItemIds()`.
+     * - The `$orderPaymentEventTransfer` parameter is a request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
      *
      * @api
      *
