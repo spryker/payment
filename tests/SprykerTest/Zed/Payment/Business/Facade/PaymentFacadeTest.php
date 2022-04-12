@@ -140,55 +140,6 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testFindPaymentMethodReturnsTransferWithCorrectData(): void
-    {
-        // Arrange
-        $paymentProviderTransfer = $this->tester->havePaymentProvider();
-        $paymentMethodTransfer = $this->tester->havePaymentMethod([
-            PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
-        ]);
-
-        $firstCriteriaPaymentMethodTransfer = (new PaymentMethodTransfer())
-            ->setIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod());
-        $secondCriteriaPaymentMethodTransfer = (new PaymentMethodTransfer())
-            ->setPaymentMethodKey($paymentMethodTransfer->getPaymentMethodKey());
-
-        // Act
-        $foundFirstPaymentMethodTransfer = $this->paymentFacade->findPaymentMethod($firstCriteriaPaymentMethodTransfer);
-        $foundSecondPaymentMethodTransfer = $this->paymentFacade->findPaymentMethod($secondCriteriaPaymentMethodTransfer);
-
-        // Assert
-        $this->assertNotNull($foundFirstPaymentMethodTransfer);
-        $this->assertSame($paymentMethodTransfer->getIdPaymentMethod(), $foundFirstPaymentMethodTransfer->getIdPaymentMethod());
-        $this->assertNotNull($foundSecondPaymentMethodTransfer);
-        $this->assertSame($paymentMethodTransfer->getIdPaymentMethod(), $foundSecondPaymentMethodTransfer->getIdPaymentMethod());
-        $this->assertSame($paymentMethodTransfer->getPaymentMethodKey(), $foundSecondPaymentMethodTransfer->getPaymentMethodKey());
-    }
-
-    /**
-     * @return void
-     */
-    public function testFindPaymentMethodReturnsNullWithCorrectData(): void
-    {
-        // Arrange
-        $paymentProviderTransfer = $this->tester->havePaymentProvider();
-        $paymentMethodTransfer = $this->tester->havePaymentMethod([
-            PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
-        ]);
-
-        $criteriaPaymentMethodTransfer = (new PaymentMethodTransfer())
-            ->setIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod() + 1);
-
-        // Act
-        $foundPaymentMethodTransfer = $this->paymentFacade->findPaymentMethod($criteriaPaymentMethodTransfer);
-
-        // Assert
-        $this->assertNull($foundPaymentMethodTransfer);
-    }
-
-    /**
-     * @return void
-     */
     public function testUpdatePaymentMethodShouldUpdatePaymentMethodWithStoreRelation(): void
     {
         // Arrange
@@ -575,7 +526,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testExecuteOrderPostSaveHookReceivesTokenAndUsingItAddsRedirectUrlWithCorrectData(): void
+    public function testForeignPaymentAuthorizerReceivesTokenAndUsingItAddsRedirectUrlWithCorrectData(): void
     {
         // Arrange
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
@@ -606,7 +557,7 @@ class PaymentFacadeTest extends Unit
             );
 
         // Act
-        $this->tester->getFacade()->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
@@ -617,7 +568,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testExecuteOrderPostSaveHookDoesNothingWithIncorrectData(): void
+    public function testForeignPaymentAuthorizerDoesNothingWithIncorrectData(): void
     {
         // Arrange
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
@@ -635,7 +586,7 @@ class PaymentFacadeTest extends Unit
         $checkoutResponseTransfer = clone $initialCheckoutResponseTransfer;
 
         // Act
-        $this->tester->getFacade()->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertEquals($initialQuoteTransfer->toArray(), $quoteTransfer->toArray());
@@ -648,23 +599,19 @@ class PaymentFacadeTest extends Unit
     public function testEnablePaymentMethodReturnsSavedPaymentMethodTransferWithCorrectData(): void
     {
         // Arrange
-        $storeTransfer = $this->tester->getStoreTransfer([
-            StoreTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
-        ]);
         $this->tester->setStoreReferenceData([static::STORE_NAME => static::STORE_REFERENCE]);
 
         $paymentMethodAddedTransfer = $this->tester->getPaymentMethodAddedTransfer([
             PaymentMethodAddedTransfer::NAME => 'name-1',
             PaymentMethodAddedTransfer::PROVIDER_NAME => 'provider-name-1',
             PaymentMethodAddedTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => 'redirect-url',
-            PaymentMethodAddedTransfer::STORE => $storeTransfer,
         ], [
             MessageAttributesTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
         ]);
 
         // Act
         $createdPaymentMethodTransfer = $this->tester->getFacade()
-            ->enablePaymentMethod($paymentMethodAddedTransfer);
+            ->enableForeignPaymentMethod($paymentMethodAddedTransfer);
 
         $createdPaymentMethodAddedTransfer = $this->tester->mapPaymentMethodTransferToPaymentMethodAddedTransfer(
             $createdPaymentMethodTransfer,
@@ -684,7 +631,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testDisableExternalPaymentMethodSetsPaymentMethodIsDeletedFlagToTrueWithCorrectData(): void
+    public function testDisableForeignPaymentMethodSetsPaymentMethodIsDeletedFlagToTrueWithCorrectData(): void
     {
         // Arrange
         $storeTransfer = $this->tester->getStoreTransfer([
@@ -696,22 +643,20 @@ class PaymentFacadeTest extends Unit
             PaymentMethodAddedTransfer::NAME => 'name-2',
             PaymentMethodAddedTransfer::PROVIDER_NAME => 'provider-name-2',
             PaymentMethodAddedTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => 'redirect-url',
-            PaymentMethodAddedTransfer::STORE => $storeTransfer,
         ], [
             MessageAttributesTransfer::STORE_REFERENCE => static::STORE_REFERENCE,
         ]);
 
         // Act
         $paymentMethodTransfer = $this->tester->getFacade()
-            ->enablePaymentMethod($paymentMethodAddedTransfer);
-        $paymentMethodTransfer->setStore($storeTransfer);
+            ->enableForeignPaymentMethod($paymentMethodAddedTransfer);
 
         $paymentMethodDeletedTransfer = $this->tester->mapPaymentMethodTransferToPaymentMethodDeletedTransfer(
             $paymentMethodTransfer,
             (new PaymentMethodDeletedTransfer())
                 ->setMessageAttributes($paymentMethodAddedTransfer->getMessageAttributes()),
         );
-        $this->tester->getFacade()->disablePaymentMethod($paymentMethodDeletedTransfer);
+        $this->tester->getFacade()->disableForeignPaymentMethod($paymentMethodDeletedTransfer);
 
         $filterPaymentMethodTransfer = (new PaymentMethodTransfer())
             ->setIdPaymentMethod($paymentMethodTransfer->getIdPaymentMethod());

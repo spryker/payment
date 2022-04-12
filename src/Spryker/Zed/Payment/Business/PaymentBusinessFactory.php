@@ -10,24 +10,20 @@ namespace Spryker\Zed\Payment\Business;
 use Spryker\Client\Payment\PaymentClientInterface;
 use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizer;
+use Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizerInterface;
 use Spryker\Zed\Payment\Business\Calculation\PaymentCalculator;
 use Spryker\Zed\Payment\Business\Checkout\PaymentPluginExecutor;
-use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisabler;
-use Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface;
-use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnabler;
-use Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface;
 use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
 use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
-use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitter;
-use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitterInterface;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
-use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHook;
-use Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapper;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface;
 use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapper;
 use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface;
+use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitter;
+use Spryker\Zed\Payment\Business\MessageEmitter\MessageEmitterInterface;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodFinder;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodFinderInterface;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodReader;
@@ -74,11 +70,11 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\Hook\OrderPostSaveHookInterface
+     * @return \Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizerInterface
      */
-    public function createOrderPostSaveHook(): OrderPostSaveHookInterface
+    public function createForeignPaymentAuthorizer(): ForeignPaymentAuthorizerInterface
     {
-        return new OrderPostSaveHook(
+        return new ForeignPaymentAuthorizer(
             $this->createQuoteDataMapper(),
             $this->getLocaleFacade(),
             $this->getRepository(),
@@ -141,34 +137,6 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\Enabler\PaymentMethodEnablerInterface
-     */
-    public function createPaymentMethodEnabler(): PaymentMethodEnablerInterface
-    {
-        return new PaymentMethodEnabler(
-            $this->getRepository(),
-            $this->createPaymentWriter(),
-            $this->createPaymentMethodUpdater(),
-            $this->createPaymentMethodKeyGenerator(),
-            $this->createPaymentMethodEventMapper(),
-            $this->getStoreReferenceFacade(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Zed\Payment\Business\Disabler\PaymentMethodDisablerInterface
-     */
-    public function createPaymentMethodDisabler(): PaymentMethodDisablerInterface
-    {
-        return new PaymentMethodDisabler(
-            $this->getEntityManager(),
-            $this->createPaymentMethodKeyGenerator(),
-            $this->createPaymentMethodEventMapper(),
-            $this->getStoreReferenceFacade(),
-        );
-    }
-
-    /**
      * @return \Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface
      */
     public function createPaymentMethodEventMapper(): PaymentMethodEventMapperInterface
@@ -211,6 +179,11 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
         return new PaymentMethodUpdater(
             $this->getEntityManager(),
             $this->createPaymentMethodStoreRelationUpdater(),
+            $this->getRepository(),
+            $this->createPaymentWriter(),
+            $this->createPaymentMethodKeyGenerator(),
+            $this->createPaymentMethodEventMapper(),
+            $this->getStoreReferenceFacade(),
         );
     }
 

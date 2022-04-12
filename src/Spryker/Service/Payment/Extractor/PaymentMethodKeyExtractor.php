@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Service\Payment\Model;
+namespace Spryker\Service\Payment\Extractor;
 
 use Generated\Shared\Transfer\PaymentTransfer;
 

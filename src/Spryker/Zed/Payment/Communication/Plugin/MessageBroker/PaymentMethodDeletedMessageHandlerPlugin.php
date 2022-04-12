@@ -20,7 +20,7 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInt
 class PaymentMethodDeletedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
-     * Specification:
+     * {@inheritDoc}
      * - Triggers an OMS event for PaymentMethodDeletedTransfer.
      *
      * @api
@@ -31,7 +31,7 @@ class PaymentMethodDeletedMessageHandlerPlugin extends AbstractPlugin implements
      */
     public function onPaymentMethodDeleted(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void
     {
-        $this->getFacade()->disablePaymentMethod($paymentMethodDeletedTransfer);
+        $this->getFacade()->disableForeignPaymentMethod($paymentMethodDeletedTransfer);
     }
 
     /**

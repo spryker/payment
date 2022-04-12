@@ -41,11 +41,11 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Check whether the given order has a payment method external selected.
-     * - Terminates hook execution if not.
-     * - Receives all the necessary information about the payment method external.
-     * - Sends a request with all pre-selected quote fields using PaymentMethodTransfer.paymentAuthorizationEndpoint.
-     * - If the response is free of errors, uses PaymentMethodTransfer.paymentAuthorizationEndpoint and response data to build a redirect URL.
+     * - Check whether the given order has a foreign payment selection key.
+     * - Terminates payment authorization if not.
+     * - Receives all the necessary information about the foreign payment method.
+     * - Terminates payment authorization if the payment method is not found or no `paymentAuthorizationEndpoint` is specified for it.
+     * - Sends an HTTP request with all pre-selected quote fields using URL from `PaymentMethod.paymentAuthorizationEndpoint`.
      * - Updates CheckoutResponseTransfer with errors or the redirect URL according to response received.
      *
      * @api
@@ -55,20 +55,21 @@ interface PaymentFacadeInterface
      *
      * @return void
      */
-    public function executeOrderPostSaveHook(
+    public function authorizeForeignPaymentMethod(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void;
 
     /**
      * Specification:
-     * - Requires PaymentMethodTransfer.labelName transfer field to be set.
-     * - Requires PaymentMethodTransfer.groupName transfer field to be set.
-     * - Creates payment provider if respective provider doesn't exist in DB
-     * - Creates payment method if the payment method with provided key doesn't exist in DB.
+     * - Used to support only foreign payment methods.
+     * - Requires `PaymentMethodAdded.labelName` transfer field to be set.
+     * - Requires `PaymentMethodAdded.groupName` transfer field to be set.
+     * - Creates payment provider if respective provider doesn't exist in the database.
+     * - Creates payment method if the payment method with provided key doesn't exist in the database.
      * - Updates payment method otherwise.
-     * - Sets payment method `is_hidden` flag to false if it already exists.
-     * - Returns PaymentMethod transfer filled with payment method data.
+     * - Sets payment method `is_hidden` flag to `false` (if it exists in the database).
+     * - Returns `PaymentMethod` transfer filled with payment method data.
      *
      * @api
      *
@@ -76,14 +77,15 @@ interface PaymentFacadeInterface
      *
      * @return \Generated\Shared\Transfer\PaymentMethodTransfer
      */
-    public function enablePaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer;
+    public function enableForeignPaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer;
 
     /**
      * Specification:
-     * - Requires PaymentMethodTransfer.labelName transfer field to be set.
-     * - Requires PaymentMethodTransfer.groupName transfer field to be set.
+     * - Used to support only foreign payment methods.
+     * - Requires `PaymentMethodDeleted.labelName` transfer field to be set.
+     * - Requires `PaymentMethodDeleted.groupName` transfer field to be set.
      * - Uses the specified data to find a payment method.
-     * - Sets payment method `is_hidden` flag to true.
+     * - Sets payment method `is_hidden` flag to `true` (if it exists in the database).
      *
      * @api
      *
@@ -91,7 +93,7 @@ interface PaymentFacadeInterface
      *
      * @return void
      */
-    public function disablePaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void;
+    public function disableForeignPaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void;
 
     /**
      * Specification:
@@ -129,22 +131,6 @@ interface PaymentFacadeInterface
      * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
      */
     public function findPaymentMethodById(int $idPaymentMethod): PaymentMethodResponseTransfer;
-
-    /**
-     * Specification:
-     * - Finds a payment method.
-     * - Uses PaymentMethodTransfer.idPaymentMethod if set to filter payment methods.
-     * - Uses PaymentMethodTransfer.paymentMethodKey if set to filter payment methods.
-     * - Returns a payment method found using the provided filters.
-     * - Returns NULL otherwise.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
-    public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer;
 
     /**
      * Specification:
@@ -334,7 +320,7 @@ interface PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return void
@@ -348,7 +334,7 @@ interface PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -368,7 +354,7 @@ interface PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -382,10 +368,10 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Checks store matching.
-     * - Checks if the received event is one of the Preauthorized events.
-     * - Triggers its own event for each received transfer from the `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
-     * - The first parameter is request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
+     * - Finds the appropriate event for the current transfer using `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
+     * - If nothing is found - throws `InvalidPaymentEventException`.
+     * - Otherwise triggers the found OMS event for all order items from `$orderPaymentEventTransfer::getOrderItemIds()`.
+     * - The `$orderPaymentEventTransfer` parameter is a request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
      *
      * @api
      *

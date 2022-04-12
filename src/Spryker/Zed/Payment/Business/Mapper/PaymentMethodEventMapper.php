@@ -26,8 +26,7 @@ class PaymentMethodEventMapper implements PaymentMethodEventMapperInterface
         $paymentMethodTransfer
             ->setLabelName($paymentMethodAddedTransfer->getName())
             ->setGroupName($paymentMethodAddedTransfer->getProviderName())
-            ->setPaymentAuthorizationEndpoint($paymentMethodAddedTransfer->getPaymentAuthorizationEndpoint())
-            ->setStore($paymentMethodAddedTransfer->getStore());
+            ->setPaymentAuthorizationEndpoint($paymentMethodAddedTransfer->getPaymentAuthorizationEndpoint());
 
         return $paymentMethodTransfer;
     }
@@ -44,8 +43,7 @@ class PaymentMethodEventMapper implements PaymentMethodEventMapperInterface
     ): PaymentMethodTransfer {
         $paymentMethodTransfer
             ->setLabelName($paymentMethodDeletedTransfer->getName())
-            ->setGroupName($paymentMethodDeletedTransfer->getProviderName())
-            ->setStore($paymentMethodDeletedTransfer->getStore());
+            ->setGroupName($paymentMethodDeletedTransfer->getProviderName());
 
         return $paymentMethodTransfer;
     }

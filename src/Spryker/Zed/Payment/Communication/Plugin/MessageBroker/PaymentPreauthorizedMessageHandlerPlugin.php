@@ -20,7 +20,7 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInt
 class PaymentPreauthorizedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
-     * Specification:
+     * {@inheritDoc}
      * - Triggers an OMS event for PaymentPreauthorizedTransfer.
      *
      * @api

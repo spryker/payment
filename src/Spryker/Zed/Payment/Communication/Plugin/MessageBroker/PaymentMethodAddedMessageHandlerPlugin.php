@@ -20,7 +20,7 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInt
 class PaymentMethodAddedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
-     * Specification:
+     * {@inheritDoc}
      * - Triggers an OMS event for PaymentMethodAddedTransfer.
      *
      * @api
@@ -31,7 +31,7 @@ class PaymentMethodAddedMessageHandlerPlugin extends AbstractPlugin implements M
      */
     public function onPaymentMethodAdded(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): void
     {
-        $this->getFacade()->enablePaymentMethod($paymentMethodAddedTransfer);
+        $this->getFacade()->enableForeignPaymentMethod($paymentMethodAddedTransfer);
     }
 
     /**

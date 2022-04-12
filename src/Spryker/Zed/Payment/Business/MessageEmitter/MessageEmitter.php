@@ -29,7 +29,7 @@ class MessageEmitter implements MessageEmitterInterface
     }
 
     /**
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return void
@@ -46,7 +46,7 @@ class MessageEmitter implements MessageEmitterInterface
     }
 
     /**
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -69,7 +69,7 @@ class MessageEmitter implements MessageEmitterInterface
     }
 
     /**
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *

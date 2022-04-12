@@ -8,13 +8,13 @@
 namespace Spryker\Service\Payment;
 
 use Spryker\Service\Kernel\AbstractServiceFactory;
-use Spryker\Service\Payment\Model\PaymentMethodKeyExtractor;
-use Spryker\Service\Payment\Model\PaymentMethodKeyExtractorInterface;
+use Spryker\Service\Payment\Extractor\PaymentMethodKeyExtractor;
+use Spryker\Service\Payment\Extractor\PaymentMethodKeyExtractorInterface;
 
 class PaymentServiceFactory extends AbstractServiceFactory
 {
     /**
-     * @return \Spryker\Service\Payment\Model\PaymentMethodKeyExtractorInterface
+     * @return \Spryker\Service\Payment\Extractor\PaymentMethodKeyExtractorInterface
      */
     public function createPaymentMethodKeyExtractor(): PaymentMethodKeyExtractorInterface
     {

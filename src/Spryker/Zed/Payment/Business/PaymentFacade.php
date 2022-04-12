@@ -55,13 +55,13 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return void
      */
-    public function executeOrderPostSaveHook(
+    public function authorizeForeignPaymentMethod(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
         $this->getFactory()
-            ->createOrderPostSaveHook()
-            ->executeOrderPostSaveHook($quoteTransfer, $checkoutResponseTransfer);
+            ->createForeignPaymentAuthorizer()
+            ->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
     }
 
     /**
@@ -73,10 +73,10 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return \Generated\Shared\Transfer\PaymentMethodTransfer
      */
-    public function enablePaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer
+    public function enableForeignPaymentMethod(PaymentMethodAddedTransfer $paymentMethodAddedTransfer): PaymentMethodTransfer
     {
         return $this->getFactory()
-            ->createPaymentMethodEnabler()
+            ->createPaymentMethodUpdater()
             ->enablePaymentMethod($paymentMethodAddedTransfer);
     }
 
@@ -89,10 +89,10 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return void
      */
-    public function disablePaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void
+    public function disableForeignPaymentMethod(PaymentMethodDeletedTransfer $paymentMethodDeletedTransfer): void
     {
         $this->getFactory()
-            ->createPaymentMethodDisabler()
+            ->createPaymentMethodUpdater()
             ->disablePaymentMethod($paymentMethodDeletedTransfer);
     }
 
@@ -140,20 +140,6 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
         return $this->getFactory()
             ->createPaymentMethodFinder()
             ->findPaymentMethodById($idPaymentMethod);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
-    public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer
-    {
-        return $this->getRepository()->findPaymentMethod($paymentMethodTransfer);
     }
 
     /**
@@ -370,7 +356,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
      * @return void
@@ -387,7 +373,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
@@ -419,7 +405,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @api
      *
-     * @param array $orderItemIds
+     * @param array<int> $orderItemIds
      * @param int $orderItemsTotal
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
