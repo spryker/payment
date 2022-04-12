@@ -529,6 +529,8 @@ class PaymentFacadeTest extends Unit
     public function testForeignPaymentAuthorizerReceivesTokenAndUsingItAddsRedirectUrlWithCorrectData(): void
     {
         // Arrange
+        $this->tester->setStoreReferenceData([static::STORE_NAME => static::STORE_REFERENCE]);
+
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
         $paymentMethodTransfer = $this->tester->havePaymentMethod([
             PaymentMethodTransfer::IS_HIDDEN => false,
