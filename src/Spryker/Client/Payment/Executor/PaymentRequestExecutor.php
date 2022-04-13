@@ -50,7 +50,7 @@ class PaymentRequestExecutor implements PaymentRequestExecutorInterface
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
-    public function authorizePayment(
+    public function authorizeForeignPayment(
         PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
     ): PaymentAuthorizeResponseTransfer {
         try {

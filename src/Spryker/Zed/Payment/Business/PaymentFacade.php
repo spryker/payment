@@ -61,7 +61,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
     ): void {
         $this->getFactory()
             ->createForeignPaymentAuthorizer()
-            ->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+            ->initForeignPaymentForCheckoutProcess($quoteTransfer, $checkoutResponseTransfer);
     }
 
     /**

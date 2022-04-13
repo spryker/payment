@@ -1,5 +1,5 @@
 {
     "isSuccessful": true,
-    "token": "token-value",
+    "redirectUrl": "http://localhost/redirect",
     "message": null
 }

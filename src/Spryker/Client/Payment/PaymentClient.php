@@ -31,7 +31,7 @@ class PaymentClient extends AbstractClient implements PaymentClientInterface
     ): PaymentAuthorizeResponseTransfer {
         return $this->getFactory()
             ->createPaymentRequestExecutor()
-            ->authorizePayment($paymentAuthorizeRequestTransfer);
+            ->authorizeForeignPayment($paymentAuthorizeRequestTransfer);
     }
 
     /**

@@ -62,22 +62,17 @@ class PaymentFacadeTest extends Unit
     /**
      * @var string
      */
-    protected const TOKEN = 'token-value';
-
-    /**
-     * @var string
-     */
-    protected const CHECKOUT_ORDER_TOKEN_URL = 'checkout-order-token-url';
-
-    /**
-     * @var string
-     */
     protected const CHECKOUT_REDIRECT_URL = 'checkout-redirect-url';
 
     /**
      * @var string
      */
-    protected const PAYMENT_AUTHORIZATION_ENDPOINT = 'payment_authorization_endpoint';
+    protected const PAYMENT_AUTHORIZATION_ENDPOINT = 'http://localhost/authorize';
+
+    /**
+     * @var string
+     */
+    protected const PAYMENT_AUTHORIZATION_REDIRECT = 'http://localhost/redirect';
 
     /**
      * @var \SprykerTest\Zed\Payment\PaymentBusinessTester
@@ -526,7 +521,7 @@ class PaymentFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testForeignPaymentAuthorizerReceivesTokenAndUsingItAddsRedirectUrlWithCorrectData(): void
+    public function testForeignPaymentAuthorizerReceivesCorrectResponseAndUsingItAddsRedirectUrlWithCorrectData(): void
     {
         // Arrange
         $this->tester->setStoreReferenceData([static::STORE_NAME => static::STORE_REFERENCE]);
@@ -534,7 +529,7 @@ class PaymentFacadeTest extends Unit
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
         $paymentMethodTransfer = $this->tester->havePaymentMethod([
             PaymentMethodTransfer::IS_HIDDEN => false,
-            PaymentMethodTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => static::CHECKOUT_ORDER_TOKEN_URL,
+            PaymentMethodTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => static::PAYMENT_AUTHORIZATION_ENDPOINT,
             PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
         ]);
 
@@ -548,23 +543,22 @@ class PaymentFacadeTest extends Unit
 
         $paymentClientMock = $this->getPaymentClientMock();
         $paymentClientMock->expects($this->once())
-            ->method('authorizePayment')
+            ->method('authorizeForeignPayment')
             ->with($this->callback(function (PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer) {
-                return $paymentAuthorizeRequestTransfer->getRequestUrl() === static::CHECKOUT_ORDER_TOKEN_URL;
+                return $paymentAuthorizeRequestTransfer->getRequestUrl() === static::PAYMENT_AUTHORIZATION_ENDPOINT;
             }))
             ->willReturn(
                 (new PaymentAuthorizeResponseTransfer())
                     ->setIsSuccessful(true)
-                    ->setRedirectUrl(static::PAYMENT_AUTHORIZATION_ENDPOINT . '/' . static::TOKEN),
+                    ->setRedirectUrl(static::PAYMENT_AUTHORIZATION_REDIRECT),
             );
 
         // Act
-        $this->tester->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->initForeignPaymentForCheckoutProcess($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
-        $this->assertStringContainsString(static::PAYMENT_AUTHORIZATION_ENDPOINT, $checkoutResponseTransfer->getRedirectUrl());
-        $this->assertStringContainsString(static::TOKEN, $checkoutResponseTransfer->getRedirectUrl());
+        $this->assertSame(static::PAYMENT_AUTHORIZATION_REDIRECT, $checkoutResponseTransfer->getRedirectUrl());
     }
 
     /**
@@ -588,7 +582,7 @@ class PaymentFacadeTest extends Unit
         $checkoutResponseTransfer = clone $initialCheckoutResponseTransfer;
 
         // Act
-        $this->tester->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+        $this->tester->getFacade()->initForeignPaymentForCheckoutProcess($quoteTransfer, $checkoutResponseTransfer);
 
         // Assert
         $this->assertEquals($initialQuoteTransfer->toArray(), $quoteTransfer->toArray());

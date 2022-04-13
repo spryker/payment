@@ -100,7 +100,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      *
      * @return void
      */
-    public function authorizePaymentMethod(
+    public function initForeignPaymentForCheckoutProcess(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
@@ -119,16 +119,15 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
             return;
         }
 
-        $paymentAuthorizeResponseTransfer = $this->requestPaymentToken(
+        $paymentAuthorizeResponseTransfer = $this->requestPaymentAuthorization(
             $paymentMethodTransfer,
             $quoteTransfer,
             $checkoutResponseTransfer->getSaveOrderOrFail(),
         );
 
-        $this->processPaymentTokenResponse(
+        $this->processPaymentAuthorizeResponse(
             $paymentAuthorizeResponseTransfer,
             $checkoutResponseTransfer,
-            $paymentMethodTransfer,
         );
     }
 
@@ -139,7 +138,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
-    protected function requestPaymentToken(
+    protected function requestPaymentAuthorization(
         PaymentMethodTransfer $paymentMethodTransfer,
         QuoteTransfer $quoteTransfer,
         SaveOrderTransfer $saveOrderTransfer
@@ -213,14 +212,12 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer $paymentAuthorizeResponseTransfer
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      *
      * @return void
      */
-    protected function processPaymentTokenResponse(
+    protected function processPaymentAuthorizeResponse(
         PaymentAuthorizeResponseTransfer $paymentAuthorizeResponseTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer,
-        PaymentMethodTransfer $paymentMethodTransfer
+        CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
         if (!$paymentAuthorizeResponseTransfer->getIsSuccessful()) {
             $checkoutErrorTransfer = (new CheckoutErrorTransfer())
