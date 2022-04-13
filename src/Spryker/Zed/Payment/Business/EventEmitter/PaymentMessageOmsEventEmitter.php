@@ -5,14 +5,14 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\Payment\Business\EventTriggerer;
+namespace Spryker\Zed\Payment\Business\EventEmitter;
 
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Payment\Business\Exception\InvalidPaymentEventException;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface;
 use Spryker\Zed\Payment\PaymentConfig;
 
-class PaymentMessageOmsEventTriggerer implements PaymentMessageOmsEventTriggererInterface
+class PaymentMessageOmsEventEmitter implements PaymentMessageOmsEventEmitterInterface
 {
     /**
      * @var \Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface

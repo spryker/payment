@@ -397,7 +397,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      */
     public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void
     {
-        $this->getFactory()->createPaymentMessageOmsEventTriggerer()->triggerPaymentMessageOmsEvent($orderPaymentEventTransfer);
+        $this->getFactory()->createPaymentMessageOmsEventEmitter()->triggerPaymentMessageOmsEvent($orderPaymentEventTransfer);
     }
 
     /**
