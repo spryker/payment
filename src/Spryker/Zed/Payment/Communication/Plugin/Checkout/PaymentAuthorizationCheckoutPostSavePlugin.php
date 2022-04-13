@@ -24,7 +24,7 @@ class PaymentAuthorizationCheckoutPostSavePlugin extends AbstractPlugin implemen
      * {@inheritDoc}
      * - Checks whether a payment method that requires authorization is selected for the given order.
      * - Terminates hook execution if not.
-     * - Receives all the necessary information about the payment method external.
+     * - Receives all the necessary information about the foreign payment method.
      * - Sends a request with all pre-selected quote fields using PaymentMethodTransfer.paymentAuthorizationEndpoint.
      * - If the response is free of errors, uses PaymentMethodTransfer.paymentAuthorizationEndpoint and response data to build a redirect URL.
      * - Updates CheckoutResponseTransfer with errors or the redirect URL according to response received.
@@ -38,6 +38,6 @@ class PaymentAuthorizationCheckoutPostSavePlugin extends AbstractPlugin implemen
      */
     public function executeHook(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer)
     {
-        $this->getFacade()->authorizeForeignPaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+        $this->getFacade()->initForeignPaymentForCheckoutProcess($quoteTransfer, $checkoutResponseTransfer);
     }
 }

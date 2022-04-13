@@ -176,7 +176,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
             ->setRequestUrl($paymentMethodTransfer->getPaymentAuthorizationEndpoint())
             ->setPostData($postData);
 
-        return $this->paymentClient->authorizePayment($paymentAuthorizeRequestTransfer);
+        return $this->paymentClient->authorizeForeignPayment($paymentAuthorizeRequestTransfer);
     }
 
     /**
