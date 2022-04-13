@@ -29,6 +29,7 @@ interface PaymentFacadeInterface
     /**
      * Specification:
      * - Finds available payment methods
+     * - Finds payment methods with `is_hidden` set to `false` (if such a column exists in the database).
      * - Runs filter plugins
      *
      * @api
