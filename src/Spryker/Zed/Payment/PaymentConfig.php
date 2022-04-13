@@ -141,7 +141,7 @@ class PaymentConfig extends AbstractBundleConfig
      *
      * @return array<mixed>
      */
-    public function getQuoteFieldsAllowedForSending(): array
+    public function getQuoteFieldsForForeignPayment(): array
     {
         return [
             QuoteTransfer::ORDER_REFERENCE => 'orderReference',

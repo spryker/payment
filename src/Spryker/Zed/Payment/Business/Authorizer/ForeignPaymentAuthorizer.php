@@ -151,7 +151,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $postData = [
             'orderData' => $this->quoteDataMapper->mapQuoteDataByAllowedFields(
                 $quoteTransfer,
-                $this->paymentConfig->getQuoteFieldsAllowedForSending(),
+                $this->paymentConfig->getQuoteFieldsForForeignPayment(),
             ),
             'redirectSuccessUrl' => $this->generatePaymentRedirectUrl(
                 $language,
