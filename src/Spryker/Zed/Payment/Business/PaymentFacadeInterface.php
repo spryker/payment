@@ -55,7 +55,7 @@ interface PaymentFacadeInterface
      *
      * @return void
      */
-    public function authorizeForeignPaymentMethod(
+    public function initForeignPaymentForCheckoutProcess(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void;

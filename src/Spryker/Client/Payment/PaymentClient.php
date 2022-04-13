@@ -26,7 +26,7 @@ class PaymentClient extends AbstractClient implements PaymentClientInterface
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
-    public function authorizePayment(
+    public function authorizeForeignPayment(
         PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
     ): PaymentAuthorizeResponseTransfer {
         return $this->getFactory()

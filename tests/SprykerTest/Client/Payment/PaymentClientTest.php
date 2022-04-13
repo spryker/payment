@@ -43,7 +43,7 @@ class PaymentClientTest extends Test
 
         // Act
         $paymentAuthorizeResponseTransfer = $this->tester->getClient()
-            ->authorizePayment($this->getPaymentAuthorizeRequestTransfer());
+            ->authorizeForeignPayment($this->getPaymentAuthorizeRequestTransfer());
 
         // Assert
         $this->assertTrue($paymentAuthorizeResponseTransfer->getIsSuccessful());
@@ -61,7 +61,7 @@ class PaymentClientTest extends Test
 
         // Act
         $paymentAuthorizeResponseTransfer = $this->tester->getClient()
-            ->authorizePayment($this->getPaymentAuthorizeRequestTransfer());
+            ->authorizeForeignPayment($this->getPaymentAuthorizeRequestTransfer());
 
         // Assert
         $this->assertFalse($paymentAuthorizeResponseTransfer->getIsSuccessful());
@@ -79,7 +79,7 @@ class PaymentClientTest extends Test
 
         // Act
         $paymentAuthorizeResponseTransfer = $this->tester->getClient()
-            ->authorizePayment($this->getPaymentAuthorizeRequestTransfer());
+            ->authorizeForeignPayment($this->getPaymentAuthorizeRequestTransfer());
 
         // Assert
         $this->assertFalse($paymentAuthorizeResponseTransfer->getIsSuccessful());

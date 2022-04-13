@@ -16,7 +16,7 @@ interface PaymentClientInterface
     /**
      * Specification:
      * - Makes a request from given PaymentAuthorizeRequestTransfer.
-     * - Sends a request to an external payment server to generate a token.
+     * - Sends a request to a foreign payment service.
      * - Returns a PaymentAuthorizeResponseTransfer with the received data.
      *
      * @api
@@ -25,7 +25,7 @@ interface PaymentClientInterface
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
-    public function authorizePayment(
+    public function authorizeForeignPayment(
         PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
     ): PaymentAuthorizeResponseTransfer;
 
