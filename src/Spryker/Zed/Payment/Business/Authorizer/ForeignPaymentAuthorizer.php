@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\Payment\Business\Authorizer;
 
+use Generated\Shared\Transfer\AccessTokenResponseTransfer;
 use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
@@ -19,6 +20,7 @@ use Generated\Shared\Transfer\SaveOrderTransfer;
 use Spryker\Client\Payment\PaymentClientInterface;
 use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Service\UtilText\Model\Url\Url;
+use Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface;
 use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface;
@@ -68,6 +70,11 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
     protected $paymentService;
 
     /**
+     * @var \Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface
+     */
+    protected $accessTokenReader;
+
+    /**
      * @param \Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface $quoteDataMapper
      * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface $localeFacade
      * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
@@ -75,6 +82,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      * @param \Spryker\Zed\Payment\PaymentConfig $paymentConfig
      * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface $storeReferenceFacade
      * @param \Spryker\Service\Payment\PaymentServiceInterface $paymentService
+     * @param \Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface $accessTokenReader
      */
     public function __construct(
         QuoteDataMapperInterface $quoteDataMapper,
@@ -83,7 +91,8 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         PaymentClientInterface $paymentClient,
         PaymentConfig $paymentConfig,
         PaymentToStoreReferenceFacadeInterface $storeReferenceFacade,
-        PaymentServiceInterface $paymentService
+        PaymentServiceInterface $paymentService,
+        AccessTokenReaderInterface $accessTokenReader
     ) {
         $this->quoteDataMapper = $quoteDataMapper;
         $this->localeFacade = $localeFacade;
@@ -92,6 +101,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $this->paymentConfig = $paymentConfig;
         $this->storeReferenceFacade = $storeReferenceFacade;
         $this->paymentService = $paymentService;
+        $this->accessTokenReader = $accessTokenReader;
     }
 
     /**
@@ -119,16 +129,27 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
             return;
         }
 
-        $paymentAuthorizeResponseTransfer = $this->requestPaymentToken(
-            $paymentMethodTransfer,
-            $quoteTransfer,
-            $checkoutResponseTransfer->getSaveOrderOrFail(),
-        );
+        $accessTokenResponseTransfer = $this->accessTokenReader->requestAccessToken();
 
+        if ($accessTokenResponseTransfer->getIsSuccessful()) {
+            $paymentAuthorizeResponseTransfer = $this->requestPaymentToken(
+                $paymentMethodTransfer,
+                $quoteTransfer,
+                $checkoutResponseTransfer->getSaveOrderOrFail(),
+                $accessTokenResponseTransfer,
+            );
+            $this->processPaymentTokenResponse(
+                $paymentAuthorizeResponseTransfer,
+                $checkoutResponseTransfer,
+            );
+
+            return;
+        }
         $this->processPaymentTokenResponse(
-            $paymentAuthorizeResponseTransfer,
+            (new PaymentAuthorizeResponseTransfer())
+                ->setIsSuccessful(false)
+                ->setMessage($accessTokenResponseTransfer->getAccessTokenErrorOrFail()->getErrorOrFail()),
             $checkoutResponseTransfer,
-            $paymentMethodTransfer,
         );
     }
 
@@ -136,13 +157,15 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
+     * @param \Generated\Shared\Transfer\AccessTokenResponseTransfer $accessTokenResponseTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
     protected function requestPaymentToken(
         PaymentMethodTransfer $paymentMethodTransfer,
         QuoteTransfer $quoteTransfer,
-        SaveOrderTransfer $saveOrderTransfer
+        SaveOrderTransfer $saveOrderTransfer,
+        AccessTokenResponseTransfer $accessTokenResponseTransfer
     ): PaymentAuthorizeResponseTransfer {
         $localeTransfer = $this->localeFacade->getCurrentLocale();
         $quoteTransfer->setOrderReference($saveOrderTransfer->getOrderReference());
@@ -167,14 +190,13 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
                 $language,
                 $this->paymentConfig->getCheckoutSummaryPageRoute(),
             ),
-            'storeReference' => $this->storeReferenceFacade
-                ->getStoreByStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
-                ->getStoreReferenceOrFail(),
+            'storeReference' => $this->getCurrentStoreReference($quoteTransfer),
         ];
 
         $paymentAuthorizeRequestTransfer = (new PaymentAuthorizeRequestTransfer())
             ->setRequestUrl($paymentMethodTransfer->getPaymentAuthorizationEndpoint())
-            ->setPostData($postData);
+            ->setPostData($postData)
+            ->setAccessToken($accessTokenResponseTransfer->getAccessTokenOrFail());
 
         return $this->paymentClient->authorizePayment($paymentAuthorizeRequestTransfer);
     }
@@ -213,14 +235,12 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer $paymentAuthorizeResponseTransfer
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      *
      * @return void
      */
     protected function processPaymentTokenResponse(
         PaymentAuthorizeResponseTransfer $paymentAuthorizeResponseTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer,
-        PaymentMethodTransfer $paymentMethodTransfer
+        CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
         if (!$paymentAuthorizeResponseTransfer->getIsSuccessful()) {
             $checkoutErrorTransfer = (new CheckoutErrorTransfer())
@@ -235,5 +255,17 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $checkoutResponseTransfer
             ->setIsExternalRedirect(true)
             ->setRedirectUrl($paymentAuthorizeResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return string
+     */
+    protected function getCurrentStoreReference(QuoteTransfer $quoteTransfer): string
+    {
+        return $this->storeReferenceFacade
+            ->getStoreByStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
+            ->getStoreReferenceOrFail();
     }
 }

@@ -59,6 +59,9 @@ class PaymentRequestExecutor implements PaymentRequestExecutorInterface
                 $paymentAuthorizeRequestTransfer->getRequestUrlOrFail(),
                 [
                     RequestOptions::FORM_PARAMS => $paymentAuthorizeRequestTransfer->getPostData(),
+                    RequestOptions::HEADERS => [
+                        'Authorization' => sprintf('Bearer %s', $paymentAuthorizeRequestTransfer->getAccessToken()),
+                    ],
                 ],
             );
         } catch (PaymentHttpRequestException $e) {

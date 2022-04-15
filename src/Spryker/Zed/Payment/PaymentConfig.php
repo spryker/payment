@@ -171,4 +171,34 @@ class PaymentConfig extends AbstractBundleConfig
             ],
         ];
     }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getOauthProviderNameForPaymentAuthorize(): string
+    {
+        return $this->get(PaymentConstants::OAUTH_PROVIDER_NAME_FOR_PAYMENT_AUTHORIZE, '');
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getOauthGrantTypeForPaymentAuthorize(): string
+    {
+        return $this->get(PaymentConstants::OAUTH_GRANT_TYPE_FOR_PAYMENT_AUTHORIZE, '');
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getOauthOptionAudienceForPaymentAuthorize(): string
+    {
+        return $this->get(PaymentConstants::OAUTH_OPTION_AUDIENCE_FOR_PAYMENT_AUTHORIZE, '');
+    }
 }

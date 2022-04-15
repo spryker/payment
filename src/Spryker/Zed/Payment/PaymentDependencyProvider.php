@@ -11,6 +11,7 @@ use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeBridge;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerBridge;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToOauthClientFacadeBridge;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeBridge;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeBridge;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeBridge;
@@ -106,6 +107,11 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_OMS = 'FACADE_OMS';
 
     /**
+     * @var string
+     */
+    public const FACADE_OAUTH_CLIENT = 'FACADE_OAUTH_CLIENT';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -124,6 +130,7 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addStoreReferenceFacade($container);
         $container = $this->addOmsFacade($container);
         $container = $this->addMessageBrokerFacade($container);
+        $container = $this->addOauthClientFacade($container);
 
         return $container;
     }
@@ -321,6 +328,22 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_OMS, function (Container $container) {
             return new PaymentToOmsFacadeBridge($container->getLocator()->oms()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addOauthClientFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_OAUTH_CLIENT, function (Container $container) {
+            return new PaymentToOauthClientFacadeBridge(
+                $container->getLocator()->oauthClient()->facade(),
+            );
         });
 
         return $container;
