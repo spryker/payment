@@ -110,7 +110,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      *
      * @return void
      */
-    public function authorizePaymentMethod(
+    public function initForeignPaymentForCheckoutProcess(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
@@ -132,20 +132,20 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $accessTokenResponseTransfer = $this->accessTokenReader->requestAccessToken();
 
         if ($accessTokenResponseTransfer->getIsSuccessful()) {
-            $paymentAuthorizeResponseTransfer = $this->requestPaymentToken(
+            $paymentAuthorizeResponseTransfer = $this->requestPaymentAuthorization(
                 $paymentMethodTransfer,
                 $quoteTransfer,
                 $checkoutResponseTransfer->getSaveOrderOrFail(),
                 $accessTokenResponseTransfer,
             );
-            $this->processPaymentTokenResponse(
+            $this->processPaymentAuthorizeResponse(
                 $paymentAuthorizeResponseTransfer,
                 $checkoutResponseTransfer,
             );
 
             return;
         }
-        $this->processPaymentTokenResponse(
+        $this->processPaymentAuthorizeResponse(
             (new PaymentAuthorizeResponseTransfer())
                 ->setIsSuccessful(false)
                 ->setMessage($accessTokenResponseTransfer->getAccessTokenErrorOrFail()->getErrorOrFail()),
@@ -161,7 +161,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
-    protected function requestPaymentToken(
+    protected function requestPaymentAuthorization(
         PaymentMethodTransfer $paymentMethodTransfer,
         QuoteTransfer $quoteTransfer,
         SaveOrderTransfer $saveOrderTransfer,
@@ -175,7 +175,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $postData = [
             'orderData' => $this->quoteDataMapper->mapQuoteDataByAllowedFields(
                 $quoteTransfer,
-                $this->paymentConfig->getQuoteFieldsAllowedForSending(),
+                $this->paymentConfig->getQuoteFieldsForForeignPayment(),
             ),
             'redirectSuccessUrl' => $this->generatePaymentRedirectUrl(
                 $language,
@@ -198,7 +198,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
             ->setPostData($postData)
             ->setAccessToken($accessTokenResponseTransfer->getAccessTokenOrFail());
 
-        return $this->paymentClient->authorizePayment($paymentAuthorizeRequestTransfer);
+        return $this->paymentClient->authorizeForeignPayment($paymentAuthorizeRequestTransfer);
     }
 
     /**
@@ -238,7 +238,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      *
      * @return void
      */
-    protected function processPaymentTokenResponse(
+    protected function processPaymentAuthorizeResponse(
         PaymentAuthorizeResponseTransfer $paymentAuthorizeResponseTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {

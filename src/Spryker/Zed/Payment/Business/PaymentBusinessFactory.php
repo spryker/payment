@@ -16,8 +16,8 @@ use Spryker\Zed\Payment\Business\AccessToken\AccessTokenReader;
 use Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface;
 use Spryker\Zed\Payment\Business\Calculation\PaymentCalculator;
 use Spryker\Zed\Payment\Business\Checkout\PaymentPluginExecutor;
-use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggerer;
-use Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface;
+use Spryker\Zed\Payment\Business\EventEmitter\PaymentMessageOmsEventEmitter;
+use Spryker\Zed\Payment\Business\EventEmitter\PaymentMessageOmsEventEmitterInterface;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGenerator;
 use Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface;
 use Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapper;
@@ -329,11 +329,11 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\EventTriggerer\PaymentMessageOmsEventTriggererInterface
+     * @return \Spryker\Zed\Payment\Business\EventEmitter\PaymentMessageOmsEventEmitterInterface
      */
-    public function createPaymentMessageOmsEventTriggerer(): PaymentMessageOmsEventTriggererInterface
+    public function createPaymentMessageOmsEventEmitter(): PaymentMessageOmsEventEmitterInterface
     {
-        return new PaymentMessageOmsEventTriggerer(
+        return new PaymentMessageOmsEventEmitter(
             $this->getOmsFacade(),
             $this->getConfig(),
         );

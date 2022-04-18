@@ -55,13 +55,13 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      *
      * @return void
      */
-    public function authorizeForeignPaymentMethod(
+    public function initForeignPaymentForCheckoutProcess(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
         $this->getFactory()
             ->createForeignPaymentAuthorizer()
-            ->authorizePaymentMethod($quoteTransfer, $checkoutResponseTransfer);
+            ->initForeignPaymentForCheckoutProcess($quoteTransfer, $checkoutResponseTransfer);
     }
 
     /**
@@ -397,7 +397,7 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
      */
     public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void
     {
-        $this->getFactory()->createPaymentMessageOmsEventTriggerer()->triggerPaymentMessageOmsEvent($orderPaymentEventTransfer);
+        $this->getFactory()->createPaymentMessageOmsEventEmitter()->triggerPaymentMessageOmsEvent($orderPaymentEventTransfer);
     }
 
     /**
