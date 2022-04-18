@@ -129,26 +129,13 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
             return;
         }
 
-        $accessTokenResponseTransfer = $this->accessTokenReader->requestAccessToken();
-
-        if ($accessTokenResponseTransfer->getIsSuccessful()) {
-            $paymentAuthorizeResponseTransfer = $this->requestPaymentAuthorization(
-                $paymentMethodTransfer,
-                $quoteTransfer,
-                $checkoutResponseTransfer->getSaveOrderOrFail(),
-                $accessTokenResponseTransfer,
-            );
-            $this->processPaymentAuthorizeResponse(
-                $paymentAuthorizeResponseTransfer,
-                $checkoutResponseTransfer,
-            );
-
-            return;
-        }
+        $paymentAuthorizeResponseTransfer = $this->requestPaymentAuthorization(
+            $paymentMethodTransfer,
+            $quoteTransfer,
+            $checkoutResponseTransfer->getSaveOrderOrFail(),
+        );
         $this->processPaymentAuthorizeResponse(
-            (new PaymentAuthorizeResponseTransfer())
-                ->setIsSuccessful(false)
-                ->setMessage($accessTokenResponseTransfer->getAccessTokenErrorOrFail()->getErrorOrFail()),
+            $paymentAuthorizeResponseTransfer,
             $checkoutResponseTransfer,
         );
     }
@@ -157,16 +144,22 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
-     * @param \Generated\Shared\Transfer\AccessTokenResponseTransfer $accessTokenResponseTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
     protected function requestPaymentAuthorization(
         PaymentMethodTransfer $paymentMethodTransfer,
         QuoteTransfer $quoteTransfer,
-        SaveOrderTransfer $saveOrderTransfer,
-        AccessTokenResponseTransfer $accessTokenResponseTransfer
+        SaveOrderTransfer $saveOrderTransfer
     ): PaymentAuthorizeResponseTransfer {
+        $accessTokenResponseTransfer = $this->accessTokenReader->requestAccessToken();
+
+        if (!$accessTokenResponseTransfer->getIsSuccessful()) {
+            return (new PaymentAuthorizeResponseTransfer())
+                ->setIsSuccessful(false)
+                ->setMessage($accessTokenResponseTransfer->getAccessTokenErrorOrFail()->getErrorOrFail());
+        }
+
         $localeTransfer = $this->localeFacade->getCurrentLocale();
         $quoteTransfer->setOrderReference($saveOrderTransfer->getOrderReference());
         $quoteTransfer->getCustomerOrFail()->setLocale($localeTransfer);
