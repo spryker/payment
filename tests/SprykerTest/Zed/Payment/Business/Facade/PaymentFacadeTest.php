@@ -13,6 +13,8 @@ use Generated\Shared\DataBuilder\PaymentMethodBuilder;
 use Generated\Shared\DataBuilder\PaymentProviderBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\StoreRelationBuilder;
+use Generated\Shared\Transfer\AccessTokenErrorTransfer;
+use Generated\Shared\Transfer\AccessTokenResponseTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer;
@@ -32,6 +34,7 @@ use Spryker\Client\Payment\PaymentClientInterface;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\Payment\Business\Method\PaymentMethodReader;
 use Spryker\Zed\Payment\Business\PaymentBusinessFactory;
+use Spryker\Zed\Payment\Dependency\Facade\PaymentToOauthClientFacadeInterface;
 use Spryker\Zed\Payment\PaymentConfig;
 use Spryker\Zed\Payment\PaymentDependencyProvider;
 
@@ -73,6 +76,16 @@ class PaymentFacadeTest extends Unit
      * @var string
      */
     protected const PAYMENT_AUTHORIZATION_REDIRECT = 'http://localhost/redirect';
+
+    /**
+     * @var string
+     */
+    protected const PAYMENT_AUTHORIZATION_ACCESS_TOKEN = 'access-token';
+
+    /**
+     * @var string
+     */
+    protected const PAYMENT_AUTHORIZATION_ACCESS_TOKEN_ERROR = 'error';
 
     /**
      * @var \SprykerTest\Zed\Payment\PaymentBusinessTester
@@ -541,11 +554,21 @@ class PaymentFacadeTest extends Unit
         $quoteTransfer->setPayment($paymentTransfer);
         $checkoutResponseTransfer = $this->buildCheckoutResponseTransfer();
 
+        $oauthClientFacadeMock = $this->getOauthClientFacadeMock();
+        $oauthClientFacadeMock->expects($this->once())
+            ->method('getAccessToken')
+            ->willReturn(
+                (new AccessTokenResponseTransfer())
+                    ->setIsSuccessful(true)
+                    ->setAccessToken(static::PAYMENT_AUTHORIZATION_ACCESS_TOKEN),
+            );
+
         $paymentClientMock = $this->getPaymentClientMock();
         $paymentClientMock->expects($this->once())
             ->method('authorizeForeignPayment')
             ->with($this->callback(function (PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer) {
-                return $paymentAuthorizeRequestTransfer->getRequestUrl() === static::PAYMENT_AUTHORIZATION_ENDPOINT;
+                return $paymentAuthorizeRequestTransfer->getRequestUrl() === static::PAYMENT_AUTHORIZATION_ENDPOINT
+                    && $paymentAuthorizeRequestTransfer->getAccessToken() === static::PAYMENT_AUTHORIZATION_ACCESS_TOKEN;
             }))
             ->willReturn(
                 (new PaymentAuthorizeResponseTransfer())
@@ -559,6 +582,54 @@ class PaymentFacadeTest extends Unit
         // Assert
         $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
         $this->assertSame(static::PAYMENT_AUTHORIZATION_REDIRECT, $checkoutResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @return void
+     */
+    public function testForeignPaymentAuthorizerReceivesFailsIfThereIsNoValidAccessTokenForAuthorizationRequest(): void
+    {
+        // Arrange
+        $this->tester->setStoreReferenceData([static::STORE_NAME => static::STORE_REFERENCE]);
+
+        $paymentProviderTransfer = $this->tester->havePaymentProvider();
+        $paymentMethodTransfer = $this->tester->havePaymentMethod([
+            PaymentMethodTransfer::IS_HIDDEN => false,
+            PaymentMethodTransfer::PAYMENT_AUTHORIZATION_ENDPOINT => static::PAYMENT_AUTHORIZATION_ENDPOINT,
+            PaymentMethodTransfer::ID_PAYMENT_PROVIDER => $paymentProviderTransfer->getIdPaymentProvider(),
+        ]);
+
+        $paymentTransfer = (new PaymentTransfer())->setPaymentSelection(
+            sprintf('%s[%s]', PaymentTransfer::FOREIGN_PAYMENTS, $paymentMethodTransfer->getPaymentMethodKey()),
+        );
+
+        $quoteTransfer = $this->buildQuoteTransfer();
+        $quoteTransfer->setPayment($paymentTransfer);
+        $checkoutResponseTransfer = $this->buildCheckoutResponseTransfer();
+
+        $oauthClientFacadeMock = $this->getOauthClientFacadeMock();
+        $oauthClientFacadeMock->expects($this->once())
+            ->method('getAccessToken')
+            ->willReturn(
+                (new AccessTokenResponseTransfer())
+                    ->setIsSuccessful(false)
+                    ->setAccessTokenError(
+                        (new AccessTokenErrorTransfer())
+                            ->setError(static::PAYMENT_AUTHORIZATION_ACCESS_TOKEN_ERROR),
+                    ),
+            );
+
+        $paymentClientMock = $this->getPaymentClientMock();
+        $paymentClientMock->expects($this->never())
+            ->method('authorizeForeignPayment');
+
+        // Act
+        $this->tester->getFacade()->initForeignPaymentForCheckoutProcess($quoteTransfer, $checkoutResponseTransfer);
+
+        // Assert
+        $this->assertFalse($checkoutResponseTransfer->getIsSuccess());
+        $this->assertNull($checkoutResponseTransfer->getRedirectUrl());
+        $this->assertSame($checkoutResponseTransfer->getErrors()[0]->getMessage(), static::PAYMENT_AUTHORIZATION_ACCESS_TOKEN_ERROR);
     }
 
     /**
@@ -668,10 +739,21 @@ class PaymentFacadeTest extends Unit
      */
     protected function getPaymentClientMock(): PaymentClientInterface
     {
-        $paymentClient = $this->getMockBuilder(PaymentClientInterface::class)->getMock();
-        $this->tester->setDependency(PaymentDependencyProvider::CLIENT_PAYMENT, $paymentClient);
+        $paymentClientMock = $this->getMockBuilder(PaymentClientInterface::class)->getMock();
+        $this->tester->setDependency(PaymentDependencyProvider::CLIENT_PAYMENT, $paymentClientMock);
 
-        return $paymentClient;
+        return $paymentClientMock;
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Payment\Dependency\Facade\PaymentToOauthClientFacadeInterface
+     */
+    protected function getOauthClientFacadeMock(): PaymentToOauthClientFacadeInterface
+    {
+        $oauthClientFacadeMock = $this->getMockBuilder(PaymentToOauthClientFacadeInterface::class)->getMock();
+        $this->tester->setDependency(PaymentDependencyProvider::FACADE_OAUTH_CLIENT, $oauthClientFacadeMock);
+
+        return $oauthClientFacadeMock;
     }
 
     /**

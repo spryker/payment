@@ -8,7 +8,6 @@
 namespace Spryker\Zed\Payment\Business\AccessToken;
 
 use Generated\Shared\Transfer\AccessTokenResponseTransfer;
-use Generated\Shared\Transfer\StoreTransfer;
 
 interface AccessTokenReaderInterface
 {

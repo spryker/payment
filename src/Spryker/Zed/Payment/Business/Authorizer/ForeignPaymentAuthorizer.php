@@ -7,7 +7,6 @@
 
 namespace Spryker\Zed\Payment\Business\Authorizer;
 
-use Generated\Shared\Transfer\AccessTokenResponseTransfer;
 use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
