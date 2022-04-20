@@ -20,7 +20,6 @@ use Generated\Shared\Transfer\PaymentProviderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SalesPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
-use Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentAuthorizeRequestExpanderPluginInterface;
 
 /**
  * @method \Spryker\Zed\Payment\Business\PaymentBusinessFactory getFactory()
