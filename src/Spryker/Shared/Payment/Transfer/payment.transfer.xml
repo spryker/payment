@@ -78,7 +78,7 @@
     <transfer name="PaymentAuthorizeRequest">
         <property name="requestUrl" type="string"/>
         <property name="postData" type="array" associative="true" singular="postValue"/>
-        <property name="accessToken" type="string"/>
+        <property name="authorization" type="string"/>
     </transfer>
 
     <transfer name="PaymentMethods">

@@ -10,8 +10,6 @@ namespace Spryker\Zed\Payment\Business;
 use Spryker\Client\Payment\PaymentClientInterface;
 use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-use Spryker\Zed\Payment\Business\AccessToken\AccessTokenReader;
-use Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface;
 use Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizer;
 use Spryker\Zed\Payment\Business\Authorizer\ForeignPaymentAuthorizerInterface;
 use Spryker\Zed\Payment\Business\Calculation\PaymentCalculator;
@@ -44,7 +42,6 @@ use Spryker\Zed\Payment\Business\Writer\PaymentWriter;
 use Spryker\Zed\Payment\Business\Writer\PaymentWriterInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface;
-use Spryker\Zed\Payment\Dependency\Facade\PaymentToOauthClientFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface;
@@ -85,7 +82,7 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->getStoreReferenceFacade(),
             $this->getPaymentService(),
-            $this->createAccessTokenReader(),
+            $this->getPaymentAuthorizeRequestExpanderPlugins(),
         );
     }
 
@@ -340,21 +337,10 @@ class PaymentBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface
+     * @return array<int, \Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentAuthorizeRequestExpanderPluginInterface>
      */
-    public function createAccessTokenReader(): AccessTokenReaderInterface
+    public function getPaymentAuthorizeRequestExpanderPlugins(): array
     {
-        return new AccessTokenReader(
-            $this->getOauthClientFacade(),
-            $this->getConfig(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToOauthClientFacadeInterface
-     */
-    public function getOauthClientFacade(): PaymentToOauthClientFacadeInterface
-    {
-        return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_OAUTH_CLIENT);
+        return $this->getProvidedDependency(PaymentDependencyProvider::PLUGINS_PAYMENT_AUTHORIZE_REQUEST_EXPANDER);
     }
 }

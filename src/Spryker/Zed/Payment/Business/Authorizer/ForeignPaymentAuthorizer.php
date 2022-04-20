@@ -19,7 +19,6 @@ use Generated\Shared\Transfer\SaveOrderTransfer;
 use Spryker\Client\Payment\PaymentClientInterface;
 use Spryker\Service\Payment\PaymentServiceInterface;
 use Spryker\Service\UtilText\Model\Url\Url;
-use Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface;
 use Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface;
 use Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface;
@@ -69,9 +68,9 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
     protected $paymentService;
 
     /**
-     * @var \Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface
+     * @var array<int, \Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentAuthorizeRequestExpanderPluginInterface>
      */
-    protected $accessTokenReader;
+    protected $paymentAuthorizeRequestExpanderPlugins;
 
     /**
      * @param \Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface $quoteDataMapper
@@ -81,7 +80,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      * @param \Spryker\Zed\Payment\PaymentConfig $paymentConfig
      * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface $storeReferenceFacade
      * @param \Spryker\Service\Payment\PaymentServiceInterface $paymentService
-     * @param \Spryker\Zed\Payment\Business\AccessToken\AccessTokenReaderInterface $accessTokenReader
+     * @param array<int, \Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentAuthorizeRequestExpanderPluginInterface> $paymentAuthorizeRequestExpanderPlugins
      */
     public function __construct(
         QuoteDataMapperInterface $quoteDataMapper,
@@ -91,7 +90,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         PaymentConfig $paymentConfig,
         PaymentToStoreReferenceFacadeInterface $storeReferenceFacade,
         PaymentServiceInterface $paymentService,
-        AccessTokenReaderInterface $accessTokenReader
+        array $paymentAuthorizeRequestExpanderPlugins
     ) {
         $this->quoteDataMapper = $quoteDataMapper;
         $this->localeFacade = $localeFacade;
@@ -100,7 +99,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $this->paymentConfig = $paymentConfig;
         $this->storeReferenceFacade = $storeReferenceFacade;
         $this->paymentService = $paymentService;
-        $this->accessTokenReader = $accessTokenReader;
+        $this->paymentAuthorizeRequestExpanderPlugins = $paymentAuthorizeRequestExpanderPlugins;
     }
 
     /**
@@ -151,14 +150,6 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         QuoteTransfer $quoteTransfer,
         SaveOrderTransfer $saveOrderTransfer
     ): PaymentAuthorizeResponseTransfer {
-        $accessTokenResponseTransfer = $this->accessTokenReader->requestAccessToken();
-
-        if (!$accessTokenResponseTransfer->getIsSuccessful()) {
-            return (new PaymentAuthorizeResponseTransfer())
-                ->setIsSuccessful(false)
-                ->setMessage($accessTokenResponseTransfer->getAccessTokenErrorOrFail()->getErrorOrFail());
-        }
-
         $localeTransfer = $this->localeFacade->getCurrentLocale();
         $quoteTransfer->setOrderReference($saveOrderTransfer->getOrderReference());
         $quoteTransfer->getCustomerOrFail()->setLocale($localeTransfer);
@@ -187,8 +178,9 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
 
         $paymentAuthorizeRequestTransfer = (new PaymentAuthorizeRequestTransfer())
             ->setRequestUrl($paymentMethodTransfer->getPaymentAuthorizationEndpoint())
-            ->setPostData($postData)
-            ->setAccessToken($accessTokenResponseTransfer->getAccessTokenOrFail());
+            ->setPostData($postData);
+
+        $paymentAuthorizeRequestTransfer = $this->executePaymentAuthorizeRequestExpanderPlugins($paymentAuthorizeRequestTransfer);
 
         return $this->paymentClient->authorizeForeignPayment($paymentAuthorizeRequestTransfer);
     }
@@ -259,5 +251,20 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         return $this->storeReferenceFacade
             ->getStoreByStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
             ->getStoreReferenceOrFail();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer
+     */
+    protected function executePaymentAuthorizeRequestExpanderPlugins(
+        PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
+    ): PaymentAuthorizeRequestTransfer {
+        foreach ($this->paymentAuthorizeRequestExpanderPlugins as $paymentAuthorizeRequestExpanderPlugin) {
+            $paymentAuthorizeRequestTransfer = $paymentAuthorizeRequestExpanderPlugin->expand($paymentAuthorizeRequestTransfer);
+        }
+
+        return $paymentAuthorizeRequestTransfer;
     }
 }
