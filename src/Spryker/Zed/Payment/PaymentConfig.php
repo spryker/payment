@@ -92,7 +92,7 @@ class PaymentConfig extends AbstractBundleConfig
      *
      * @return array
      */
-    public function getSupportedOrderPaymentEvenTransfersList(): array
+    public function getSupportedOrderPaymentEventTransfersList(): array
     {
         return static::SUPPORTED_ORDER_PAYMENT_EVENT_TRANSFERS_LIST;
     }
@@ -141,7 +141,7 @@ class PaymentConfig extends AbstractBundleConfig
      *
      * @return array<mixed>
      */
-    public function getQuoteFieldsAllowedForSending(): array
+    public function getQuoteFieldsForForeignPayment(): array
     {
         return [
             QuoteTransfer::ORDER_REFERENCE => 'orderReference',

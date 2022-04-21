@@ -5,11 +5,11 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\Payment\Business\EventTriggerer;
+namespace Spryker\Zed\Payment\Business\EventEmitter;
 
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
-interface PaymentMessageOmsEventTriggererInterface
+interface PaymentMessageOmsEventEmitterInterface
 {
     /**
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $orderPaymentEventTransfer

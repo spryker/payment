@@ -68,6 +68,11 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
     protected $paymentService;
 
     /**
+     * @var array<int, \Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentAuthorizeRequestExpanderPluginInterface>
+     */
+    protected $paymentAuthorizeRequestExpanderPlugins;
+
+    /**
      * @param \Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface $quoteDataMapper
      * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface $localeFacade
      * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
@@ -75,6 +80,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      * @param \Spryker\Zed\Payment\PaymentConfig $paymentConfig
      * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreReferenceFacadeInterface $storeReferenceFacade
      * @param \Spryker\Service\Payment\PaymentServiceInterface $paymentService
+     * @param array<int, \Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentAuthorizeRequestExpanderPluginInterface> $paymentAuthorizeRequestExpanderPlugins
      */
     public function __construct(
         QuoteDataMapperInterface $quoteDataMapper,
@@ -83,7 +89,8 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         PaymentClientInterface $paymentClient,
         PaymentConfig $paymentConfig,
         PaymentToStoreReferenceFacadeInterface $storeReferenceFacade,
-        PaymentServiceInterface $paymentService
+        PaymentServiceInterface $paymentService,
+        array $paymentAuthorizeRequestExpanderPlugins
     ) {
         $this->quoteDataMapper = $quoteDataMapper;
         $this->localeFacade = $localeFacade;
@@ -92,6 +99,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $this->paymentConfig = $paymentConfig;
         $this->storeReferenceFacade = $storeReferenceFacade;
         $this->paymentService = $paymentService;
+        $this->paymentAuthorizeRequestExpanderPlugins = $paymentAuthorizeRequestExpanderPlugins;
     }
 
     /**
@@ -100,7 +108,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      *
      * @return void
      */
-    public function authorizePaymentMethod(
+    public function initForeignPaymentForCheckoutProcess(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
@@ -119,16 +127,14 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
             return;
         }
 
-        $paymentAuthorizeResponseTransfer = $this->requestPaymentToken(
+        $paymentAuthorizeResponseTransfer = $this->requestPaymentAuthorization(
             $paymentMethodTransfer,
             $quoteTransfer,
             $checkoutResponseTransfer->getSaveOrderOrFail(),
         );
-
-        $this->processPaymentTokenResponse(
+        $this->processPaymentAuthorizeResponse(
             $paymentAuthorizeResponseTransfer,
             $checkoutResponseTransfer,
-            $paymentMethodTransfer,
         );
     }
 
@@ -139,7 +145,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
      *
      * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
      */
-    protected function requestPaymentToken(
+    protected function requestPaymentAuthorization(
         PaymentMethodTransfer $paymentMethodTransfer,
         QuoteTransfer $quoteTransfer,
         SaveOrderTransfer $saveOrderTransfer
@@ -152,7 +158,7 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $postData = [
             'orderData' => $this->quoteDataMapper->mapQuoteDataByAllowedFields(
                 $quoteTransfer,
-                $this->paymentConfig->getQuoteFieldsAllowedForSending(),
+                $this->paymentConfig->getQuoteFieldsForForeignPayment(),
             ),
             'redirectSuccessUrl' => $this->generatePaymentRedirectUrl(
                 $language,
@@ -167,16 +173,16 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
                 $language,
                 $this->paymentConfig->getCheckoutSummaryPageRoute(),
             ),
-            'storeReference' => $this->storeReferenceFacade
-                ->getStoreByStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
-                ->getStoreReferenceOrFail(),
+            'storeReference' => $this->getCurrentStoreReference($quoteTransfer),
         ];
 
         $paymentAuthorizeRequestTransfer = (new PaymentAuthorizeRequestTransfer())
             ->setRequestUrl($paymentMethodTransfer->getPaymentAuthorizationEndpoint())
             ->setPostData($postData);
 
-        return $this->paymentClient->authorizePayment($paymentAuthorizeRequestTransfer);
+        $paymentAuthorizeRequestTransfer = $this->executePaymentAuthorizeRequestExpanderPlugins($paymentAuthorizeRequestTransfer);
+
+        return $this->paymentClient->authorizeForeignPayment($paymentAuthorizeRequestTransfer);
     }
 
     /**
@@ -213,14 +219,12 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer $paymentAuthorizeResponseTransfer
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      *
      * @return void
      */
-    protected function processPaymentTokenResponse(
+    protected function processPaymentAuthorizeResponse(
         PaymentAuthorizeResponseTransfer $paymentAuthorizeResponseTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer,
-        PaymentMethodTransfer $paymentMethodTransfer
+        CheckoutResponseTransfer $checkoutResponseTransfer
     ): void {
         if (!$paymentAuthorizeResponseTransfer->getIsSuccessful()) {
             $checkoutErrorTransfer = (new CheckoutErrorTransfer())
@@ -235,5 +239,32 @@ class ForeignPaymentAuthorizer implements ForeignPaymentAuthorizerInterface
         $checkoutResponseTransfer
             ->setIsExternalRedirect(true)
             ->setRedirectUrl($paymentAuthorizeResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return string
+     */
+    protected function getCurrentStoreReference(QuoteTransfer $quoteTransfer): string
+    {
+        return $this->storeReferenceFacade
+            ->getStoreByStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
+            ->getStoreReferenceOrFail();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer
+     */
+    protected function executePaymentAuthorizeRequestExpanderPlugins(
+        PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
+    ): PaymentAuthorizeRequestTransfer {
+        foreach ($this->paymentAuthorizeRequestExpanderPlugins as $paymentAuthorizeRequestExpanderPlugin) {
+            $paymentAuthorizeRequestTransfer = $paymentAuthorizeRequestExpanderPlugin->expand($paymentAuthorizeRequestTransfer);
+        }
+
+        return $paymentAuthorizeRequestTransfer;
     }
 }

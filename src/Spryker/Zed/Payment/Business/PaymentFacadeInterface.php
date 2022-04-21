@@ -29,6 +29,7 @@ interface PaymentFacadeInterface
     /**
      * Specification:
      * - Finds available payment methods
+     * - Finds payment methods with `is_hidden` set to `false` (if such a column exists in the database).
      * - Runs filter plugins
      *
      * @api
@@ -45,6 +46,7 @@ interface PaymentFacadeInterface
      * - Terminates payment authorization if not.
      * - Receives all the necessary information about the foreign payment method.
      * - Terminates payment authorization if the payment method is not found or no `paymentAuthorizationEndpoint` is specified for it.
+     * - Uses `PaymentAuthorizeRequestExpanderPluginInterface` plugins stack to expand payment authorization request data.
      * - Sends an HTTP request with all pre-selected quote fields using URL from `PaymentMethod.paymentAuthorizationEndpoint`.
      * - Updates CheckoutResponseTransfer with errors or the redirect URL according to response received.
      *
@@ -55,7 +57,7 @@ interface PaymentFacadeInterface
      *
      * @return void
      */
-    public function authorizeForeignPaymentMethod(
+    public function initForeignPaymentForCheckoutProcess(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void;
@@ -368,7 +370,7 @@ interface PaymentFacadeInterface
 
     /**
      * Specification:
-     * - Finds the appropriate event for the current transfer using `PaymentConfig::getSupportedOrderPaymentEvenTransfersList()`.
+     * - Finds the appropriate event for the current transfer using `PaymentConfig::getSupportedOrderPaymentEventTransfersList()`.
      * - If nothing is found - throws `InvalidPaymentEventException`.
      * - Otherwise triggers the found OMS event for all order items from `$orderPaymentEventTransfer::getOrderItemIds()`.
      * - The `$orderPaymentEventTransfer` parameter is a request transfer as provided by order payment event (e.g. PaymentCancelReservationFailedTransfer).
