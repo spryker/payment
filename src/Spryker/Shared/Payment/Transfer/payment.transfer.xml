@@ -155,7 +155,12 @@
 
     <transfer name="MessageAttributes">
         <property name="storeReference" type="string"/>
-        <property name="publisher" type="string"/>
+        <property name="publisher" type="Publisher"/>
+    </transfer>
+
+    <transfer name="Publisher">
+        <property name="storeReference" type="string"/>
+        <property name="appIdentifier" type="string"/>
     </transfer>
 
     <transfer name="PaymentMethodDeleted">
