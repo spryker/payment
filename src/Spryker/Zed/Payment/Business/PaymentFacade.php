@@ -420,4 +420,67 @@ class PaymentFacade extends AbstractFacade implements PaymentFacadeInterface
             ->createMessageEmitter()
             ->sendEventPaymentRefundPending($orderItemIds, $orderItemsTotal, $orderTransfer);
     }
+
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer
+     */
+    public function getPaymentProviderCollection(PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer): PaymentProviderCollectionTransfer
+    {
+        return $this->getRepository()->getPaymentProviderCollection($paymentProviderCriteriaTransfer);
+    }
+
+/**
+ * {@inheritDoc}
+ *
+ * @api
+ *
+ * @param \Generated\Shared\Transfer\PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer
+ *
+ * @return \Generated\Shared\Transfer\PaymentMethodCollectionTransfer
+ */
+public function getPaymentMethodCollection(PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer): PaymentMethodCollectionTransfer
+{
+    return $this->getRepository()->getPaymentMethodCollection($paymentMethodCriteriaTransfer);
+}
+
+/**
+ * {@inheritDoc}
+ *
+ * @api
+ *
+ * @param \Generated\Shared\Transfer\PaymentProviderCollectionRequestTransfer $paymentProviderCollectionRequestTransfer
+ *
+ * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
+ */
+public function createPaymentProviderCollection(
+    PaymentProviderCollectionRequestTransfer $paymentProviderCollectionRequestTransfer
+): PaymentProviderCollectionResponseTransfer {
+    return $this->getFactory()
+        ->createPaymentProviderCreator()
+        ->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
+}
+
+/**
+ * {@inheritDoc}
+ *
+ * @api
+ *
+ * @param \Generated\Shared\Transfer\PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer
+ *
+ * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
+ */
+public function createPaymentMethodCollection(
+    PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer
+): PaymentMethodCollectionResponseTransfer {
+    return $this->getFactory()
+        ->createPaymentMethodCreator()
+        ->createPaymentMethodCollection($paymentMethodCollectionRequestTransfer);
+}
 }
