@@ -24,4 +24,6 @@ interface PaymentToStoreFacadeInterface
      * @return \Generated\Shared\Transfer\StoreTransfer
      */
     public function getStoreByStoreReference(string $storeReference): StoreTransfer;
+
+    public function getAllStores(): array;
 }

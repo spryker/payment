@@ -125,9 +125,7 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         );
 
         $messageAtributes = $paymentMethodAddedTransfer->getMessageAttributesOrFail();
-        $storeTransfer = $this->storeFacade->getStoreByStoreReference(
-            $paymentMethodAddedTransfer->getMessageAttributesOrFail()->getStoreReferenceOrFail(),
-        );
+        $storeTransfer = $this->storeFacade->getAllStores()[0];
         $existingPaymentMethodTransfer = $this->findExistentPaymentMethod(
             $paymentMethodTransfer,
             $storeTransfer,
@@ -164,9 +162,7 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
             ->requireGroupName();
 
         $messageAtributes = $paymentMethodDeletedTransfer->getMessageAttributesOrFail();
-        $storeTransfer = $this->storeFacade->getStoreByStoreReference(
-            $paymentMethodDeletedTransfer->getMessageAttributesOrFail()->getStoreReferenceOrFail(),
-        );
+        $storeTransfer = $this->storeFacade->getAllStores()[0];
         $existingPaymentMethodTransfer = $this->findExistentPaymentMethod(
             $paymentMethodTransfer,
             $storeTransfer,
@@ -243,13 +239,10 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         }
 
         if (!$existingPaymentMethodTransfer) {
-            $storeReference = $messageAttributesTransfer->getStoreReferenceOrFail();
-            $storeTransfer = $this->storeFacade->getStoreByStoreReference($storeReference);
-
             $paymentMethodKey = $this->paymentMethodKeyGenerator->generatePaymentMethodKey(
                 $paymentMethodTransfer->getGroupNameOrFail(),
                 $paymentMethodTransfer->getLabelNameOrFail(),
-                $storeTransfer->getNameOrFail(),
+                getenv('SPRYKER_TENANT_IDENTIFIER') ?: '',
             );
 
             $paymentProviderTransfer = $this->findOrCreatePaymentProvider($paymentMethodTransfer->getGroupNameOrFail());

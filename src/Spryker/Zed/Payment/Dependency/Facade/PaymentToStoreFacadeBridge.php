@@ -43,4 +43,9 @@ class PaymentToStoreFacadeBridge implements PaymentToStoreFacadeInterface
     {
         return $this->storeFacade->getStoreByStoreReference($storeReference);
     }
+
+    public function getAllStores(): array
+    {
+        return $this->storeFacade->getAllStores();
+    }
 }
