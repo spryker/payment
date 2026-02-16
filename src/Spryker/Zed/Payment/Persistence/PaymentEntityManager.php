@@ -126,6 +126,7 @@ class PaymentEntityManager extends AbstractEntityManager implements PaymentEntit
             return;
         }
 
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (method_exists($paymentMethodEntity, 'getIsHidden')) {
             $paymentMethodEntity->setIsHidden(true);
             $paymentMethodTransfer->setIsHidden(true);
