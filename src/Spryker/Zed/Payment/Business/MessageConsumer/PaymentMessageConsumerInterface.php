@@ -11,10 +11,5 @@ use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 
 interface PaymentMessageConsumerInterface
 {
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\AbstractTransfer $messageTransfer
-     *
-     * @return void
-     */
     public function consumePaymentMessage(AbstractTransfer $messageTransfer): void;
 }

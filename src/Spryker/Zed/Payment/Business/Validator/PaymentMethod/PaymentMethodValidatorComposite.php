@@ -24,11 +24,6 @@ class PaymentMethodValidatorComposite implements PaymentMethodValidatorInterface
         $this->paymentMethodValidators = $paymentMethodValidators;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     public function validate(PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer): PaymentMethodCollectionResponseTransfer
     {
         foreach ($this->paymentMethodValidators as $paymentMethodValidator) {

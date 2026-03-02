@@ -21,33 +21,18 @@ use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
  */
 class GatewayController extends AbstractGatewayController
 {
-    /**
-     * @param \Generated\Shared\Transfer\PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PreOrderPaymentResponseTransfer
-     */
     public function initializePreOrderPaymentAction(
         PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
     ): PreOrderPaymentResponseTransfer {
         return $this->getFacade()->initializePreOrderPayment($preOrderPaymentRequestTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PreOrderPaymentResponseTransfer
-     */
     public function cancelPreOrderPaymentAction(
         PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
     ): PreOrderPaymentResponseTransfer {
         return $this->getFacade()->cancelPreOrderPayment($preOrderPaymentRequestTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
-     */
     public function getAvailableMethodsAction(QuoteTransfer $quoteTransfer): PaymentMethodsTransfer
     {
         return $this->getFacade()->getAvailableMethods($quoteTransfer);

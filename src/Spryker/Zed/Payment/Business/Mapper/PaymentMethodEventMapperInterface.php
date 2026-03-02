@@ -14,34 +14,16 @@ use Generated\Shared\Transfer\UpdatePaymentMethodTransfer;
 
 interface PaymentMethodEventMapperInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AddPaymentMethodTransfer $addPaymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function mapAddPaymentMethodTransferToPaymentMethodTransfer(
         AddPaymentMethodTransfer $addPaymentMethodTransfer,
         PaymentMethodTransfer $paymentMethodTransfer
     ): PaymentMethodTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\UpdatePaymentMethodTransfer $updatePaymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function mapUpdatePaymentMethodTransferToPaymentMethodTransfer(
         UpdatePaymentMethodTransfer $updatePaymentMethodTransfer,
         PaymentMethodTransfer $paymentMethodTransfer
     ): PaymentMethodTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function mapDeletePaymentMethodTransferToPaymentMethodTransfer(
         DeletePaymentMethodTransfer $deletePaymentMethodTransfer,
         PaymentMethodTransfer $paymentMethodTransfer

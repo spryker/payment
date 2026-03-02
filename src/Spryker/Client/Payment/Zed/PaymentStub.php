@@ -20,9 +20,6 @@ class PaymentStub implements PaymentStubInterface
      */
     protected $zedRequestClient;
 
-    /**
-     * @param \Spryker\Client\Payment\Dependency\Client\PaymentToZedRequestClientInterface $zedRequestClient
-     */
     public function __construct(PaymentToZedRequestClientInterface $zedRequestClient)
     {
         $this->zedRequestClient = $zedRequestClient;

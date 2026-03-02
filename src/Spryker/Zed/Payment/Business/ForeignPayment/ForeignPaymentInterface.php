@@ -14,40 +14,18 @@ use Generated\Shared\Transfer\QuoteTransfer;
 
 interface ForeignPaymentInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     *
-     * @return void
-     */
     public function initializePayment(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): void;
 
-    /**
-     * @param \Generated\Shared\Transfer\PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PreOrderPaymentResponseTransfer
-     */
     public function initializePreOrderPayment(
         PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
     ): PreOrderPaymentResponseTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PreOrderPaymentResponseTransfer
-     */
     public function cancelPreOrderPayment(
         PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
     ): PreOrderPaymentResponseTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     *
-     * @return void
-     */
     public function confirmPreOrderPayment(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): void;
 }

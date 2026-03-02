@@ -20,19 +20,11 @@ class PaymentWriter implements PaymentWriterInterface
      */
     protected $entityManager;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentEntityManagerInterface $entityManager
-     */
     public function __construct(PaymentEntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderResponseTransfer
-     */
     public function createPaymentProvider(PaymentProviderTransfer $paymentProviderTransfer): PaymentProviderResponseTransfer
     {
         $paymentProviderTransfer->requirePaymentProviderKey();
@@ -58,11 +50,6 @@ class PaymentWriter implements PaymentWriterInterface
         return $paymentProviderResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     public function createPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): PaymentMethodResponseTransfer
     {
         $paymentMethodTransfer
@@ -85,11 +72,6 @@ class PaymentWriter implements PaymentWriterInterface
             ->setIsSuccessful((bool)$paymentMethodTransfer->getIdPaymentMethod());
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     public function deactivatePaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): PaymentMethodResponseTransfer
     {
         $paymentMethodTransfer->setIsActive(false);
@@ -101,11 +83,6 @@ class PaymentWriter implements PaymentWriterInterface
             ->setIsSuccessful($paymentMethodTransfer !== null);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     public function activatePaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): PaymentMethodResponseTransfer
     {
         $paymentMethodTransfer->setIsActive(true);

@@ -39,20 +39,12 @@ class PaymentMethodUniqueValidator implements PaymentMethodValidatorInterface
      */
     protected $paymentMethodEntityIdentifierBuilder;
 
-    /**
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentMethodEntityIdentifierBuilderInterface $paymentMethodEntityIdentifierBuilder
-     */
     public function __construct(
         PaymentMethodEntityIdentifierBuilderInterface $paymentMethodEntityIdentifierBuilder
     ) {
         $this->paymentMethodEntityIdentifierBuilder = $paymentMethodEntityIdentifierBuilder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     public function validate(PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer): PaymentMethodCollectionResponseTransfer
     {
         $paymentMethodKeys = [];
@@ -78,13 +70,6 @@ class PaymentMethodUniqueValidator implements PaymentMethodValidatorInterface
         return $paymentMethodCollectionResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param array $paymentMethodKeys
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     protected function validateThatPaymentMethodKeyIsUnique(
         PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer,
         PaymentMethodTransfer $paymentMethodTransfer,

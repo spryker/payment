@@ -16,21 +16,11 @@ class PaymentMethodKeyGenerator implements PaymentMethodKeyGeneratorInterface
      */
     protected $utilTextService;
 
-    /**
-     * @param \Spryker\Zed\Payment\Dependency\Service\PaymentToUtilTextServiceInterface $utilTextService
-     */
     public function __construct(PaymentToUtilTextServiceInterface $utilTextService)
     {
         $this->utilTextService = $utilTextService;
     }
 
-    /**
-     * @param string $paymentProviderName
-     * @param string $paymentMethodName
-     * @param string $storeName
-     *
-     * @return string
-     */
     public function generatePaymentMethodKey(
         string $paymentProviderName,
         string $paymentMethodName,
@@ -41,12 +31,6 @@ class PaymentMethodKeyGenerator implements PaymentMethodKeyGeneratorInterface
         );
     }
 
-    /**
-     * @param string $paymentProviderName
-     * @param string $paymentMethodName
-     *
-     * @return string
-     */
     public function generate(
         string $paymentProviderName,
         string $paymentMethodName

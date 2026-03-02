@@ -81,15 +81,6 @@ class ForeignPayment implements ForeignPaymentInterface
      */
     protected PaymentToUtilEncodingServiceInterface $utilEncodingService;
 
-    /**
-     * @param \Spryker\Zed\Payment\Business\Mapper\QuoteDataMapperInterface $quoteDataMapper
-     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToLocaleFacadeInterface $localeFacade
-     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToKernelAppFacadeInterface $kernelAppFacade
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     * @param \Spryker\Zed\Payment\PaymentConfig $paymentConfig
-     * @param \Spryker\Service\Payment\PaymentServiceInterface $paymentService
-     * @param \Spryker\Zed\Payment\Dependency\Service\PaymentToUtilEncodingServiceInterface $utilEncodingService
-     */
     public function __construct(
         QuoteDataMapperInterface $quoteDataMapper,
         PaymentToLocaleFacadeInterface $localeFacade,
@@ -108,12 +99,6 @@ class ForeignPayment implements ForeignPaymentInterface
         $this->utilEncodingService = $utilEncodingService;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     *
-     * @return void
-     */
     public function initializePayment(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
@@ -219,11 +204,6 @@ class ForeignPayment implements ForeignPaymentInterface
             ->setRedirectUrl($redirectUrl);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PreOrderPaymentResponseTransfer
-     */
     public function initializePreOrderPayment(
         PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
     ): PreOrderPaymentResponseTransfer {
@@ -312,12 +292,6 @@ class ForeignPayment implements ForeignPaymentInterface
         return $initializePreOrderPaymentResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     *
-     * @return void
-     */
     public function confirmPreOrderPayment(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
@@ -374,21 +348,11 @@ class ForeignPayment implements ForeignPaymentInterface
         }
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return bool
-     */
     protected function hasQuotePreOrderPaymentData(QuoteTransfer $quoteTransfer): bool
     {
         return count($quoteTransfer->getPreOrderPaymentData()) > 0;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return bool
-     */
     protected function isExpressCheckoutPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
         $checkoutConfigurationTransfer = $paymentMethodTransfer->getPaymentMethodAppConfiguration()->getCheckoutConfiguration();
@@ -396,11 +360,6 @@ class ForeignPayment implements ForeignPaymentInterface
         return $checkoutConfigurationTransfer && $checkoutConfigurationTransfer->getStrategy() === PaymentConfig::CHECKOUT_STRATEGY_EXPRESS_CHECKOUT;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PreOrderPaymentResponseTransfer
-     */
     public function cancelPreOrderPayment(
         PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
     ): PreOrderPaymentResponseTransfer {
@@ -450,11 +409,6 @@ class ForeignPayment implements ForeignPaymentInterface
         return $cancelPreOrderPaymentResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AcpHttpResponseTransfer $acpHttpResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\CheckoutErrorTransfer
-     */
     protected function createCheckoutErrorTransfer(
         AcpHttpResponseTransfer $acpHttpResponseTransfer
     ): CheckoutErrorTransfer {
@@ -463,12 +417,6 @@ class ForeignPayment implements ForeignPaymentInterface
             ->setMessage($this->paymentConfig->isDebugEnabled() ? $acpHttpResponseTransfer->getContent() : static::ERROR_MESSAGE_PAYMENT_AUTHORIZATION);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AcpHttpRequestTransfer $acpHttpRequestTransfer
-     * @param \Generated\Shared\Transfer\AcpHttpResponseTransfer $acpHttpResponseTransfer
-     *
-     * @return void
-     */
     protected function logAcpHttpResponseError(
         AcpHttpRequestTransfer $acpHttpRequestTransfer,
         AcpHttpResponseTransfer $acpHttpResponseTransfer
@@ -595,11 +543,6 @@ class ForeignPayment implements ForeignPaymentInterface
         return Url::generate($url, $queryParts)->build();
     }
 
-    /**
-     * @param string $url
-     *
-     * @return bool
-     */
     protected function isAbsoluteUrl(string $url): bool
     {
         $urlComponents = parse_url($url);
@@ -627,11 +570,6 @@ class ForeignPayment implements ForeignPaymentInterface
         return $url;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
-     *
-     * @return string
-     */
     protected function getCurrentLanguage(LocaleTransfer $localeTransfer): string
     {
         $splitLocale = explode('_', $localeTransfer->getLocaleNameOrFail());
@@ -639,11 +577,6 @@ class ForeignPayment implements ForeignPaymentInterface
         return $splitLocale[0];
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     protected function getPaymentMethodTransferFromRequestTransfer(
         PreOrderPaymentRequestTransfer $preOrderPaymentRequestTransfer
     ): PaymentMethodTransfer {

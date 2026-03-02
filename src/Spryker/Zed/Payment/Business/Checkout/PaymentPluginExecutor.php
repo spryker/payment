@@ -43,10 +43,6 @@ class PaymentPluginExecutor implements PaymentPluginExecutorInterface
      */
     protected $executedProviderPlugins = [];
 
-    /**
-     * @param \Spryker\Zed\Payment\Dependency\Plugin\Checkout\CheckoutPluginCollectionInterface $checkoutPlugins
-     * @param \Spryker\Zed\Payment\Business\Order\SalesPaymentSaverInterface $salesPaymentSaver
-     */
     public function __construct(
         CheckoutPluginCollectionInterface $checkoutPlugins,
         SalesPaymentSaverInterface $salesPaymentSaver

@@ -29,10 +29,6 @@ class SalesPaymentHydrator implements SalesPaymentHydratorInterface
      */
     protected $paymentQueryContainer;
 
-    /**
-     * @param \Spryker\Zed\Payment\Dependency\Plugin\Sales\PaymentHydratorPluginCollectionInterface $paymentHydratePluginCollection
-     * @param \Spryker\Zed\Payment\Persistence\PaymentQueryContainerInterface $paymentQueryContainer
-     */
     public function __construct(
         PaymentHydratorPluginCollectionInterface $paymentHydratePluginCollection,
         PaymentQueryContainerInterface $paymentQueryContainer
@@ -41,11 +37,6 @@ class SalesPaymentHydrator implements SalesPaymentHydratorInterface
         $this->paymentQueryContainer = $paymentQueryContainer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return \Generated\Shared\Transfer\OrderTransfer
-     */
     public function hydrateOrderWithPayment(OrderTransfer $orderTransfer): OrderTransfer
     {
         $orderTransfer->requireIdSalesOrder();
@@ -56,11 +47,6 @@ class SalesPaymentHydrator implements SalesPaymentHydratorInterface
         return $orderTransfer;
     }
 
-    /**
-     * @param \Orm\Zed\Payment\Persistence\SpySalesPayment $salesPaymentEntity
-     *
-     * @return \Generated\Shared\Transfer\PaymentTransfer
-     */
     protected function mapPaymentTransfer(SpySalesPayment $salesPaymentEntity): PaymentTransfer
     {
         $paymentTransfer = new PaymentTransfer();
@@ -90,11 +76,6 @@ class SalesPaymentHydrator implements SalesPaymentHydratorInterface
         return $orderTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return int
-     */
     protected function calculatePriceToPay(OrderTransfer $orderTransfer): int
     {
         $priceToPay = $orderTransfer->getTotals()->getGrandTotal();
@@ -114,12 +95,6 @@ class SalesPaymentHydrator implements SalesPaymentHydratorInterface
         return $priceToPay;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentTransfer
-     */
     protected function executePaymentHydratorPlugin(PaymentTransfer $paymentTransfer, OrderTransfer $orderTransfer): PaymentTransfer
     {
         if ($this->paymentHydratePluginCollection->has($paymentTransfer->getPaymentProvider())) {

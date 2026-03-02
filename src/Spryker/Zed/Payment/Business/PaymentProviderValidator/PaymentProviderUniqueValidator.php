@@ -39,20 +39,12 @@ class PaymentProviderUniqueValidator implements PaymentProviderValidatorInterfac
      */
     protected $paymentProviderEntityIdentifierBuilder;
 
-    /**
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentProviderEntityIdentifierBuilderInterface $paymentProviderEntityIdentifierBuilder
-     */
     public function __construct(
         PaymentProviderEntityIdentifierBuilderInterface $paymentProviderEntityIdentifierBuilder
     ) {
         $this->paymentProviderEntityIdentifierBuilder = $paymentProviderEntityIdentifierBuilder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     public function validate(
         PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
     ): PaymentProviderCollectionResponseTransfer {

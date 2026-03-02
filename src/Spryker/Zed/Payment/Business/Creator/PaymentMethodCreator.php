@@ -34,11 +34,6 @@ class PaymentMethodCreator implements PaymentMethodCreatorInterface
      */
     protected $paymentMethodEntityIdentifierBuilder;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentEntityManagerInterface $paymentEntityManager
-     * @param \Spryker\Zed\Payment\Business\Validator\PaymentMethod\PaymentMethodValidatorInterface $paymentMethodValidator
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentMethodEntityIdentifierBuilderInterface $paymentMethodEntityIdentifierBuilder
-     */
     public function __construct(
         PaymentEntityManagerInterface $paymentEntityManager,
         PaymentMethodValidatorInterface $paymentMethodValidator,
@@ -49,11 +44,6 @@ class PaymentMethodCreator implements PaymentMethodCreatorInterface
         $this->paymentMethodEntityIdentifierBuilder = $paymentMethodEntityIdentifierBuilder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     public function createPaymentMethodCollection(
         PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer
     ): PaymentMethodCollectionResponseTransfer {
@@ -80,11 +70,6 @@ class PaymentMethodCreator implements PaymentMethodCreatorInterface
         });
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer
-     *
-     * @return void
-     */
     protected function assertRequiredFields(PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer): void
     {
         $paymentMethodCollectionRequestTransfer
@@ -99,11 +84,6 @@ class PaymentMethodCreator implements PaymentMethodCreatorInterface
         }
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     protected function executeCreatePaymentMethodCollectionTransaction(
         PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
     ): PaymentMethodCollectionResponseTransfer {

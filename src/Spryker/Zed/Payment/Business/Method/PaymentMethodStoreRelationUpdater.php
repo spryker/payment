@@ -26,10 +26,6 @@ class PaymentMethodStoreRelationUpdater implements PaymentMethodStoreRelationUpd
      */
     protected $paymentRepository;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentEntityManagerInterface $paymentEntityManager
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     */
     public function __construct(
         PaymentEntityManagerInterface $paymentEntityManager,
         PaymentRepositoryInterface $paymentRepository
@@ -38,11 +34,6 @@ class PaymentMethodStoreRelationUpdater implements PaymentMethodStoreRelationUpd
         $this->paymentRepository = $paymentRepository;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer
-     *
-     * @return void
-     */
     public function update(StoreRelationTransfer $storeRelationTransfer): void
     {
         $this->getTransactionHandler()->handleTransaction(function () use ($storeRelationTransfer) {
@@ -50,11 +41,6 @@ class PaymentMethodStoreRelationUpdater implements PaymentMethodStoreRelationUpd
         });
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer
-     *
-     * @return void
-     */
     protected function executeUpdateStoreRelationTransaction(StoreRelationTransfer $storeRelationTransfer): void
     {
         $storeRelationTransfer->requireIdEntity();

@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\PaymentProviderTransfer;
 
 interface PaymentProviderEntityIdentifierBuilderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     *
-     * @return string
-     */
     public function buildEntityIdentifier(PaymentProviderTransfer $paymentProviderTransfer): string;
 }

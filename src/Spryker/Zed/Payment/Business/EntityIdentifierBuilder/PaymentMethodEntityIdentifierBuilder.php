@@ -11,11 +11,6 @@ use Generated\Shared\Transfer\PaymentMethodTransfer;
 
 class PaymentMethodEntityIdentifierBuilder implements PaymentMethodEntityIdentifierBuilderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return string
-     */
     public function buildEntityIdentifier(PaymentMethodTransfer $paymentMethodTransfer): string
     {
         return $paymentMethodTransfer->getPaymentMethodKeyOrFail();

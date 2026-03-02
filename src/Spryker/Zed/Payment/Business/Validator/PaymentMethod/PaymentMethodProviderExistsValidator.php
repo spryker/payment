@@ -37,10 +37,6 @@ class PaymentMethodProviderExistsValidator implements PaymentMethodValidatorInte
      */
     protected $paymentMethodEntityIdentifierBuilder;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentMethodEntityIdentifierBuilderInterface $paymentMethodEntityIdentifierBuilder
-     */
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
         PaymentMethodEntityIdentifierBuilderInterface $paymentMethodEntityIdentifierBuilder
@@ -49,11 +45,6 @@ class PaymentMethodProviderExistsValidator implements PaymentMethodValidatorInte
         $this->paymentMethodEntityIdentifierBuilder = $paymentMethodEntityIdentifierBuilder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     public function validate(PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer): PaymentMethodCollectionResponseTransfer
     {
         foreach ($paymentMethodCollectionResponseTransfer->getPaymentMethods() as $paymentMethodTransfer) {
@@ -68,11 +59,6 @@ class PaymentMethodProviderExistsValidator implements PaymentMethodValidatorInte
         return $paymentMethodCollectionResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return bool
-     */
     protected function hasPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
         $paymentProviderConditionsTransfer = (new PaymentProviderConditionsTransfer())->addIdPaymentProvider($paymentMethodTransfer->getIdPaymentProviderOrFail());
@@ -81,12 +67,6 @@ class PaymentMethodProviderExistsValidator implements PaymentMethodValidatorInte
         return $this->paymentRepository->hasPaymentProvider($paymentProviderCriteriaTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     protected function addErrorToPaymentMethodCollectionResponseTransfer(
         PaymentMethodTransfer $paymentMethodTransfer,
         PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer

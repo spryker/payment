@@ -48,11 +48,6 @@ class PaymentRequestExecutor implements PaymentRequestExecutorInterface
      */
     protected PaymentConfig $config;
 
-    /**
-     * @param \Spryker\Client\Payment\Dependency\Service\PaymentToUtilEncodingServiceInterface $utilEncodingService
-     * @param \Spryker\Client\Payment\Dependency\External\PaymentToHttpClientAdapterInterface $httpClient
-     * @param \Spryker\Client\Payment\PaymentConfig $config
-     */
     public function __construct(
         PaymentToUtilEncodingServiceInterface $utilEncodingService,
         PaymentToHttpClientAdapterInterface $httpClient,
@@ -63,11 +58,6 @@ class PaymentRequestExecutor implements PaymentRequestExecutorInterface
         $this->config = $config;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
-     */
     public function authorizeForeignPayment(
         PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
     ): PaymentAuthorizeResponseTransfer {
@@ -107,12 +97,6 @@ class PaymentRequestExecutor implements PaymentRequestExecutorInterface
         return $paymentAuthorizeResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
-     * @param \Psr\Http\Message\ResponseInterface|null $response
-     *
-     * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
-     */
     protected function getFailedPaymentAuthorizeResponse(
         PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer,
         ?ResponseInterface $response
@@ -122,12 +106,6 @@ class PaymentRequestExecutor implements PaymentRequestExecutorInterface
             ->setMessage($this->getPaymentAuthorizationErrorMessage($paymentAuthorizeRequestTransfer, $response));
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
-     * @param \Psr\Http\Message\ResponseInterface|null $response
-     *
-     * @return string
-     */
     protected function getPaymentAuthorizationErrorMessage(
         PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer,
         ?ResponseInterface $response

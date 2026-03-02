@@ -37,10 +37,6 @@ class PaymentProviderExistsValidator implements PaymentProviderValidatorInterfac
      */
     protected $paymentProviderEntityIdentifierBuilder;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentProviderEntityIdentifierBuilderInterface $paymentProviderEntityIdentifierBuilder
-     */
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
         PaymentProviderEntityIdentifierBuilderInterface $paymentProviderEntityIdentifierBuilder
@@ -49,11 +45,6 @@ class PaymentProviderExistsValidator implements PaymentProviderValidatorInterfac
         $this->paymentProviderEntityIdentifierBuilder = $paymentProviderEntityIdentifierBuilder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     public function validate(
         PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
     ): PaymentProviderCollectionResponseTransfer {
@@ -69,11 +60,6 @@ class PaymentProviderExistsValidator implements PaymentProviderValidatorInterfac
         return $paymentProviderCollectionResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     *
-     * @return bool
-     */
     protected function hasPaymentProvider(PaymentProviderTransfer $paymentProviderTransfer): bool
     {
         $paymentMethodConditionsTransfer = (new PaymentProviderConditionsTransfer())->addPaymentProviderKey($paymentProviderTransfer->getPaymentProviderKeyOrFail());
@@ -82,12 +68,6 @@ class PaymentProviderExistsValidator implements PaymentProviderValidatorInterfac
         return $this->paymentRepository->hasPaymentProvider($paymentProviderCriteriaTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     protected function addErrorToPaymentProviderCollectionResponseTransfer(
         PaymentProviderTransfer $paymentProviderTransfer,
         PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer

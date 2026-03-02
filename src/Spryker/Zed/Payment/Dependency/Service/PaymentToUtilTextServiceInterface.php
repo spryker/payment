@@ -9,10 +9,5 @@ namespace Spryker\Zed\Payment\Dependency\Service;
 
 interface PaymentToUtilTextServiceInterface
 {
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
     public function generateSlug(string $value): string;
 }

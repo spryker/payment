@@ -23,19 +23,11 @@ class PaymentMethodFinder implements PaymentMethodFinderInterface
      */
     protected $paymentRepository;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     */
     public function __construct(PaymentRepositoryInterface $paymentRepository)
     {
         $this->paymentRepository = $paymentRepository;
     }
 
-    /**
-     * @param int $idPaymentMethod
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     public function findPaymentMethodById(int $idPaymentMethod): PaymentMethodResponseTransfer
     {
         $paymentMethodResponseTransfer = new PaymentMethodResponseTransfer();
@@ -56,9 +48,6 @@ class PaymentMethodFinder implements PaymentMethodFinderInterface
         return $paymentMethodResponseTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\MessageTransfer
-     */
     protected function getMessageNotFound(): MessageTransfer
     {
         return (new MessageTransfer())->setValue(static::MESSAGE_PAYMENT_METHOD_NOT_FOUND);

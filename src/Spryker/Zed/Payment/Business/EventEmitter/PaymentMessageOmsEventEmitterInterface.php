@@ -11,10 +11,5 @@ use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 interface PaymentMessageOmsEventEmitterInterface
 {
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $orderPaymentEventTransfer
-     *
-     * @return void
-     */
     public function triggerPaymentMessageOmsEvent(TransferInterface $orderPaymentEventTransfer): void;
 }

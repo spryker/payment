@@ -12,11 +12,6 @@ use Generated\Shared\Transfer\PaymentProviderTransfer;
 
 interface PaymentEntityManagerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
     public function updatePaymentMethod(
         PaymentMethodTransfer $paymentMethodTransfer
     ): ?PaymentMethodTransfer;
@@ -43,24 +38,9 @@ interface PaymentEntityManagerInterface
         int $idPaymentMethod
     ): void;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return void
-     */
     public function hidePaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): void;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer
-     */
     public function createPaymentProvider(PaymentProviderTransfer $paymentProviderTransfer): PaymentProviderTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function createPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): PaymentMethodTransfer;
 }

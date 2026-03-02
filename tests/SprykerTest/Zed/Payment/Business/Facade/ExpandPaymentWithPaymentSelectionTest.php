@@ -43,9 +43,6 @@ class ExpandPaymentWithPaymentSelectionTest extends Unit
      */
     protected $paymentFacade;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -53,9 +50,6 @@ class ExpandPaymentWithPaymentSelectionTest extends Unit
         $this->paymentFacade = $this->tester->getFacade();
     }
 
-    /**
-     * @return void
-     */
     public function testExpandPaymentWithPaymentSelectionWorksForPaymentTransferWithNoPaymentSelectionSet(): void
     {
         // Arrange
@@ -72,9 +66,6 @@ class ExpandPaymentWithPaymentSelectionTest extends Unit
         $this->assertNotEmpty($paymentTransfer->getPaymentSelection());
     }
 
-    /**
-     * @return void
-     */
     public function testExpandPaymentWithPaymentSelectionDoesNothingForPaymentTransferWithPaymentSelectionSet(): void
     {
         // Arrange
@@ -93,9 +84,6 @@ class ExpandPaymentWithPaymentSelectionTest extends Unit
         $this->assertEquals(static::TEST_PAYMENT_SELECTION, $paymentTransfer->getPaymentSelection());
     }
 
-    /**
-     * @return void
-     */
     public function testExpandPaymentWithPaymentSelectionWorksForPaymentTransferWithForeignPaymentMethodAndNoPaymentSelectionSet(): void
     {
         // Arrange
@@ -114,12 +102,6 @@ class ExpandPaymentWithPaymentSelectionTest extends Unit
         $this->assertStringContainsString(PaymentConfig::PAYMENT_FOREIGN_PROVIDER, $paymentTransfer->getPaymentSelection());
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProvider
-     * @param array $seed
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     protected function preparePaymentMethod(PaymentProviderTransfer $paymentProvider, array $seed = []): PaymentMethodTransfer
     {
         return $this->tester->havePaymentMethod(array_merge($seed, [

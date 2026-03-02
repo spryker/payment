@@ -37,9 +37,6 @@ class CheckoutPluginCollectionTest extends Unit
      */
     public const PLUGIN_TYPE = 'plugin type';
 
-    /**
-     * @return void
-     */
     public function testAddShouldReturnInstance(): void
     {
         $checkoutPluginCollection = new CheckoutPluginCollection();
@@ -49,9 +46,6 @@ class CheckoutPluginCollectionTest extends Unit
         $this->assertInstanceOf(CheckoutPluginCollectionInterface::class, $result);
     }
 
-    /**
-     * @return void
-     */
     public function testHasShouldReturnFalse(): void
     {
         $checkoutPluginCollection = new CheckoutPluginCollection();
@@ -59,9 +53,6 @@ class CheckoutPluginCollectionTest extends Unit
         $this->assertFalse($checkoutPluginCollection->has(static::PROVIDER, static::PLUGIN_TYPE));
     }
 
-    /**
-     * @return void
-     */
     public function testHasShouldReturnTrue(): void
     {
         $checkoutPluginCollection = new CheckoutPluginCollection();
@@ -71,9 +62,6 @@ class CheckoutPluginCollectionTest extends Unit
         $this->assertTrue($checkoutPluginCollection->has(static::PROVIDER, static::PLUGIN_TYPE));
     }
 
-    /**
-     * @return void
-     */
     public function testGetShouldReturnPluginForGivenProviderAndPluginType(): void
     {
         $checkoutPluginCollection = new CheckoutPluginCollection();
@@ -84,9 +72,6 @@ class CheckoutPluginCollectionTest extends Unit
         $this->assertSame($pluginMock, $result);
     }
 
-    /**
-     * @return void
-     */
     public function testGetShouldThrowExceptionIfProviderNotFound(): void
     {
         $checkoutPluginCollection = new CheckoutPluginCollection();
@@ -98,9 +83,6 @@ class CheckoutPluginCollectionTest extends Unit
         $checkoutPluginCollection->get('unknown', static::PLUGIN_TYPE);
     }
 
-    /**
-     * @return void
-     */
     public function testGetShouldThrowExceptionIfPluginTypeNotFound(): void
     {
         $checkoutPluginCollection = new CheckoutPluginCollection();

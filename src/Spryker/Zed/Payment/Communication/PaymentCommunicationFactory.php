@@ -22,17 +22,11 @@ use Spryker\Zed\Payment\PaymentDependencyProvider;
  */
 class PaymentCommunicationFactory extends AbstractCommunicationFactory
 {
-    /**
-     * @return \Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeBridge
-     */
     public function getStoreFacade(): PaymentToStoreFacadeBridge
     {
         return $this->getProvidedDependency(PaymentDependencyProvider::FACADE_STORE);
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Communication\Mapper\OrderMapperInterface
-     */
     public function createOrderMapper(): OrderMapperInterface
     {
         return new OrderMapper();

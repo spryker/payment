@@ -12,9 +12,6 @@ use RuntimeException;
 
 class PaymentHttpRequestException extends RuntimeException
 {
-    /**
-     * @return \Psr\Http\Message\ResponseInterface|null
-     */
     public function getResponse(): ?ResponseInterface
     {
         $previous = $this->getPrevious();

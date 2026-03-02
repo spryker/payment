@@ -41,9 +41,6 @@ class GetPaymentProviderCollectionTest extends Unit
      */
     protected $paymentFacade;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -53,9 +50,6 @@ class GetPaymentProviderCollectionTest extends Unit
         $this->paymentFacade = $this->tester->getFacade();
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -63,9 +57,6 @@ class GetPaymentProviderCollectionTest extends Unit
         $this->tester->ensurePaymentProviderTableIsEmpty();
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentProviderCollectionReturnsCollectionWithPersistedPaymentProviders(): void
     {
         // Arrange
@@ -81,9 +72,6 @@ class GetPaymentProviderCollectionTest extends Unit
         $this->assertCount(2, $paymentProviderCollectionTransfer->getPaymentProviders());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentProviderCollectionReturnsCollectionWithPaymentProviderByKeys(): void
     {
         // Arrange
@@ -102,9 +90,6 @@ class GetPaymentProviderCollectionTest extends Unit
         $this->assertCount(1, $paymentProviderCollectionTransfer->getPaymentProviders());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentProviderCollectionReturnsCollectionWithPaymentProviderByNames(): void
     {
         // Arrange
@@ -123,9 +108,6 @@ class GetPaymentProviderCollectionTest extends Unit
         $this->assertCount(1, $paymentProviderCollectionTransfer->getPaymentProviders());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentProviderCollectionReturnsCollectionWithNoPaymentProviderByNames(): void
     {
         // Arrange
@@ -141,9 +123,6 @@ class GetPaymentProviderCollectionTest extends Unit
         $this->assertCount(0, $paymentProviderCollectionTransfer->getPaymentProviders());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentProviderCollectionReturnsCollectionWithPaymentProviderHavingCorrectProperties(): void
     {
         // Arrange

@@ -18,71 +18,23 @@ use Generated\Shared\Transfer\StoreRelationTransfer;
 
 interface PaymentRepositoryInterface
 {
-    /**
-     * @param int $idPaymentMethod
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
     public function findPaymentMethodById(int $idPaymentMethod): ?PaymentMethodTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
     public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer;
 
-    /**
-     * @param int $idPaymentMethod
-     *
-     * @return \Generated\Shared\Transfer\StoreRelationTransfer
-     */
     public function getStoreRelationByIdPaymentMethod(int $idPaymentMethod): StoreRelationTransfer;
 
-    /**
-     * @param string $storeName
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer
-     */
     public function getAvailablePaymentProvidersForStore(string $storeName): PaymentProviderCollectionTransfer;
 
-    /**
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
-     */
     public function getPaymentMethodsWithStoreRelation(): PaymentMethodsTransfer;
 
-    /**
-     * @param string $paymentProviderKey
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer|null
-     */
     public function findPaymentProviderByKey(string $paymentProviderKey): ?PaymentProviderTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer
-     */
     public function getPaymentProviderCollection(PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer): PaymentProviderCollectionTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionTransfer
-     */
     public function getPaymentMethodCollection(PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer): PaymentMethodCollectionTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer
-     *
-     * @return bool
-     */
     public function hasPaymentMethod(PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer): bool;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
-     *
-     * @return bool
-     */
     public function hasPaymentProvider(PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer): bool;
 }

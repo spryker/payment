@@ -11,11 +11,6 @@ use Generated\Shared\Transfer\PaymentTransfer;
 
 class PaymentMethodKeyExtractor implements PaymentMethodKeyExtractorInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
-     *
-     * @return string
-     */
     public function getPaymentSelectionKey(PaymentTransfer $paymentTransfer): string
     {
         if (!$paymentTransfer->getPaymentSelection()) {
@@ -31,11 +26,6 @@ class PaymentMethodKeyExtractor implements PaymentMethodKeyExtractorInterface
         return $paymentTransfer->getPaymentSelectionOrFail();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
-     *
-     * @return string
-     */
     public function getPaymentMethodKey(PaymentTransfer $paymentTransfer): string
     {
         if (!$paymentTransfer->getPaymentSelection()) {

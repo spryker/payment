@@ -18,9 +18,6 @@ class PaymentMessageConsumer implements PaymentMessageConsumerInterface
 {
     protected PaymentMethodUpdaterInterface $paymentMethodUpdater;
 
-    /**
-     * @param \Spryker\Zed\Payment\Business\Method\PaymentMethodUpdaterInterface $paymentMethodUpdater
-     */
     public function __construct(PaymentMethodUpdaterInterface $paymentMethodUpdater)
     {
         $this->paymentMethodUpdater = $paymentMethodUpdater;
@@ -49,31 +46,16 @@ class PaymentMessageConsumer implements PaymentMessageConsumerInterface
         };
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AddPaymentMethodTransfer $addPaymentMethodTransfer
-     *
-     * @return void
-     */
     protected function addPaymentMethod(AddPaymentMethodTransfer $addPaymentMethodTransfer): void
     {
         $this->paymentMethodUpdater->addPaymentMethod($addPaymentMethodTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\UpdatePaymentMethodTransfer $updatePaymentMethodTransfer
-     *
-     * @return void
-     */
     protected function updatePaymentMethod(UpdatePaymentMethodTransfer $updatePaymentMethodTransfer): void
     {
         $this->paymentMethodUpdater->updatePaymentMethod($updatePaymentMethodTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     *
-     * @return void
-     */
     protected function deletePaymentMethod(DeletePaymentMethodTransfer $deletePaymentMethodTransfer): void
     {
         $this->paymentMethodUpdater->deletePaymentMethod($deletePaymentMethodTransfer);

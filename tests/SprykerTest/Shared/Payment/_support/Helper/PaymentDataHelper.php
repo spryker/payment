@@ -24,26 +24,17 @@ use Orm\Zed\Payment\Persistence\SpyPaymentProviderQuery;
 
 class PaymentDataHelper extends Module
 {
-    /**
-     * @return void
-     */
     public function ensurePaymentMethodTableIsEmpty(): void
     {
         SpyPaymentMethodStoreQuery::create()->deleteAll();
         SpyPaymentMethodQuery::create()->deleteAll();
     }
 
-    /**
-     * @return void
-     */
     public function ensurePaymentMethodStoreTableIsEmpty(): void
     {
         SpyPaymentMethodStoreQuery::create()->deleteAll();
     }
 
-    /**
-     * @return void
-     */
     public function ensurePaymentProviderTableIsEmpty(): void
     {
         SpyPaymentMethodStoreQuery::create()->deleteAll();
@@ -51,11 +42,6 @@ class PaymentDataHelper extends Module
         SpyPaymentProviderQuery::create()->deleteAll();
     }
 
-    /**
-     * @param array $seed
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function havePaymentMethodWithPaymentProviderPersisted(array $seed = []): PaymentMethodTransfer
     {
         $paymentProviderTransfer = $this->havePaymentProvider($seed[PaymentMethodTransfer::PAYMENT_PROVIDER] ?? $seed);
@@ -66,11 +52,6 @@ class PaymentDataHelper extends Module
         return $this->havePaymentMethod($seed);
     }
 
-    /**
-     * @param array $override
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer
-     */
     public function havePaymentProvider(array $override = []): PaymentProviderTransfer
     {
         $paymentProviderTransfer = (new PaymentProviderBuilder())->seed($override)->build();
@@ -87,11 +68,6 @@ class PaymentDataHelper extends Module
         return $paymentProviderTransfer;
     }
 
-    /**
-     * @param array $override
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function havePaymentMethod(array $override = []): PaymentMethodTransfer
     {
         $paymentMethodTransfer = (new PaymentMethodBuilder())->seed($override)->build();
@@ -134,11 +110,6 @@ class PaymentDataHelper extends Module
         return $paymentMethodTransfer;
     }
 
-    /**
-     * @param int $idPaymentMethod
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
     public function findPaymentMethodById(int $idPaymentMethod): ?PaymentMethodTransfer
     {
         $paymentMethodEntity = SpyPaymentMethodQuery::create()
@@ -154,11 +125,6 @@ class PaymentDataHelper extends Module
         return $paymentMethodTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
     public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer
     {
         $paymentMethodEntity = SpyPaymentMethodQuery::create()

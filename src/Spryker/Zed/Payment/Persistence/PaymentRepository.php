@@ -24,11 +24,6 @@ use Spryker\Zed\Kernel\Persistence\AbstractRepository;
  */
 class PaymentRepository extends AbstractRepository implements PaymentRepositoryInterface
 {
-    /**
-     * @param int $idPaymentMethod
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
     public function findPaymentMethodById(int $idPaymentMethod): ?PaymentMethodTransfer
     {
         $paymentMethodEntity = $this->getFactory()
@@ -45,11 +40,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             ->mapPaymentMethodEntityToPaymentMethodTransfer($paymentMethodEntity, new PaymentMethodTransfer());
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer|null
-     */
     public function findPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): ?PaymentMethodTransfer
     {
         $paymentMethodQuery = $this->getFactory()->createPaymentMethodQuery();
@@ -79,11 +69,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             ->mapPaymentMethodEntityToPaymentMethodTransfer($paymentMethodEntity, new PaymentMethodTransfer());
     }
 
-    /**
-     * @param string $storeName
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer
-     */
     public function getAvailablePaymentProvidersForStore(string $storeName): PaymentProviderCollectionTransfer
     {
         $paymentProviderCollectionTransfer = new PaymentProviderCollectionTransfer();
@@ -115,11 +100,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             );
     }
 
-    /**
-     * @param int $idPaymentMethod
-     *
-     * @return \Generated\Shared\Transfer\StoreRelationTransfer
-     */
     public function getStoreRelationByIdPaymentMethod(int $idPaymentMethod): StoreRelationTransfer
     {
         $shipmentMethodStoreEntities = $this->getFactory()
@@ -135,9 +115,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             ->mapPaymentMethodStoreEntitiesToStoreRelationTransfer($shipmentMethodStoreEntities, $storeRelationTransfer);
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
-     */
     public function getPaymentMethodsWithStoreRelation(): PaymentMethodsTransfer
     {
         $paymentMethodsTransfer = new PaymentMethodsTransfer();
@@ -162,11 +139,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             );
     }
 
-    /**
-     * @param string $paymentProviderKey
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer|null
-     */
     public function findPaymentProviderByKey(string $paymentProviderKey): ?PaymentProviderTransfer
     {
         $paymentProviderTransfer = new PaymentProviderTransfer();
@@ -187,11 +159,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer
-     */
     public function getPaymentProviderCollection(PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer): PaymentProviderCollectionTransfer
     {
         $paymentProviderCollectionTransfer = new PaymentProviderCollectionTransfer();
@@ -216,11 +183,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionTransfer
-     */
     public function getPaymentMethodCollection(PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer): PaymentMethodCollectionTransfer
     {
         $paymentMethodCollectionTransfer = new PaymentMethodCollectionTransfer();
@@ -245,11 +207,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
             );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
-     *
-     * @return bool
-     */
     public function hasPaymentProvider(PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer): bool
     {
         return $this->applyPaymentProviderFilters(
@@ -258,11 +215,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         )->exists();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer
-     *
-     * @return bool
-     */
     public function hasPaymentMethod(PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer): bool
     {
         return $this->applyPaymentMethodFilters(
@@ -271,12 +223,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         )->exists();
     }
 
-    /**
-     * @param \Orm\Zed\Payment\Persistence\SpyPaymentMethodQuery $paymentMethodQuery
-     * @param \Generated\Shared\Transfer\PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer
-     *
-     * @return \Orm\Zed\Payment\Persistence\SpyPaymentMethodQuery
-     */
     protected function applyPaymentMethodFilters(
         SpyPaymentMethodQuery $paymentMethodQuery,
         PaymentMethodCriteriaTransfer $paymentMethodCriteriaTransfer
@@ -316,12 +262,6 @@ class PaymentRepository extends AbstractRepository implements PaymentRepositoryI
         return $paymentMethodQuery;
     }
 
-    /**
-     * @param \Orm\Zed\Payment\Persistence\SpyPaymentProviderQuery $paymentProviderQuery
-     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
-     *
-     * @return \Orm\Zed\Payment\Persistence\SpyPaymentProviderQuery
-     */
     protected function applyPaymentProviderFilters(
         SpyPaymentProviderQuery $paymentProviderQuery,
         PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer

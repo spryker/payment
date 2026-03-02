@@ -12,11 +12,6 @@ use Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer;
 
 interface PaymentMethodCreatorInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     public function createPaymentMethodCollection(
         PaymentMethodCollectionRequestTransfer $paymentMethodCollectionRequestTransfer
     ): PaymentMethodCollectionResponseTransfer;

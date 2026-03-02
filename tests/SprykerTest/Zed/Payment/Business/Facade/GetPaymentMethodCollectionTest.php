@@ -50,9 +50,6 @@ class GetPaymentMethodCollectionTest extends Unit
      */
     protected $paymentFacade;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -61,9 +58,6 @@ class GetPaymentMethodCollectionTest extends Unit
         $this->paymentFacade = $this->tester->getFacade();
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -71,9 +65,6 @@ class GetPaymentMethodCollectionTest extends Unit
         $this->tester->ensurePaymentProviderTableIsEmpty();
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentMethodCollectionReturnsCollectionWithPersistedPaymentMethods(): void
     {
         // Arrange
@@ -94,9 +85,6 @@ class GetPaymentMethodCollectionTest extends Unit
         $this->assertCount(2, $paymentMethodCollectionTransfer->getPaymentMethods());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentMethodCollectionReturnsCollectionWithPaymentMethodByNames(): void
     {
         // Arrange
@@ -121,9 +109,6 @@ class GetPaymentMethodCollectionTest extends Unit
         $this->assertCount(1, $paymentMethodCollectionTransfer->getPaymentMethods());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentMethodCollectionReturnsCollectionWithPaymentMethodByPaymentMethodKey(): void
     {
         // Arrange
@@ -148,9 +133,6 @@ class GetPaymentMethodCollectionTest extends Unit
         $this->assertCount(1, $paymentMethodCollectionTransfer->getPaymentMethods());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentMethodCollectionReturnsCollectionWithPaymentMethodByNamesAndPaymentMethodKey(): void
     {
         // Arrange
@@ -176,9 +158,6 @@ class GetPaymentMethodCollectionTest extends Unit
         $this->assertCount(1, $paymentMethodCollectionTransfer->getPaymentMethods());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentMethodCollectionReturnsCollectionWithNoPaymentMethodByNamesAndPaymentMethodKey(): void
     {
         // Arrange
@@ -202,9 +181,6 @@ class GetPaymentMethodCollectionTest extends Unit
         $this->assertCount(0, $paymentMethodCollectionTransfer->getPaymentMethods());
     }
 
-    /**
-     * @return void
-     */
     public function testGetPaymentMethodCollectionReturnsCollectionWithPaymentMethodHavingCorrectProperties(): void
     {
         // Arrange

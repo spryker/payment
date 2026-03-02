@@ -13,9 +13,6 @@ use Spryker\Service\Payment\Extractor\PaymentMethodKeyExtractorInterface;
 
 class PaymentServiceFactory extends AbstractServiceFactory
 {
-    /**
-     * @return \Spryker\Service\Payment\Extractor\PaymentMethodKeyExtractorInterface
-     */
     public function createPaymentMethodKeyExtractor(): PaymentMethodKeyExtractorInterface
     {
         return new PaymentMethodKeyExtractor();

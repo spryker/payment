@@ -24,10 +24,6 @@ class PaymentMessageOmsEventEmitter implements PaymentMessageOmsEventEmitterInte
      */
     protected $paymentConfig;
 
-    /**
-     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToOmsFacadeInterface $omsFacade
-     * @param \Spryker\Zed\Payment\PaymentConfig $paymentConfig
-     */
     public function __construct(PaymentToOmsFacadeInterface $omsFacade, PaymentConfig $paymentConfig)
     {
         $this->omsFacade = $omsFacade;

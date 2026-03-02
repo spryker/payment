@@ -15,18 +15,8 @@ use Generated\Shared\Transfer\UpdatePaymentMethodTransfer;
 
 interface PaymentMethodUpdaterInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\UpdatePaymentMethodTransfer $updatePaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function updatePaymentMethod(UpdatePaymentMethodTransfer $updatePaymentMethodTransfer): PaymentMethodTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     public function update(PaymentMethodTransfer $paymentMethodTransfer): PaymentMethodResponseTransfer;
 
     /**
@@ -38,11 +28,6 @@ interface PaymentMethodUpdaterInterface
      */
     public function enableForeignPaymentMethod(AddPaymentMethodTransfer $addPaymentMethodTransfer): PaymentMethodTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\AddPaymentMethodTransfer $addPaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function addPaymentMethod(AddPaymentMethodTransfer $addPaymentMethodTransfer): PaymentMethodTransfer;
 
     /**
@@ -54,10 +39,5 @@ interface PaymentMethodUpdaterInterface
      */
     public function disableForeignPaymentMethod(DeletePaymentMethodTransfer $deletePaymentMethodTransfer): PaymentMethodTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function deletePaymentMethod(DeletePaymentMethodTransfer $deletePaymentMethodTransfer): PaymentMethodTransfer;
 }

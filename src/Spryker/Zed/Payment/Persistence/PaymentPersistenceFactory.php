@@ -41,25 +41,16 @@ class PaymentPersistenceFactory extends AbstractPersistenceFactory
         return SpySalesPaymentMethodTypeQuery::create();
     }
 
-    /**
-     * @return \Orm\Zed\Payment\Persistence\SpyPaymentMethodQuery
-     */
     public function createPaymentMethodQuery(): SpyPaymentMethodQuery
     {
         return SpyPaymentMethodQuery::create();
     }
 
-    /**
-     * @return \Orm\Zed\Payment\Persistence\SpyPaymentMethodStoreQuery
-     */
     public function createPaymentMethodStoreQuery(): SpyPaymentMethodStoreQuery
     {
         return SpyPaymentMethodStoreQuery::create();
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Persistence\Propel\Mapper\PaymentMapper
-     */
     public function createPaymentMapper(): PaymentMapper
     {
         return new PaymentMapper(
@@ -68,25 +59,16 @@ class PaymentPersistenceFactory extends AbstractPersistenceFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Persistence\Propel\Mapper\PaymentProviderMapper
-     */
     public function createPaymentProviderMapper(): PaymentProviderMapper
     {
         return new PaymentProviderMapper();
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Persistence\Propel\Mapper\StoreRelationMapper
-     */
     public function createStoreRelationMapper(): StoreRelationMapper
     {
         return new StoreRelationMapper();
     }
 
-    /**
-     * @return \Orm\Zed\Payment\Persistence\SpyPaymentProviderQuery
-     */
     public function createPaymentProviderQuery(): SpyPaymentProviderQuery
     {
         return SpyPaymentProviderQuery::create();

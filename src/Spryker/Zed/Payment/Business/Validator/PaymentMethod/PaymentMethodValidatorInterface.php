@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer;
 
 interface PaymentMethodValidatorInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
-     */
     public function validate(PaymentMethodCollectionResponseTransfer $paymentMethodCollectionResponseTransfer): PaymentMethodCollectionResponseTransfer;
 }

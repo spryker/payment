@@ -27,10 +27,6 @@ class PaymentMapper
      */
     protected $storeRelationMapper;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\Propel\Mapper\PaymentProviderMapper $paymentProviderMapper
-     * @param \Spryker\Zed\Payment\Persistence\Propel\Mapper\StoreRelationMapper $storeRelationMapper
-     */
     public function __construct(
         PaymentProviderMapper $paymentProviderMapper,
         StoreRelationMapper $storeRelationMapper
@@ -59,12 +55,6 @@ class PaymentMapper
         return $paymentMethodsTransfer;
     }
 
-    /**
-     * @param \Orm\Zed\Payment\Persistence\SpyPaymentMethod $paymentMethodEntity
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function mapPaymentMethodEntityToPaymentMethodTransfer(
         SpyPaymentMethod $paymentMethodEntity,
         PaymentMethodTransfer $paymentMethodTransfer
@@ -100,12 +90,6 @@ class PaymentMapper
         return $paymentMethodTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Orm\Zed\Payment\Persistence\SpyPaymentMethod $paymentMethodEntity
-     *
-     * @return \Orm\Zed\Payment\Persistence\SpyPaymentMethod
-     */
     public function mapPaymentMethodTransferToPaymentMethodEntity(
         PaymentMethodTransfer $paymentMethodTransfer,
         SpyPaymentMethod $paymentMethodEntity

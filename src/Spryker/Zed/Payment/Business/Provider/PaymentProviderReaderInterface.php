@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\PaymentProviderTransfer;
 
 interface PaymentProviderReaderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer|null
-     */
     public function findPaymentProvider(PaymentProviderTransfer $paymentProviderTransfer): ?PaymentProviderTransfer;
 }

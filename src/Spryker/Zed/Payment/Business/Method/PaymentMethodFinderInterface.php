@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\PaymentMethodResponseTransfer;
 
 interface PaymentMethodFinderInterface
 {
-    /**
-     * @param int $idPaymentMethod
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     public function findPaymentMethodById(int $idPaymentMethod): PaymentMethodResponseTransfer;
 }

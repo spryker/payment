@@ -20,19 +20,11 @@ class SalesPaymentReader implements SalesPaymentReaderInterface
      */
     protected $paymentQueryContainer;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentQueryContainerInterface $paymentQueryContainer
-     */
     public function __construct(PaymentQueryContainerInterface $paymentQueryContainer)
     {
         $this->paymentQueryContainer = $paymentQueryContainer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\SalesPaymentTransfer $paymentTransfer
-     *
-     * @return int
-     */
     public function getPaymentMethodPriceToPay(SalesPaymentTransfer $paymentTransfer): int
     {
         $salesPaymentEntity = $this->paymentQueryContainer->queryPaymentMethodPriceToPay(

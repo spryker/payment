@@ -85,12 +85,6 @@ class PaymentBusinessTester extends Actor
         return (new StoreBuilder($seedData))->build();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\DeletePaymentMethodTransfer
-     */
     public function mapPaymentMethodTransferToDeletePaymentMethodTransfer(
         PaymentMethodTransfer $paymentMethodTransfer,
         DeletePaymentMethodTransfer $deletePaymentMethodTransfer
@@ -102,12 +96,6 @@ class PaymentBusinessTester extends Actor
         return $deletePaymentMethodTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\AddPaymentMethodTransfer $addPaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\AddPaymentMethodTransfer
-     */
     public function mapPaymentMethodTransferToAddPaymentMethodTransfer(
         PaymentMethodTransfer $paymentMethodTransfer,
         AddPaymentMethodTransfer $addPaymentMethodTransfer
@@ -120,28 +108,16 @@ class PaymentBusinessTester extends Actor
         return $addPaymentMethodTransfer;
     }
 
-    /**
-     * @return int
-     */
     public function getNumberOfPersistentPaymentMethods(): int
     {
         return SpyPaymentMethodQuery::create()->count();
     }
 
-    /**
-     * @return int
-     */
     public function getNumberOfPersistentPaymentProviders(): int
     {
         return SpyPaymentProviderQuery::create()->count();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param string $timestamp
-     *
-     * @return \Generated\Shared\Transfer\DeletePaymentMethodTransfer
-     */
     public function haveDeletePaymentMethodTransferWithTimestamp(
         PaymentProviderTransfer $paymentProviderTransfer,
         string $timestamp
@@ -156,11 +132,6 @@ class PaymentBusinessTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer|null $paymentProviderTransfer
-     *
-     * @return \Generated\Shared\Transfer\DeletePaymentMethodTransfer
-     */
     public function haveDeletePaymentMethodTransferWithoutTimestamp(
         ?PaymentProviderTransfer $paymentProviderTransfer = null
     ): DeletePaymentMethodTransfer {
@@ -175,12 +146,6 @@ class PaymentBusinessTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param string $timestamp
-     *
-     * @return \Generated\Shared\Transfer\AddPaymentMethodTransfer
-     */
     public function haveAddPaymentMethodTransferWithTimestamp(
         PaymentProviderTransfer $paymentProviderTransfer,
         string $timestamp
@@ -196,11 +161,6 @@ class PaymentBusinessTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     *
-     * @return \Generated\Shared\Transfer\AddPaymentMethodTransfer
-     */
     public function haveAddPaymentMethodTransferWithoutTimestamp(
         PaymentProviderTransfer $paymentProviderTransfer
     ): AddPaymentMethodTransfer {
@@ -213,13 +173,6 @@ class PaymentBusinessTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param string $timestamp
-     * @param bool $addStore
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function createDisabledPaymentMethodWithTimestampOnDatabase(
         PaymentProviderTransfer $paymentProviderTransfer,
         string $timestamp,
@@ -236,12 +189,6 @@ class PaymentBusinessTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param bool $addStore
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function createDisabledPaymentMethodWithoutTimestampOnDatabase(
         PaymentProviderTransfer $paymentProviderTransfer,
         bool $addStore = true
@@ -280,12 +227,6 @@ class PaymentBusinessTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param bool $addStore
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function createEnabledPaymentMethodWithoutTimestampOnDatabase(
         PaymentProviderTransfer $paymentProviderTransfer,
         bool $addStore = true
@@ -301,12 +242,6 @@ class PaymentBusinessTester extends Actor
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     * @param bool $addStore
-     *
-     * @return void
-     */
     public function assertDisabledPaymentMethodWasCreatedWithSoftDeletion(
         DeletePaymentMethodTransfer $deletePaymentMethodTransfer,
         bool $addStore = true
@@ -349,11 +284,6 @@ class PaymentBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return void
-     */
     public function assertDisabledPaymentMethodDidNotChange(
         PaymentMethodTransfer $paymentMethodTransfer
     ): void {
@@ -375,12 +305,6 @@ class PaymentBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\AddPaymentMethodTransfer $addPaymentMethodTransfer
-     *
-     * @return void
-     */
     public function assertDisabledPaymentMethodWasEnabledAndTimestampChanged(
         PaymentMethodTransfer $paymentMethodTransfer,
         AddPaymentMethodTransfer $addPaymentMethodTransfer
@@ -403,11 +327,6 @@ class PaymentBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return void
-     */
     public function assertDisabledPaymentMethodWasEnabledAndTimestampWasUpdated(
         PaymentMethodTransfer $paymentMethodTransfer
     ): void {
@@ -442,11 +361,6 @@ class PaymentBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return void
-     */
     public function assertEnabledPaymentMethodDidNotChange(
         PaymentMethodTransfer $paymentMethodTransfer
     ): void {
@@ -468,12 +382,6 @@ class PaymentBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     *
-     * @return void
-     */
     public function assertEnabledPaymentMethodWasDisabledAndTimestampChanged(
         PaymentMethodTransfer $paymentMethodTransfer,
         DeletePaymentMethodTransfer $deletePaymentMethodTransfer
@@ -496,12 +404,6 @@ class PaymentBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     *
-     * @return void
-     */
     public function assertEnabledPaymentMethodWasDisabledAndTimestampWasUpdated(
         PaymentMethodTransfer $paymentMethodTransfer,
         DeletePaymentMethodTransfer $deletePaymentMethodTransfer
@@ -576,12 +478,6 @@ class PaymentBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param string $paymentProviderKey
-     * @param bool $addStore
-     *
-     * @return string
-     */
     protected function generatePaymentMethodKey(string $paymentProviderKey, bool $addStore = true): string
     {
         $paymentMethodKey = $paymentProviderKey . '-' . static::PAYMENT_METHOD_NAME;

@@ -23,9 +23,6 @@ class MessageEmitter implements MessageEmitterInterface
      */
     protected $messageBrokerFacade;
 
-    /**
-     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToMessageBrokerInterface $messageBrokerFacade
-     */
     public function __construct(PaymentToMessageBrokerInterface $messageBrokerFacade)
     {
         $this->messageBrokerFacade = $messageBrokerFacade;

@@ -38,10 +38,6 @@ class PaymentProviderPaymentMethodExistsValidator implements PaymentProviderVali
      */
     protected $paymentProviderEntityIdentifierBuilder;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentProviderEntityIdentifierBuilderInterface $paymentProviderEntityIdentifierBuilder
-     */
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
         PaymentProviderEntityIdentifierBuilderInterface $paymentProviderEntityIdentifierBuilder
@@ -50,11 +46,6 @@ class PaymentProviderPaymentMethodExistsValidator implements PaymentProviderVali
         $this->paymentProviderEntityIdentifierBuilder = $paymentProviderEntityIdentifierBuilder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     public function validate(
         PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
     ): PaymentProviderCollectionResponseTransfer {
@@ -68,12 +59,6 @@ class PaymentProviderPaymentMethodExistsValidator implements PaymentProviderVali
         return $paymentProviderCollectionResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     protected function validatePaymentMethods(
         PaymentProviderTransfer $paymentProviderTransfer,
         PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
@@ -91,11 +76,6 @@ class PaymentProviderPaymentMethodExistsValidator implements PaymentProviderVali
         return $paymentProviderCollectionResponseTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return bool
-     */
     protected function hasPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
         $paymentMethodConditionsTransfer = (new PaymentMethodConditionsTransfer())->addPaymentMethodKey($paymentMethodTransfer->getPaymentMethodKeyOrFail());
@@ -104,13 +84,6 @@ class PaymentProviderPaymentMethodExistsValidator implements PaymentProviderVali
         return $this->paymentRepository->hasPaymentMethod($paymentMethodCriteriaTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     protected function addErrorToPaymentProviderCollectionResponseTransfer(
         PaymentProviderTransfer $paymentProviderTransfer,
         PaymentMethodTransfer $paymentMethodTransfer,

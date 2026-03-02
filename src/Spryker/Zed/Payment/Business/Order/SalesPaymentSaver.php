@@ -28,20 +28,11 @@ class SalesPaymentSaver implements SalesPaymentSaverInterface
      */
     protected $paymentQueryContainer;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentQueryContainerInterface $paymentQueryContainer
-     */
     public function __construct(PaymentQueryContainerInterface $paymentQueryContainer)
     {
         $this->paymentQueryContainer = $paymentQueryContainer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponse
-     *
-     * @return void
-     */
     public function saveOrderPayments(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponse): void
     {
         $checkoutResponse->requireSaveOrder()
@@ -122,11 +113,6 @@ class SalesPaymentSaver implements SalesPaymentSaverInterface
         }
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
-     *
-     * @return \Orm\Zed\Payment\Persistence\SpySalesPaymentMethodType
-     */
     protected function findOrCreatePaymentMethodType(PaymentTransfer $paymentTransfer): SpySalesPaymentMethodType
     {
         $paymentMethodTypeEntity = $this->paymentQueryContainer

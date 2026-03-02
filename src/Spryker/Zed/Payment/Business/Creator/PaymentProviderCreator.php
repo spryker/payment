@@ -41,12 +41,6 @@ class PaymentProviderCreator implements PaymentProviderCreatorInterface
      */
     protected $paymentMethodEntityIdentifierBuilder;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentEntityManagerInterface $paymentEntityManager
-     * @param \Spryker\Zed\Payment\Business\PaymentProviderValidator\PaymentProviderValidatorInterface $paymentProviderValidator
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentProviderEntityIdentifierBuilderInterface $paymentProviderEntityIdentifierBuilder
-     * @param \Spryker\Zed\Payment\Business\EntityIdentifierBuilder\PaymentMethodEntityIdentifierBuilderInterface $paymentMethodEntityIdentifierBuilder
-     */
     public function __construct(
         PaymentEntityManagerInterface $paymentEntityManager,
         PaymentProviderValidatorInterface $paymentProviderValidator,
@@ -59,11 +53,6 @@ class PaymentProviderCreator implements PaymentProviderCreatorInterface
         $this->paymentMethodEntityIdentifierBuilder = $paymentMethodEntityIdentifierBuilder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionRequestTransfer $paymentProviderCollectionRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     public function createPaymentProviderCollection(
         PaymentProviderCollectionRequestTransfer $paymentProviderCollectionRequestTransfer
     ): PaymentProviderCollectionResponseTransfer {
@@ -91,11 +80,6 @@ class PaymentProviderCreator implements PaymentProviderCreatorInterface
         });
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionRequestTransfer $paymentProviderCollectionRequestTransfer
-     *
-     * @return void
-     */
     protected function assertRequiredFields(PaymentProviderCollectionRequestTransfer $paymentProviderCollectionRequestTransfer): void
     {
         $paymentProviderCollectionRequestTransfer
@@ -127,11 +111,6 @@ class PaymentProviderCreator implements PaymentProviderCreatorInterface
         }
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
-     */
     protected function executeCreatePaymentProviderCollectionTransaction(
         PaymentProviderCollectionResponseTransfer $paymentProviderCollectionResponseTransfer
     ): PaymentProviderCollectionResponseTransfer {
@@ -215,11 +194,6 @@ class PaymentProviderCreator implements PaymentProviderCreatorInterface
         return $entityIdentifiers;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer
-     */
     protected function createPaymentProvider(PaymentProviderTransfer $paymentProviderTransfer): PaymentProviderTransfer
     {
         $paymentProviderTransfers = $paymentProviderTransfer->getPaymentMethods();

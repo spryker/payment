@@ -30,10 +30,6 @@ class PaymentMethodValidator implements PaymentMethodValidatorInterface
      */
     protected $paymentService;
 
-    /**
-     * @param \Spryker\Zed\Payment\Business\Method\PaymentMethodReaderInterface $paymentMethodReader
-     * @param \Spryker\Service\Payment\PaymentServiceInterface $paymentService
-     */
     public function __construct(
         PaymentMethodReaderInterface $paymentMethodReader,
         PaymentServiceInterface $paymentService
@@ -42,12 +38,6 @@ class PaymentMethodValidator implements PaymentMethodValidatorInterface
         $this->paymentService = $paymentService;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     *
-     * @return bool
-     */
     public function isQuotePaymentMethodValid(
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer

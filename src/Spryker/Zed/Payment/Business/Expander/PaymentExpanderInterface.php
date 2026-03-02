@@ -12,11 +12,5 @@ use Generated\Shared\Transfer\StoreTransfer;
 
 interface PaymentExpanderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentTransfer
-     */
     public function expandPaymentWithPaymentSelection(PaymentTransfer $paymentTransfer, StoreTransfer $storeTransfer): PaymentTransfer;
 }

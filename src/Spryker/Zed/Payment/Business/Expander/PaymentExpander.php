@@ -28,10 +28,6 @@ class PaymentExpander implements PaymentExpanderInterface
      */
     protected $storeFacade;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface $storeFacade
-     */
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
         PaymentToStoreFacadeInterface $storeFacade
@@ -40,12 +36,6 @@ class PaymentExpander implements PaymentExpanderInterface
         $this->storeFacade = $storeFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentTransfer $paymentTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentTransfer
-     */
     public function expandPaymentWithPaymentSelection(PaymentTransfer $paymentTransfer, StoreTransfer $storeTransfer): PaymentTransfer
     {
         if ($paymentTransfer->getPaymentSelection()) {
@@ -69,13 +59,6 @@ class PaymentExpander implements PaymentExpanderInterface
         return $paymentTransfer;
     }
 
-    /**
-     * @param string $paymentMethodName
-     * @param string $paymentProviderKey
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     protected function getPaymentMethodByNameAndProvider(
         string $paymentMethodName,
         string $paymentProviderKey,
@@ -105,11 +88,6 @@ class PaymentExpander implements PaymentExpanderInterface
         return new PaymentMethodTransfer();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return string
-     */
     protected function getPaymentMethodKey(PaymentMethodTransfer $paymentMethodTransfer): string
     {
         if (!$paymentMethodTransfer->getIsForeign()) {

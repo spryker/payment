@@ -115,11 +115,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
      */
     public const FACADE_OMS = 'FACADE_OMS';
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = $this->addStoreFacade($container);
@@ -139,11 +134,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addUtilTextService(Container $container): Container
     {
         $container->set(static::SERVICE_UTIL_TEXT, function (Container $container) {
@@ -153,11 +143,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addUtilEncodingService(Container $container): Container
     {
         $container->set(static::SERVICE_UTIL_ENCODING, function (Container $container): PaymentToUtilEncodingServiceInterface {
@@ -167,11 +152,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addLocaleFacade(Container $container): Container
     {
         $container->set(static::FACADE_LOCALE, function (Container $container) {
@@ -183,11 +163,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addKernelAppFacade(Container $container): Container
     {
         $container->set(static::FACADE_KERNEL_APP, function (Container $container) {
@@ -197,11 +172,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addPaymentService(Container $container): Container
     {
         $container->set(static::SERVICE_PAYMENT, function (Container $container) {
@@ -211,11 +181,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function provideCommunicationLayerDependencies(Container $container): Container
     {
         $container = $this->addMessageBrokerFacade($container);
@@ -225,11 +190,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addStoreFacade(Container $container): Container
     {
         $container->set(static::FACADE_STORE, function (Container $container) {
@@ -241,11 +201,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addPaymentMethodFilterPlugins(Container $container): Container
     {
         $container->set(static::PAYMENT_METHOD_FILTER_PLUGINS, function (Container $container) {
@@ -331,11 +286,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addMessageBrokerFacade(Container $container): Container
     {
         $container->set(static::FACADE_MESSAGE_BROKER, function (Container $container) {
@@ -347,11 +297,6 @@ class PaymentDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addOmsFacade(Container $container): Container
     {
         $container->set(static::FACADE_OMS, function (Container $container) {

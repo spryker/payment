@@ -14,10 +14,5 @@ use Generated\Shared\Transfer\SalesPaymentTransfer;
  */
 interface SalesPaymentReaderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\SalesPaymentTransfer $paymentTransfer
-     *
-     * @return int
-     */
     public function getPaymentMethodPriceToPay(SalesPaymentTransfer $paymentTransfer): int;
 }

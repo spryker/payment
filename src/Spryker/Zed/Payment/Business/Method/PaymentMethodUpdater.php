@@ -72,15 +72,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
      */
     protected $storeFacade;
 
-    /**
-     * @param \Spryker\Zed\Payment\Persistence\PaymentEntityManagerInterface $paymentEntityManager
-     * @param \Spryker\Zed\Payment\Business\Method\PaymentMethodStoreRelationUpdaterInterface $storeRelationUpdater
-     * @param \Spryker\Zed\Payment\Persistence\PaymentRepositoryInterface $paymentRepository
-     * @param \Spryker\Zed\Payment\Business\Writer\PaymentWriterInterface $paymentWriter
-     * @param \Spryker\Zed\Payment\Business\Generator\PaymentMethodKeyGeneratorInterface $paymentMethodKeyGenerator
-     * @param \Spryker\Zed\Payment\Business\Mapper\PaymentMethodEventMapperInterface $paymentMethodEventMapper
-     * @param \Spryker\Zed\Payment\Dependency\Facade\PaymentToStoreFacadeInterface $storeFacade
-     */
     public function __construct(
         PaymentEntityManagerInterface $paymentEntityManager,
         PaymentMethodStoreRelationUpdaterInterface $storeRelationUpdater,
@@ -99,11 +90,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         $this->storeFacade = $storeFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\UpdatePaymentMethodTransfer $updatePaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function updatePaymentMethod(UpdatePaymentMethodTransfer $updatePaymentMethodTransfer): PaymentMethodTransfer
     {
         $paymentMethodTransfer = $this->paymentMethodEventMapper->mapUpdatePaymentMethodTransferToPaymentMethodTransfer(
@@ -116,11 +102,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         return $this->savePaymentMethod($paymentMethodTransfer, $existingPaymentMethodTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     public function update(
         PaymentMethodTransfer $paymentMethodTransfer
     ): PaymentMethodResponseTransfer {
@@ -171,11 +152,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         return $this->savePaymentMethodWithStoreRelation($paymentMethodTransfer, $existingPaymentMethodTransfer, $storeTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AddPaymentMethodTransfer $addPaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function addPaymentMethod(AddPaymentMethodTransfer $addPaymentMethodTransfer): PaymentMethodTransfer
     {
         $paymentMethodTransfer = $this->paymentMethodEventMapper->mapAddPaymentMethodTransferToPaymentMethodTransfer(
@@ -251,11 +227,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         return $this->savePaymentMethodWithStoreRelation($paymentMethodTransfer, $existingPaymentMethodTransfer, $storeTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\DeletePaymentMethodTransfer $deletePaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     public function deletePaymentMethod(DeletePaymentMethodTransfer $deletePaymentMethodTransfer): PaymentMethodTransfer
     {
         $paymentMethodTransfer = $this->paymentMethodEventMapper->mapDeletePaymentMethodTransferToPaymentMethodTransfer(
@@ -371,13 +342,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         return $paymentMethodTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer|null $existingPaymentMethodTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     protected function savePaymentMethodWithStoreRelation(
         PaymentMethodTransfer $paymentMethodTransfer,
         ?PaymentMethodTransfer $existingPaymentMethodTransfer,
@@ -405,12 +369,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         return $paymentMethodResponseTransfer->getPaymentMethodOrFail();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer|null $existingPaymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodTransfer
-     */
     protected function savePaymentMethod(
         PaymentMethodTransfer $paymentMethodTransfer,
         ?PaymentMethodTransfer $existingPaymentMethodTransfer
@@ -427,11 +385,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         return $paymentMethodResponseTransfer->getPaymentMethodOrFail();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodResponseTransfer
-     */
     protected function executeUpdateTransaction(
         PaymentMethodTransfer $paymentMethodTransfer
     ): PaymentMethodResponseTransfer {
@@ -456,11 +409,6 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
             ->setPaymentMethod($paymentMethodTransfer);
     }
 
-    /**
-     * @param string $paymentProviderName
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderTransfer
-     */
     protected function findOrCreatePaymentProvider(string $paymentProviderName): PaymentProviderTransfer
     {
         $foundPaymentProviderTransfer = $this->paymentRepository->findPaymentProviderByKey(
@@ -479,19 +427,11 @@ class PaymentMethodUpdater implements PaymentMethodUpdaterInterface
         return $paymentProviderResponseTransfer->getPaymentProvider() ?? $paymentProviderTransfer;
     }
 
-    /**
-     * @param string $message
-     *
-     * @return \Generated\Shared\Transfer\MessageTransfer
-     */
     protected function getErrorMessageTransfer(string $message): MessageTransfer
     {
         return (new MessageTransfer())->setValue($message);
     }
 
-    /**
-     * @return string
-     */
     protected function generateNowTimestamp(): string
     {
         return (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d\TH:i:s.u');

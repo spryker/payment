@@ -12,11 +12,6 @@ use Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer;
 
 interface PaymentRequestExecutorInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentAuthorizeResponseTransfer
-     */
     public function authorizeForeignPayment(
         PaymentAuthorizeRequestTransfer $paymentAuthorizeRequestTransfer
     ): PaymentAuthorizeResponseTransfer;

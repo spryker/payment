@@ -15,11 +15,5 @@ use Generated\Shared\Transfer\QuoteTransfer;
  */
 interface SalesPaymentSaverInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponse
-     *
-     * @return void
-     */
     public function saveOrderPayments(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponse): void;
 }

@@ -24,12 +24,6 @@ interface PaymentMethodKeyGeneratorInterface
         string $storeName
     ): string;
 
-    /**
-     * @param string $paymentProviderName
-     * @param string $paymentMethodName
-     *
-     * @return string
-     */
     public function generate(
         string $paymentProviderName,
         string $paymentMethodName

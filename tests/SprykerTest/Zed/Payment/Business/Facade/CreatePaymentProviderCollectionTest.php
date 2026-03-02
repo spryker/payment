@@ -57,9 +57,6 @@ class CreatePaymentProviderCollectionTest extends Unit
      */
     protected $paymentFacade;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,9 +65,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->paymentFacade = $this->tester->getFacade();
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -78,9 +72,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->tester->ensurePaymentProviderTableIsEmpty();
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithPersistedPaymentProvidersHavingAssociatedPaymentMethodsAndNoErrors(): void
     {
         // Arrange
@@ -118,9 +109,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->assertSame(2, $this->tester->getNumberOfPersistentPaymentMethods());
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionTransactionalReturnsCollectionWithPersistedPaymentProvidersHavingAssociatedPaymentMethodsAndNoErrors(): void
     {
         // Arrange
@@ -144,9 +132,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->assertSame(2, $this->tester->getNumberOfPersistentPaymentMethods());
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionTransactionalReturnsCollectionWithErrorsAndPaymentProvidersFromRequest(): void
     {
         // Arrange
@@ -174,9 +159,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->assertCount(1, $paymentProviderCollectionResponseTransfer->getErrors());
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithPaymentProviderHavingCorrectProperties(): void
     {
         // Arrange
@@ -201,9 +183,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithErrorWhilePaymentProviderAlreadyExists(): void
     {
         // Arrange
@@ -230,9 +209,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithErrorWhilePaymentProviderMethodAlreadyExists(): void
     {
         // Arrange
@@ -261,9 +237,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionThrowsRequiredTransferPropertyExceptionWhileRequiredPropertyPaymentProvidersIsMissing(): void
     {
         // Arrange
@@ -277,9 +250,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->paymentFacade->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionThrowsRequiredTransferPropertyExceptionWhileRequiredPropertyIsTransactionalIsMissing(): void
     {
         // Arrange
@@ -295,9 +265,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->paymentFacade->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionThrowsRequiredTransferPropertyExceptionWhileRequiredPaymentProviderNameIsMissing(): void
     {
         // Arrange
@@ -316,9 +283,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->paymentFacade->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionThrowsRequiredTransferPropertyExceptionWhileRequiredPaymentProviderKeyIsMissing(): void
     {
         // Arrange
@@ -337,9 +301,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->paymentFacade->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionThrowsRequiredTransferPropertyExceptionWhileRequiredPaymentMethodNameIsMissing(): void
     {
         // Arrange
@@ -360,9 +321,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->paymentFacade->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionThrowsRequiredTransferPropertyExceptionWhileRequiredPaymentMethodKeyIsMissing(): void
     {
         // Arrange
@@ -383,9 +341,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         $this->paymentFacade->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithErrorWhilePaymentProviderNameIsUsedMoreThanOnce(): void
     {
         // Arrange
@@ -411,9 +366,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithErrorWhilePaymentProviderKeyIsUsedMoreThanOnce(): void
     {
         // Arrange
@@ -439,9 +391,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithErrorWhilePaymentMethodNameIsUsedMoreThanOnce(): void
     {
         // Arrange
@@ -470,9 +419,6 @@ class CreatePaymentProviderCollectionTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProviderCollectionReturnsCollectionWithErrorWhilePaymentMethodKeyIsUsedMoreThanOnce(): void
     {
         // Arrange

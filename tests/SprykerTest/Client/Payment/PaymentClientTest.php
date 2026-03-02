@@ -43,9 +43,6 @@ class PaymentClientTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -57,9 +54,6 @@ class PaymentClientTest extends Unit
         $this->tester->setDependency(LocaleDependencyProvider::LOCALE_CURRENT, $this->tester::LOCALE);
     }
 
-    /**
-     * @return void
-     */
     public function testAuthorizePaymentReturnsCorrectResponseIfRequestSuccessful(): void
     {
         // Arrange
@@ -75,9 +69,6 @@ class PaymentClientTest extends Unit
         $this->assertTrue($paymentAuthorizeResponseTransfer->getIsSuccessful());
     }
 
-    /**
-     * @return void
-     */
     public function testAuthorizePaymentReturnsCorrectResponseIfRequestUnsuccessful(): void
     {
         // Arrange
@@ -93,9 +84,6 @@ class PaymentClientTest extends Unit
         $this->assertFalse($paymentAuthorizeResponseTransfer->getIsSuccessful());
     }
 
-    /**
-     * @return void
-     */
     public function testAuthorizePaymentReturnsCorrectResponseIfRequestFailed(): void
     {
         // Arrange
@@ -111,9 +99,6 @@ class PaymentClientTest extends Unit
         $this->assertFalse($paymentAuthorizeResponseTransfer->getIsSuccessful());
     }
 
-    /**
-     * @return void
-     */
     public function testAuthorizePaymentUsesContentOfResponseInErrorMessageWhenDebugingIsEnabled(): void
     {
         // Arrange
@@ -134,9 +119,6 @@ class PaymentClientTest extends Unit
         $this->assertSame($this->getFixture('error_response.json'), $paymentAuthorizeResponseTransfer->getMessage());
     }
 
-    /**
-     * @return void
-     */
     public function testAuthorizePaymentUsesContentOfResponseInErrorMessageWhenDebugingIsDisabled(): void
     {
         // Arrange
@@ -157,9 +139,6 @@ class PaymentClientTest extends Unit
         $this->assertSame(PaymentRequestExecutor::MESSAGE_ERROR_PAYMENT_AUTHORIZATION, $paymentAuthorizeResponseTransfer->getMessage());
     }
 
-    /**
-     * @return void
-     */
     public function testAuthorizePaymentReturnsCorrectResponseWhenPaymentAuthorizeRequestTransferHasTenantIdentifier(): void
     {
         // Arrange
@@ -231,9 +210,6 @@ class PaymentClientTest extends Unit
         return $responseMock;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PaymentAuthorizeRequestTransfer
-     */
     protected function getPaymentAuthorizeRequestTransfer(): PaymentAuthorizeRequestTransfer
     {
         return (new PaymentAuthorizeRequestTransfer())
@@ -241,11 +217,6 @@ class PaymentClientTest extends Unit
             ->setTenantIdentifier('test');
     }
 
-    /**
-     * @param string $fileName
-     *
-     * @return string
-     */
     protected function getFixture(string $fileName): string
     {
         return file_get_contents(codecept_data_dir('Fixtures/' . $fileName));

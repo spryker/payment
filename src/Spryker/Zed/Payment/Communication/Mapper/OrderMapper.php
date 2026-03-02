@@ -12,12 +12,6 @@ use Orm\Zed\Sales\Persistence\SpySalesOrder;
 
 class OrderMapper implements OrderMapperInterface
 {
-    /**
-     * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $orderSales
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return \Generated\Shared\Transfer\OrderTransfer
-     */
     public function mapSalesOrderEntityToSalesOrderTransfer(
         SpySalesOrder $orderSales,
         OrderTransfer $orderTransfer

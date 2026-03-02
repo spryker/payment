@@ -38,9 +38,6 @@ class PaymentPluginExecutorTest extends Unit
      */
     public const TEST_PROVIDER = 'Test';
 
-    /**
-     * @return void
-     */
     public function testExecutePreCheckPluginPreCheckShouldTriggerTestPaymentPlugin(): void
     {
         /**
@@ -56,9 +53,6 @@ class PaymentPluginExecutorTest extends Unit
         $paymentPluginExecutor->executePreCheckPlugin($quoteTransfer, $checkoutResponseTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testExecuteOrderSaverPluginOrderSaverShouldTriggerTestPaymentPlugin(): void
     {
         /**
@@ -74,9 +68,6 @@ class PaymentPluginExecutorTest extends Unit
         $paymentPluginExecutor->executeOrderSaverPlugin($quoteTransfer, $checkoutResponseTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testExecutePostCheckPluginPostCheckShouldTriggerTestPaymentPlugin(): void
     {
         /**
@@ -144,41 +135,26 @@ class PaymentPluginExecutorTest extends Unit
         return $pluginCollection;
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Business\Order\SalesPaymentSaverInterface
-     */
     protected function createSalesSaverMock(): SalesPaymentSaverInterface
     {
         return $this->getMockBuilder(SalesPaymentSaverInterface::class)->getMock();
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Dependency\Plugin\Checkout\CheckoutPreCheckPluginInterface
-     */
     protected function createPreCheckPluginMock(): CheckoutPreCheckPluginInterface
     {
         return $this->getMockBuilder(CheckoutPreCheckPluginInterface::class)->getMock();
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Dependency\Plugin\Checkout\CheckoutSaveOrderPluginInterface
-     */
     protected function createSavePluginMock(): CheckoutSaveOrderPluginInterface
     {
         return $this->getMockBuilder(CheckoutSaveOrderPluginInterface::class)->getMock();
     }
 
-    /**
-     * @return \Spryker\Zed\Payment\Dependency\Plugin\Checkout\CheckoutPostCheckPluginInterface
-     */
     protected function createPostSavePluginMock(): CheckoutPostCheckPluginInterface
     {
         return $this->getMockBuilder(CheckoutPostCheckPluginInterface::class)->getMock();
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\QuoteTransfer
-     */
     protected function createQuoteTransfer(): QuoteTransfer
     {
         $quoteTransfer = new QuoteTransfer();

@@ -97,9 +97,6 @@ class PaymentFacadeTest extends Unit
      */
     protected $paymentFacade;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -119,9 +116,6 @@ class PaymentFacadeTest extends Unit
         ]);
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -129,9 +123,6 @@ class PaymentFacadeTest extends Unit
         $this->tester->ensurePaymentProviderTableIsEmpty();
     }
 
-    /**
-     * @return void
-     */
     public function testFindPaymentMethodByIdShouldFindPaymentMethod(): void
     {
         // Arrange
@@ -148,9 +139,6 @@ class PaymentFacadeTest extends Unit
         $this->assertNotNull($paymentMethodResponseTransfer->getPaymentMethod(), 'Payment method should not be empty');
     }
 
-    /**
-     * @return void
-     */
     public function testFindPaymentMethodByIdWithNotExistingIdShouldNotFindPaymentMethod(): void
     {
         // Act
@@ -160,9 +148,6 @@ class PaymentFacadeTest extends Unit
         $this->assertFalse($paymentMethodResponseTransfer->getIsSuccessful(), 'Payment method should not be found');
     }
 
-    /**
-     * @return void
-     */
     public function testUpdatePaymentMethodShouldUpdatePaymentMethodWithStoreRelation(): void
     {
         // Arrange
@@ -201,9 +186,6 @@ class PaymentFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testGetAvailablePaymentMethodsShouldReturnActivePaymentMethod(): void
     {
         // Arrange
@@ -247,9 +229,6 @@ class PaymentFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testGetAvailablePaymentMethodsShouldCollectPersistentAndInfrastructuralPaymentMethods(): void
     {
         $paymentProviderTransfer = $this->tester->havePaymentProvider([
@@ -309,9 +288,6 @@ class PaymentFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testGetAvailablePaymentProvidersForStoreShouldReturnActivePaymentProviderForGivenStore(): void
     {
         // Arrange
@@ -364,9 +340,6 @@ class PaymentFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testIsQuotePaymentMethodValidShouldReturnTrueIfPaymentExists(): void
     {
         // Arrange
@@ -383,9 +356,6 @@ class PaymentFacadeTest extends Unit
         $this->assertTrue($isPaymentMethodExists);
     }
 
-    /**
-     * @return void
-     */
     public function testIsQuotePaymentMethodValidShouldReturnFalseIfPaymentNotExists(): void
     {
         // Arrange
@@ -402,9 +372,6 @@ class PaymentFacadeTest extends Unit
         $this->assertFalse($isPaymentMethodExists);
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentProvider(): void
     {
         // Arrange
@@ -434,9 +401,6 @@ class PaymentFacadeTest extends Unit
         $this->assertNotEmpty($paymentProviderResponseTransfer->getPaymentProvider()->getIdPaymentProvider());
     }
 
-    /**
-     * @return void
-     */
     public function testCreatePaymentMethod(): void
     {
         // Arrange
@@ -467,9 +431,6 @@ class PaymentFacadeTest extends Unit
         $this->assertNotEmpty($paymentMethodResponseTransfer->getPaymentMethod()->getIdPaymentMethod());
     }
 
-    /**
-     * @return void
-     */
     public function testDeactivatePaymentMethod(): void
     {
         // Arrange
@@ -501,9 +462,6 @@ class PaymentFacadeTest extends Unit
         $this->assertFalse($paymentMethodResponseTransfer->getPaymentMethod()->getIsActive());
     }
 
-    /**
-     * @return void
-     */
     public function testActivatePaymentMethod(): void
     {
         // Arrange
@@ -535,9 +493,6 @@ class PaymentFacadeTest extends Unit
         $this->assertTrue($paymentMethodResponseTransfer->getPaymentMethod()->getIsActive());
     }
 
-    /**
-     * @return void
-     */
     public function testForeignPaymentInitializePaymentReceivesCorrectResponseAndUsingItAddsRedirectUrlWithCorrectData(): void
     {
         // Arrange
@@ -579,9 +534,6 @@ class PaymentFacadeTest extends Unit
         $this->assertSame(static::PAYMENT_AUTHORIZATION_REDIRECT, $checkoutResponseTransfer->getRedirectUrl());
     }
 
-    /**
-     * @return void
-     */
     public function testForeignPaymentInitializePaymentReceivesUnsuccessfulResponseWithDisabledDepugModeReturnsUserfriendlyMessage(): void
     {
         // Arrange
@@ -624,9 +576,6 @@ class PaymentFacadeTest extends Unit
         $this->assertSame(static::ERROR_MESSAGE_PAYMENT_AUTHORIZATION, $checkoutResponseTransfer->getErrors()->getArrayCopy()[0]->getMessage());
     }
 
-    /**
-     * @return void
-     */
     public function testForeignPaymentInitializePaymentReceivesUnsuccessfulResponseWithEnabledDebugModeReturnsExternalError(): void
     {
         // Arrange
@@ -669,9 +618,6 @@ class PaymentFacadeTest extends Unit
         $this->assertSame($content, $checkoutResponseTransfer->getErrors()->getArrayCopy()[0]->getMessage());
     }
 
-    /**
-     * @return void
-     */
     public function testForeignPaymentAuthorizerForwardsAdditionPaymentDataToThePaymentServiceProviderApp(): void
     {
         // Arrange
@@ -727,9 +673,6 @@ class PaymentFacadeTest extends Unit
         $this->assertSame($forwardedAdditionPaymentData, $additionalPaymentData);
     }
 
-    /**
-     * @return void
-     */
     public function testForeignPaymentAuthorizerDoesNothingWithIncorrectData(): void
     {
         // Arrange
@@ -755,9 +698,6 @@ class PaymentFacadeTest extends Unit
         $this->assertEquals($initialCheckoutResponseTransfer->toArray(), $checkoutResponseTransfer->toArray());
     }
 
-    /**
-     * @return void
-     */
     public function testInitForeignPaymentForCheckoutProcessReturnsRedirectToRelativePaymentPageFromConfig(): void
     {
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
@@ -803,9 +743,6 @@ class PaymentFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testInitForeignPaymentForCheckoutProcessReturnsRedirectToAbsolutePaymentPageOnAnotherDomainFromConfig(): void
     {
         $paymentProviderTransfer = $this->tester->havePaymentProvider();
@@ -851,9 +788,6 @@ class PaymentFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testEnablePaymentMethodReturnsSavedPaymentMethodTransferWithCorrectData(): void
     {
         // Arrange
@@ -886,9 +820,6 @@ class PaymentFacadeTest extends Unit
         $this->assertSame($addPaymentMethodTransfer->getPaymentAuthorizationEndpoint(), $createdAddPaymentMethodTransfer->getPaymentAuthorizationEndpoint());
     }
 
-    /**
-     * @return void
-     */
     public function testAddPaymentMethodReturnsSavedPaymentMethodTransferWithCorrectData(): void
     {
         // Arrange
@@ -1000,9 +931,6 @@ class PaymentFacadeTest extends Unit
         $this->assertFalse($createdPaymentMethodTransfer->getIsActive(), 'Expected that the payment method is inactive but it is active');
     }
 
-    /**
-     * @return void
-     */
     public function testDisableForeignPaymentMethodSetsPaymentMethodIsDeletedFlagToTrueWithCorrectData(): void
     {
         // Arrange
@@ -1039,9 +967,6 @@ class PaymentFacadeTest extends Unit
         $this->assertTrue($updatedPaymentMethodTransfer->getIsHidden());
     }
 
-    /**
-     * @return void
-     */
     public function testDeletePaymentMethodSetsPaymentMethodIsDeletedFlagToTrueWithCorrectData(): void
     {
         // Arrange
@@ -1568,9 +1493,6 @@ class PaymentFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
-     */
     protected function buildCheckoutResponseTransfer(): CheckoutResponseTransfer
     {
         return (new CheckoutResponseBuilder())
@@ -1578,9 +1500,6 @@ class PaymentFacadeTest extends Unit
             ->build();
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\QuoteTransfer
-     */
     protected function buildQuoteTransfer(): QuoteTransfer
     {
         return (new QuoteBuilder())
@@ -1596,9 +1515,6 @@ class PaymentFacadeTest extends Unit
             ->build();
     }
 
-    /**
-     * @return void
-     */
     protected function mockPaymentMethodReader(): void
     {
         $paymentMethodReaderMock = $this->getMockBuilder(PaymentMethodReader::class)
@@ -1626,17 +1542,11 @@ class PaymentFacadeTest extends Unit
         $this->paymentFacade->setFactory($paymentBusinessFactoryMock);
     }
 
-    /**
-     * @return string
-     */
     protected function generateNowTimestamp(): string
     {
         return (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d\TH:i:s.u');
     }
 
-    /**
-     * @return void
-     */
     public function testGeneratePaymentMethodKeyReturnsPaymentMethodKeyForGivenProviderAndMethod(): void
     {
         // Arrange, Act, Assert

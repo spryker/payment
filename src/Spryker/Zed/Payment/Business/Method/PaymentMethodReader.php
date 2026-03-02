@@ -54,11 +54,6 @@ class PaymentMethodReader implements PaymentMethodReaderInterface
         $this->paymentRepository = $paymentRepository;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
-     */
     public function getAvailableMethods(QuoteTransfer $quoteTransfer): PaymentMethodsTransfer
     {
         $paymentMethodsTransfer = $this->findPaymentMethods($quoteTransfer);
@@ -67,11 +62,6 @@ class PaymentMethodReader implements PaymentMethodReaderInterface
         return $paymentMethodsTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
-     */
     protected function findPaymentMethods(QuoteTransfer $quoteTransfer): PaymentMethodsTransfer
     {
         $paymentMethodsFromPersistence = $this->paymentRepository->getPaymentMethodsWithStoreRelation();
@@ -82,12 +72,6 @@ class PaymentMethodReader implements PaymentMethodReaderInterface
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsFromPersistence
-     * @param int $idStore
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
-     */
     protected function collectPaymentMethodsByStateMachineMapping(
         PaymentMethodsTransfer $paymentMethodsFromPersistence,
         int $idStore
@@ -131,13 +115,6 @@ class PaymentMethodReader implements PaymentMethodReaderInterface
         return $paymentMethodsTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsFromPersistence
-     * @param int $idStore
-     *
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
-     */
     protected function collectPaymentMethodsFromPersistence(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         PaymentMethodsTransfer $paymentMethodsFromPersistence,
@@ -168,12 +145,6 @@ class PaymentMethodReader implements PaymentMethodReaderInterface
         return $persistentMethodNames;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param int $idStore
-     *
-     * @return bool
-     */
     protected function isPaymentMethodAvailableForStore(
         PaymentMethodTransfer $paymentMethodTransfer,
         int $idStore
@@ -199,11 +170,6 @@ class PaymentMethodReader implements PaymentMethodReaderInterface
         return $paymentMethodsTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return int
-     */
     protected function getIdStoreFromQuote(QuoteTransfer $quoteTransfer): int
     {
         $quoteTransfer->requireStore();

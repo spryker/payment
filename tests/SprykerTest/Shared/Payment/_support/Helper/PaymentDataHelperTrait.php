@@ -11,9 +11,6 @@ use Codeception\Module;
 
 trait PaymentDataHelperTrait
 {
-    /**
-     * @return \SprykerTest\Shared\Payment\Helper\PaymentDataHelper
-     */
     protected function getPaymentDataHelper(): PaymentDataHelper
     {
         /** @var \SprykerTest\Shared\Payment\Helper\PaymentDataHelper $paymentDataHelper */
@@ -22,10 +19,5 @@ trait PaymentDataHelperTrait
         return $paymentDataHelper;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return \Codeception\Module
-     */
     abstract protected function getModule(string $name): Module;
 }
