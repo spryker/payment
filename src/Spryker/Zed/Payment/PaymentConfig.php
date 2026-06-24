@@ -36,6 +36,8 @@ use Spryker\Zed\Payment\Dependency\PaymentStateMachineEvents;
 class PaymentConfig extends AbstractBundleConfig
 {
     /**
+     * @api
+     *
      * @var string
      */
     public const PAYMENT_FOREIGN_PROVIDER = 'foreignPayments';
@@ -48,31 +50,43 @@ class PaymentConfig extends AbstractBundleConfig
     protected const BASE_URL_YVES = 'APPLICATION:BASE_URL_YVES';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const CHECKOUT_STRATEGY_EXPRESS_CHECKOUT = 'express-checkout';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PAYMENT_SERVICE_PROVIDER_ENDPOINT_NAME_AUTHORIZATION = 'authorization';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PAYMENT_SERVICE_PROVIDER_ENDPOINT_NAME_PRE_ORDER_PAYMENT = 'pre-order-payment';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PAYMENT_SERVICE_PROVIDER_ENDPOINT_NAME_PRE_ORDER_CONFIRMATION = 'pre-order-confirmation';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PAYMENT_SERVICE_PROVIDER_ENDPOINT_NAME_PRE_ORDER_CANCELLATION = 'pre-order-cancellation';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PRE_ORDER_PAYMENT_DATA_FIELD = 'preOrderPaymentData';
