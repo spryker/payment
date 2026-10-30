@@ -1369,8 +1369,6 @@ class PaymentFacadeTest extends Unit
      * Tests if a new Payment Method will be created and the Payment Method that already
      * exists will not be modified when PaymentMethodUpdater::disableForeignPaymentMethod() is called.
      *
-     * This bug was reported on https://spryker.atlassian.net/browse/PBC-1674.
-     *
      * @return void
      */
     public function testEnableForeignPaymentMethodMustChangeTheRightPaymentMethodWhenThereIsMoreThanOneMethodStored(): void
@@ -1399,8 +1397,6 @@ class PaymentFacadeTest extends Unit
     /**
      * Tests if a new Payment Method will be created and the Payment Method that already
      * exists will not be modified when PaymentMethodUpdater::deletePaymentMethod() is called.
-     *
-     * This bug was reported on https://spryker.atlassian.net/browse/PBC-1674.
      *
      * @return void
      */
@@ -1433,8 +1429,6 @@ class PaymentFacadeTest extends Unit
      * Tests if a new Payment Method will be created and the Payment Method that already
      * exists will not be modified when PaymentMethodUpdater::enableForeignPaymentMethod() is called.
      *
-     * This bug was reported on https://spryker.atlassian.net/browse/PBC-1674.
-     *
      * @return void
      */
     public function testDisableForeignPaymentMethodMustChangeTheRightPaymentMethodWhenThereIsMoreThanOneMethodStored(): void
@@ -1463,8 +1457,6 @@ class PaymentFacadeTest extends Unit
     /**
      * Tests if a new Payment Method will be created and the Payment Method that already
      * exists will not be modified when PaymentMethodUpdater::addPaymentMethod() is called.
-     *
-     * This bug was reported on https://spryker.atlassian.net/browse/PBC-1674.
      *
      * @return void
      */
